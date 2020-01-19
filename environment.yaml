@@ -15,3 +15,4 @@ dependencies:
   - zarr
   - numpydoc
   - sphinx-click
+  - pygithub

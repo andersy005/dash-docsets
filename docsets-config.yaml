@@ -1,13 +1,13 @@
 docsets:
   - name: dask
-    repo: https://github.com/dask/dask.git
+    repo: dask/dask
     doc_dir: docs
     html_pages: build/html
   - name: distributed
-    repo: https://github.com/dask/distributed.git
+    repo: dask/distributed
     doc_dir: docs
     html_pages: build/html
   - name: zarr
-    repo: https://github.com/zarr-developers/zarr-python.git
+    repo: zarr-developers/zarr-python
     doc_dir: docs
     html_pages: _build/html
