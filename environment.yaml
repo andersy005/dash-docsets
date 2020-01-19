@@ -5,7 +5,6 @@ dependencies:
   - dask
   - dask-sphinx-theme
   - distributed
-  - distributed
   - doc2dash
   - jupyterlab
   - make
@@ -14,3 +13,5 @@ dependencies:
   - sphinx-issues
   - xarray
   - zarr
+  - numpydoc
+  - sphinx-click
