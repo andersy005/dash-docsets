@@ -66,16 +66,17 @@ jobs:
           name: Copy over built site files
           command: |
             ls -ltrh
-            ls -ltrh /tmp/workspace/public
-      # - run:
-      #     name: Change to master branch and replace w/ new site
-      #     command: |
-      #       cd ~/build_dir/iotwx.github.io
-      #       git checkout master
-      #       cp -r /tmp/workspace/public/* ./
-      #       touch ./index.html
-      #       git status
-      #       git remote -v
+            ls -ltrh /tmp/workspace/docsets
+            rm -rf docsets && cp -r /tmp/workspace/docsets ../docsets
+      - run:
+          name: Change to docsets branch and replace w/ new docsets
+          command: |
+            git checkout docsets
+            rm -rf ./*
+            cp -r ../docsets ./
+            ls -ltrh ./docsets
+            git status
+            git remote -v
       # - run:
       #     name: Commit results and push to master
       #     command: |
