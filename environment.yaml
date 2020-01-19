@@ -3,11 +3,12 @@ channels:
   - conda-forge
 dependencies:
   - dask
-  - distributed
   - dask-sphinx-theme
+  - distributed
   - distributed
   - doc2dash
   - jupyterlab
+  - make
   - nbsphinx
   - sphinx_rtd_theme
   - sphinx-issues
