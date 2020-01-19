@@ -77,12 +77,11 @@ jobs:
             ls -ltrh ./docsets
             git status
             git remote -v
-      # - run:
-      #     name: Commit results and push to master
-      #     command: |
-      #       cd ~/build_dir/iotwx.github.io
-      #       git config --global user.email "bot@iotwx.github.io"
-      #       git config --global user.name "IOTWX Bot"
-      #       git add -A
-      #       git commit -m "Automated web deploy"
-      #       git push -f origin master:master
+      - run:
+          name: Commit results and push to docsets
+          command: |
+            git config --global user.email "bot@andersonbanihirwe.dev"
+            git config --global user.name "Samaritan"
+            git add -A
+            git commit -m "Automated deploy"
+          # git push -f origin docsets:docsets
