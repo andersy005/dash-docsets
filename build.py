@@ -60,7 +60,6 @@ def build_docset(project_info, local_store):
         source,
         "--destination",
         DOCSET_DIR.as_posix(),
-        "--quiet",
     ]
     if icons:
         cmd += icons
