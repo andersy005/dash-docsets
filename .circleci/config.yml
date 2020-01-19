@@ -1,26 +1,7 @@
-version: 2
+version: 2.1
 # Tell CircleCI to use this workflow
-workflows:
-  version: 2
-  default:
-    jobs:
-      - build:
-          filters:
-            branches:
-              ignore:
-                - docsets
-      - deploy:
-          requires:
-            - build
-          filters:
-            branches:
-              only:
-                - master
-              ignore:
-                - docsets
-
 jobs:
-  "build":
+  build:
     docker:
       - image: ncarxdev/miniconda:3.8
 
@@ -54,7 +35,7 @@ jobs:
           paths:
             - "/opt/conda/pkgs"
 
-  "deploy":
+  deploy:
     working_directory: ~/project/dash-docsets
     docker:
       - image: circleci/python:latest
@@ -78,7 +59,7 @@ jobs:
           name: Change to docsets branch and replace w/ new docsets
           command: |
             git checkout docsets
-            rm -rf ./*
+            rm -rf ./* .gitignore .isort.cfg .pre-commit-config.yaml
             cp -r ../docsets ./
             ls -ltrh ./docsets
             git status
@@ -91,3 +72,22 @@ jobs:
             git add -A
             git commit -m "Automated deploy"
             git push -f origin docsets:docsets
+
+workflows:
+  version: 2
+  default:
+    jobs:
+      - build:
+          filters:
+            branches:
+              ignore:
+                - docsets
+      - deploy:
+          requires:
+            - build
+          filters:
+            branches:
+              only:
+                - master
+              ignore:
+                - docsets
