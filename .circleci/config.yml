@@ -29,7 +29,7 @@ jobs:
       - checkout
 
       - restore_cache:
-          key: deps-{{ checksum "environment.yaml" }}
+          key: deps-{{ checksum "environment.yaml" }}-{{ checksum "docsets-config.yaml" }}
 
       - run:
           name: Install Dependencies
@@ -49,6 +49,10 @@ jobs:
           root: .
           paths:
             - docsets/
+      - save_cache:
+          key: deps-{{ checksum "environment.yaml" }}-{{ checksum "docsets-config.yaml" }}
+          paths:
+            - "/opt/conda/pkgs"
 
   "deploy":
     working_directory: ~/project/dash-docsets
