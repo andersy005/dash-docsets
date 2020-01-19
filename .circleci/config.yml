@@ -15,9 +15,9 @@ workflows:
           filters:
             branches:
               only:
-                - docsets
-              ignore:
                 - master
+              ignore:
+                - docsets
 
 jobs:
   "build":
