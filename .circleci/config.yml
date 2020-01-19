@@ -23,12 +23,12 @@ jobs:
       - checkout
 
       - restore_cache:
-          key: deps-{{ checksum "environment.yml" }}
+          key: deps-{{ checksum "environment.yaml" }}
 
       - run:
           name: Install Dependencies
           command: |
-            conda env update -n base -f environment.yml
+            conda env update -n base -f environment.yaml
             conda list
 
       - run:
