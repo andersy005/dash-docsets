@@ -12,10 +12,12 @@ workflows:
       - deploy:
           requires:
             - build
-          # filters:
-          #   branches:
-          #     only:
-          #       - docsets
+          filters:
+            branches:
+              only:
+                - docsets
+              ignore:
+                - master
 
 jobs:
   "build":
@@ -84,4 +86,4 @@ jobs:
             git config --global user.name "Samaritan"
             git add -A
             git commit -m "Automated deploy"
-          # git push -f origin docsets:docsets
+            git push -f origin docsets:docsets
