@@ -1,0 +1,85 @@
+version: 2
+# Tell CircleCI to use this workflow
+workflows:
+  version: 2
+  default:
+    jobs:
+      - build
+      # - deploy:
+      #     requires:
+      #       - build
+      #     filters:
+      #       branches:
+      #         only:
+      #           - master
+
+jobs:
+  "build":
+    docker:
+      - image: ncarxdev/miniconda:3.8
+
+    steps:
+      # Get our data and merge with upstream
+      - checkout
+
+      - restore_cache:
+          key: deps-{{ checksum "environment.yml" }}
+
+      - run:
+          name: Install Dependencies
+          command: |
+            conda env update -n base -f environment.yml
+            conda list
+
+      - run:
+          name: Build Dash Docsets
+          command: |
+            python build.py
+
+      - store_artifacts:
+          path: docsets/
+
+      - persist_to_workspace:
+          root: .
+          paths:
+            - docsets/
+  # "deploy":
+  #   working_directory: ~/build_dir
+  #   docker:
+  #     - image: circleci/golang:latest
+  #   steps:
+  #     - checkout
+  #     - attach_workspace:
+  #         # Must be absolute path or relative path from working_directory
+  #         at: /tmp/workspace
+  #       # Add deployment key fingerprint for CircleCI to use for a push
+  #     - add_ssh_keys:
+  #         fingerprints:
+  #           - "ea:34:69:fc:25:23:36:c4:25:fa:74:b3:14:0f:3a:99"
+  #     # Copying over built website to the live site
+  #     - run:
+  #         name: Copy over built site files
+  #         command: |
+  #           cd ~/build_dir
+  #           git clone git@github.com:iotwx/iotwx.github.io.git
+  #           cd iotwx.github.io
+  #           ls -ltrh
+  #           ls -ltrh /tmp/workspace/public
+  #     - run:
+  #         name: Change to master branch and replace w/ new site
+  #         command: |
+  #           cd ~/build_dir/iotwx.github.io
+  #           git checkout master
+  #           cp -r /tmp/workspace/public/* ./
+  #           touch ./index.html
+  #           git status
+  #           git remote -v
+  #     - run:
+  #         name: Commit results and push to master
+  #         command: |
+  #           cd ~/build_dir/iotwx.github.io
+  #           git config --global user.email "bot@iotwx.github.io"
+  #           git config --global user.name "IOTWX Bot"
+  #           git add -A
+  #           git commit -m "Automated web deploy"
+  #           git push -f origin master:master
