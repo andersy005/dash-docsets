@@ -63,10 +63,12 @@ jobs:
       - run:
           name: Change to docsets branch and replace w/ new docsets
           command: |
-            git checkout docsets
             cp README.md ../
+            cp -r ./circleci ./images ../
+            git checkout docsets
             rm -rf ./* .gitignore .isort.cfg .pre-commit-config.yaml ./circleci
             cp -r ../.circleci ./
+            cp -r ../images ./
             cp ../README.md ./
             cp -r ../docsets ./
             cp -r ../feeds   ./
