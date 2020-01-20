@@ -24,11 +24,21 @@ dash-feed://<URL encoded feed URL>
 
 **⚠️ See [Zeal Issues](#zeal-issues)** for more information on how to fix them.
 
-![](./images/how-to-add-feed.png)
-
 - [dask](https://github.com/dask/dask): https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/dask.xml
 - [distributed](https://github.com/dask/distributed): https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/distributed.xml
+- [dask-jobqueue](): https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/dask-jobqueue.xml
 - [zarr](https://github.com/zarr-developers/zarr-python): https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/zarr.xml
+- [numcodecs](https://github.com/zarr-developers/numcodecs): https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/numcodecs.xml
+- [xarray](https://github.com/pydata/xarray): https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/xarray.xml
+- [intake](https://github.com/intake/intake): https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/intake.xml
+- [fsspec](https://github.com/intake/filesystem_spec): https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/fsspec.xml
+- [climpred](https://github.com/bradyrx/climpred): https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/climpred.xml
+- [jupyterhub](https://github.com/jupyterhub/jupyterhub): https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/jupyterhub.xml
+- [binderhub](https://github.com/jupyterhub/binderhub): https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/binderhub.xml
+- [binder](https://github.com/jupyterhub/binder): https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/binder.xml
+- [xgcm](https://github.com/xgcm/xgcm): https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/xgcm.xml
+
+![](./images/how-to-add-feed.png)
 
 ## Zeal Issues
 
