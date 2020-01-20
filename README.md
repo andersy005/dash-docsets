@@ -26,7 +26,8 @@ dash-feed://<URL encoded feed URL>
 
 - [dask](https://github.com/dask/dask): https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/dask.xml
 - [distributed](https://github.com/dask/distributed): https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/distributed.xml
-- [dask-jobqueue](): https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/dask-jobqueue.xml
+- [dask-jobqueue](https://github.com/dask/dask-jobqueue): https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/dask-jobqueue.xml
+- [numba](https://github.com/numba/numba): https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/numba.xml
 - [zarr](https://github.com/zarr-developers/zarr-python): https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/zarr.xml
 - [numcodecs](https://github.com/zarr-developers/numcodecs): https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/numcodecs.xml
 - [xarray](https://github.com/pydata/xarray): https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/xarray.xml
