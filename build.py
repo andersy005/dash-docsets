@@ -37,7 +37,10 @@ def create_feed(project_info):
     g = Github()
 
     repo = g.get_repo(project_info["repo"])
-    latest_tag = list(repo.get_tags())[0].name
+    try:
+        latest_tag = list(repo.get_tags())[0].name
+    except IndexError:
+        latest_tag = "unknown"
 
     feed_filename = f"{FEED_DIR}/{project_info['name']}.xml"
     base_url = (

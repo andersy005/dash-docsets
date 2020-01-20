@@ -2,17 +2,55 @@ name: dash-docs
 channels:
   - conda-forge
 dependencies:
+  - alembic
+  - bottleneck
+  - cartopy
+  - cfgrib
+  - cftime
+  - climpred
   - dask
+  - dask-jobqueue
+  - dask-kubernetes
   - dask-sphinx-theme
   - distributed
   - doc2dash
+  - docker-py
+  - docrep
+  - escapism
+  - fsspec
+  - h5netcdf
+  - hvplot
+  - intake
+  - iris
+  - jupyter_telemetry
+  - jupyterhub
   - jupyterlab
   - make
+  - matplotlib
   - nbsphinx
-  - sphinx_rtd_theme
-  - sphinx-issues
-  - xarray
-  - zarr
+  - netcdf4
+  - nodejs
+  - numba
   - numpydoc
-  - sphinx-click
+  - paramiko
+  - pip
   - pygithub
+  - rasterio
+  - recommonmark
+  - scipy
+  - seaborn
+  - sphinx_bootstrap_theme
+  - sphinx_rtd_theme
+  - sphinx-click
+  - sphinx-copybutton
+  - sphinx-gallery
+  - sphinx-issues
+  - tqdm
+  - xarray
+  - xgcm
+  - zarr
+  - pip:
+      - git+https://github.com/pandas-dev/pandas-sphinx-theme.git@master
+      - sphinx-jsonschema
+      - autodoc-traits
+      - sphinxcontrib-napoleon

@@ -4,7 +4,8 @@ jobs:
   build:
     docker:
       - image: ncarxdev/miniconda:3.8
-
+    environment:
+      SPHINXOPTS: "-j4"
     steps:
       # Get our data and merge with upstream
       - checkout
@@ -22,6 +23,7 @@ jobs:
           name: Build Dash Docsets
           command: |
             python build.py
+          no_output_timeout: 30m
 
       - store_artifacts:
           path: docsets/
@@ -82,6 +84,28 @@ jobs:
 
 workflows:
   version: 2
+  nightly:
+    triggers:
+      - schedule:
+          cron: "0 0 * * *"
+          filters:
+            branches:
+              only:
+                - master
+    jobs:
+      - build:
+          filters:
+            branches:
+              ignore: docsets
+      - deploy:
+          requires:
+            - build
+          filters:
+            branches:
+              only:
+                - master
+              ignore:
+                - docsets
   default:
     jobs:
       - build:

@@ -7,7 +7,51 @@ docsets:
     repo: dask/distributed
     doc_dir: docs
     html_pages: build/html
+  - name: dask-jobqueue
+    repo: dask/dask-jobqueue
+    doc_dir: docs
+    html_pages: _build/html
   - name: zarr
     repo: zarr-developers/zarr-python
+    doc_dir: docs
+    html_pages: _build/html
+  - name: numcodecs
+    repo: zarr-developers/numcodecs
+    doc_dir: docs
+    html_pages: _build/html
+  - name: xarray
+    repo: pydata/xarray
+    doc_dir: doc
+    html_pages: _build/html
+  - name: climpred
+    repo: bradyrx/climpred
+    doc_dir: docs
+    html_pages: build/html
+  - name: intake
+    repo: intake/intake
+    doc_dir: docs
+    html_pages: build/html
+  - name: fsspec
+    repo: intake/filesystem_spec
+    doc_dir: docs
+    html_pages: build/html
+  - name: xgcm
+    repo: xgcm/xgcm
+    doc_dir: doc
+    html_pages: _build/html
+  - name: jupyterhub
+    repo: jupyterhub/jupyterhub
+    doc_dir: docs
+    html_pages: build/html
+  - name: binder
+    repo: jupyterhub/binder
+    doc_dir: doc
+    html_pages: _build/html
+  - name: binderhub
+    repo: jupyterhub/binderhub
+    doc_dir: doc
+    html_pages: _build/html
+  - name: numba
+    repo: numba/numba
     doc_dir: docs
     html_pages: _build/html
