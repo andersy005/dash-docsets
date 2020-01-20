@@ -7,9 +7,17 @@ docsets:
     repo: dask/distributed
     doc_dir: docs
     html_pages: build/html
+  - name: dask-jobqueue
+    repo: dask/dask-jobqueue
+    doc_dir: docs
+    html_pages: _build/html
   - name: zarr
     repo: zarr-developers/zarr-python
     doc_dir: docs
+    html_pages: _build/html
+  - name: xarray
+    repo: pydata/xarray
+    doc_dir: doc
     html_pages: _build/html
   - name: climpred
     repo: bradyrx/climpred
