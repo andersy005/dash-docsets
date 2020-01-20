@@ -14,7 +14,9 @@ dependencies:
   - dask-sphinx-theme
   - distributed
   - doc2dash
+  - docker-py
   - docrep
+  - escapism
   - fsspec
   - h5netcdf
   - hvplot
@@ -37,17 +39,16 @@ dependencies:
   - recommonmark
   - scipy
   - seaborn
+  - sphinx_bootstrap_theme
   - sphinx_rtd_theme
   - sphinx-click
   - sphinx-copybutton
+  - sphinx-gallery
   - sphinx-issues
   - tqdm
   - xarray
   - xgcm
   - zarr
-  - escapism
-  - docker-py
-  - sphinx-gallery
   - pip:
       - git+https://github.com/pandas-dev/pandas-sphinx-theme.git@master
       - sphinx-jsonschema
