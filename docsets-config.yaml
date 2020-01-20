@@ -51,7 +51,7 @@ docsets:
     repo: jupyterhub/binderhub
     doc_dir: doc
     html_pages: _build/html
-  # - name: arviz
-  #   repo: arviz-devs/arviz
-  #   doc_dir: doc
-  #   html_pages: _build/html
+  - name: numba
+    repo: numba/numba
+    doc_dir: docs
+    html_pages: _build/html
