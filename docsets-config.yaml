@@ -55,3 +55,7 @@ docsets:
     repo: numba/numba
     doc_dir: docs
     html_pages: _build/html
+  - name: xtensor
+    repo: xtensor-stack/xtensor
+    doc_dir: docs
+    html_pages: build/html

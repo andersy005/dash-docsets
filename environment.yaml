@@ -4,6 +4,7 @@ channels:
 dependencies:
   - alembic
   - bottleneck
+  - breathe
   - cartopy
   - cfgrib
   - cftime
@@ -48,6 +49,7 @@ dependencies:
   - tqdm
   - xarray
   - xgcm
+  - xtensor
   - zarr
   - pip:
       - git+https://github.com/pandas-dev/pandas-sphinx-theme.git@master
