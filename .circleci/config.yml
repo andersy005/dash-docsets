@@ -22,6 +22,7 @@ jobs:
           name: Build Dash Docsets
           command: |
             python build.py
+          no_output_timeout: 30m
 
       - store_artifacts:
           path: docsets/
