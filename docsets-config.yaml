@@ -39,3 +39,15 @@ docsets:
     repo: jupyterhub/jupyterhub
     doc_dir: docs
     html_pages: build/html
+  - name: binder
+    repo: jupyterhub/binder
+    doc_dir: doc
+    html_pages: _build/html
+  - name: binderhub
+    repo: jupyterhub/binderhub
+    doc_dir: doc
+    html_pages: _build/html
+  # - name: arviz
+  #   repo: arviz-devs/arviz
+  #   doc_dir: doc
+  #   html_pages: _build/html

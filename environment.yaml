@@ -17,8 +17,10 @@ dependencies:
   - docrep
   - fsspec
   - h5netcdf
+  - hvplot
   - intake
   - iris
+  - jupyter_telemetry
   - jupyterhub
   - jupyterlab
   - make
@@ -32,6 +34,7 @@ dependencies:
   - pip
   - pygithub
   - rasterio
+  - recommonmark
   - scipy
   - seaborn
   - sphinx_rtd_theme
@@ -42,6 +45,9 @@ dependencies:
   - xarray
   - xgcm
   - zarr
+  - escapism
+  - docker-py
+  - sphinx-gallery
   - pip:
       - git+https://github.com/pandas-dev/pandas-sphinx-theme.git@master
       - sphinx-jsonschema
