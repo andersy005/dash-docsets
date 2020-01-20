@@ -3,6 +3,9 @@ channels:
   - conda-forge
 dependencies:
   - alembic
+  - bottleneck
+  - cartopy
+  - cfgrib
   - cftime
   - climpred
   - dask
@@ -13,18 +16,24 @@ dependencies:
   - doc2dash
   - docrep
   - fsspec
+  - h5netcdf
   - intake
+  - iris
   - jupyterhub
   - jupyterlab
   - make
   - matplotlib
   - nbsphinx
+  - netcdf4
   - nodejs
+  - numba
   - numpydoc
   - paramiko
   - pip
   - pygithub
+  - rasterio
   - scipy
+  - seaborn
   - sphinx_rtd_theme
   - sphinx-click
   - sphinx-copybutton

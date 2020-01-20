@@ -82,6 +82,28 @@ jobs:
 
 workflows:
   version: 2
+  nightly:
+    triggers:
+      - schedule:
+          cron: "0 0 * * *"
+          filters:
+            branches:
+              only:
+                - master
+    jobs:
+      - build:
+          filters:
+            branches:
+              ignore: docsets
+      - deploy:
+          requires:
+            - build
+          filters:
+            branches:
+              only:
+                - master
+              ignore:
+                - docsets
   default:
     jobs:
       - build:
