@@ -16,3 +16,19 @@ dependencies:
   - numpydoc
   - sphinx-click
   - pygithub
+  - matplotlib
+  - scipy
+  - tqdm
+  - cftime
+  - docrep
+  - dask-jobqueue
+  - dask-kubernetes
+  - jupyterhub
+  - nodejs
+  - alembic
+  - sphinx-copybutton
+  - paramiko
+  - pip:
+      - git+https://github.com/pandas-dev/pandas-sphinx-theme.git@master
+      - sphinx-jsonschema
+      - autodoc-traits

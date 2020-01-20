@@ -11,3 +11,23 @@ docsets:
     repo: zarr-developers/zarr-python
     doc_dir: docs
     html_pages: _build/html
+  - name: climpred
+    repo: bradyrx/climpred
+    doc_dir: docs
+    html_pages: build/html
+  - name: intake
+    repo: intake/intake
+    doc_dir: docs
+    html_pages: build/html
+  - name: fsspec
+    repo: intake/filesystem_spec
+    doc_dir: docs
+    html_pages: build/html
+  - name: xgcm
+    repo: xgcm/xgcm
+    doc_dir: doc
+    html_pages: _build/html
+  - name: jupyterhub
+    repo: jupyterhub/jupyterhub
+    doc_dir: docs
+    html_pages: build/html
