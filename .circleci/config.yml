@@ -4,7 +4,9 @@ jobs:
   build:
     docker:
       - image: ncarxdev/miniconda:3.8
-
+    parallelism: 4
+    environment:
+      SPHINXOPTS: "-j4"
     steps:
       # Get our data and merge with upstream
       - checkout

@@ -46,3 +46,4 @@ dependencies:
       - git+https://github.com/pandas-dev/pandas-sphinx-theme.git@master
       - sphinx-jsonschema
       - autodoc-traits
+      - sphinxcontrib-napoleon
