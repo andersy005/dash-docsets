@@ -6,6 +6,7 @@ jobs:
       - image: ncarxdev/miniconda:3.8
     environment:
       SPHINXOPTS: "-j4"
+      CONDA_PREFIX: "/opt/conda"
     steps:
       # Get our data and merge with upstream
       - checkout
