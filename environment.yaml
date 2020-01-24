@@ -2,13 +2,12 @@ name: dash-docs
 channels:
   - conda-forge
 dependencies:
+  - python=3.7
   - alembic
   - bottleneck
   - breathe
-  - cartopy
   - cfgrib
   - cftime
-  - climpred
   - dask
   - dask-jobqueue
   - dask-kubernetes
@@ -17,17 +16,16 @@ dependencies:
   - doc2dash
   - docker-py
   - docrep
+  - doxygen
   - escapism
   - fsspec
   - h5netcdf
-  - hvplot
   - intake
   - iris
   - jupyter_telemetry
   - jupyterhub
   - jupyterlab
   - make
-  - matplotlib
   - nbsphinx
   - netcdf4
   - nodejs
@@ -39,21 +37,29 @@ dependencies:
   - rasterio
   - recommonmark
   - scipy
+  - tqdm
+  - trio
+  - xtensor
+  - zarr
+  - matplotlib>3
+  - cartopy
+  - xarray
+  - xgcm
+  - climpred
   - seaborn
   - sphinx_bootstrap_theme
   - sphinx_rtd_theme
+  - sphinx-automodapi
   - sphinx-click
   - sphinx-copybutton
   - sphinx-gallery
   - sphinx-issues
-  - tqdm
-  - xarray
-  - xgcm
-  - xtensor
-  - zarr
-  - doxygen
+  - basemap
   - pip:
       - git+https://github.com/pandas-dev/pandas-sphinx-theme.git@master
       - sphinx-jsonschema
       - autodoc-traits
       - sphinxcontrib-napoleon
+      - sphinxcontrib-trio
+      - git+https://github.com/lukelbd/sphinx-automodapi@v0.6.proplot-mods
+      - git+https://github.com/lukelbd/proplot.git

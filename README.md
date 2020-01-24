@@ -38,6 +38,8 @@ dash-feed://<URL encoded feed URL>
 - [binderhub](https://github.com/jupyterhub/binderhub): https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/binderhub.xml
 - [binder](https://github.com/jupyterhub/binder): https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/binder.xml
 - [xgcm](https://github.com/xgcm/xgcm): https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/xgcm.xml
+- [trio](https://github.com/python-trio/trio): https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/trio.xml
+- [proplot](https://github.com/lukelbd/proplot): https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/proplot.xml
 
 ![](./images/how-to-add-feed.png)
 

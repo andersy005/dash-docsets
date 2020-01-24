@@ -59,3 +59,11 @@ docsets:
     repo: xtensor-stack/xtensor
     doc_dir: docs
     html_pages: build/html
+  - name: proplot
+    repo: lukelbd/proplot
+    doc_dir: docs
+    html_pages: _build/html
+  - name: trio
+    repo: python-trio/trio
+    doc_dir: docs
+    html_pages: build/html
