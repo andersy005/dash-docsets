@@ -55,6 +55,7 @@ dependencies:
   - sphinx-gallery
   - sphinx-issues
   - basemap
+  - sparse
   - pip:
       - git+https://github.com/pandas-dev/pandas-sphinx-theme.git@master
       - git+https://github.com/pydata/xarray.git
@@ -65,3 +66,4 @@ dependencies:
       - sphinxcontrib-trio
       - git+https://github.com/lukelbd/sphinx-automodapi@v0.6.proplot-mods
       - git+https://github.com/lukelbd/proplot.git
+      - sphinx-pangeo-theme

@@ -51,10 +51,10 @@ docsets:
     repo: jupyterhub/binderhub
     doc_dir: doc
     html_pages: _build/html
-  # - name: numba
-  #   repo: numba/numba
-  #   doc_dir: docs
-  #   html_pages: _build/html
+  - name: numba
+    repo: numba/numba
+    doc_dir: docs
+    html_pages: _build/html
   - name: xtensor
     repo: xtensor-stack/xtensor
     doc_dir: docs
@@ -67,3 +67,8 @@ docsets:
     repo: python-trio/trio
     doc_dir: docs
     html_pages: build/html
+  - name: sparse
+    repo: pydata/sparse
+    doc_dir: docs
+    html_pages: _build/html
+    script: sphinx-build -W -b html . _build/html

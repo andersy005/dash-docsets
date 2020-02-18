@@ -71,8 +71,12 @@ def build_docset(project_info, local_store):
     subprocess.check_call(cmd)
 
     with working_directory(doc_dir):
-        cmd = ["make", "html"]
-        subprocess.check_call(cmd)
+        if "script" in project_info:
+            cmd = project_info["script"]
+            subprocess.check_call(cmd, shell=True)
+        else:
+            cmd = ["make", "html"]
+            subprocess.check_call(cmd)
 
     source = (doc_dir / project_info["html_pages"]).as_posix()
     icon_dir = ICON_DIR / project_info["name"]
@@ -128,7 +132,10 @@ def _main():
         local_store = Path(local_store)
         projects = data["docsets"]
         for project in projects:
-            build_docset(project, local_store)
+            try:
+                build_docset(project, local_store)
+            except Exception as e:
+                print(e)
 
 
 if __name__ == "__main__":
