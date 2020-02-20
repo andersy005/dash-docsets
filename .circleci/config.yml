@@ -21,7 +21,7 @@ jobs:
       - run:
           name: Install Dependencies
           command: |
-
+            go get -u github.com/technosophos/dashing
             conda env update -n base -f environment.yaml
             conda list
 
