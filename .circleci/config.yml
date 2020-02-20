@@ -15,8 +15,13 @@ jobs:
           key: deps-{{ checksum "environment.yaml" }}-{{ checksum "docsets-config.yaml" }}
 
       - run:
+          name: Install Go
+          command: |
+            apt install golang-go
+      - run:
           name: Install Dependencies
           command: |
+
             conda env update -n base -f environment.yaml
             conda list
 
