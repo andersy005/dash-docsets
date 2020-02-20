@@ -36,6 +36,7 @@ dependencies:
   - pygithub
   - rasterio
   - recommonmark
+  - msgpack-python<1.0.0
   - scipy
   - tqdm
   - trio
