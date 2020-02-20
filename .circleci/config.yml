@@ -28,6 +28,8 @@ jobs:
       - run:
           name: Build Dash Docsets
           command: |
+            export PATH=$HOME/go/bin:$PATH
+            dashing --help
             python build.py
           no_output_timeout: 30m
 
