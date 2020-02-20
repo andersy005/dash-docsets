@@ -17,7 +17,7 @@ jobs:
       - run:
           name: Install Go
           command: |
-            apt install golang-go
+            apt install golang-go -y
       - run:
           name: Install Dependencies
           command: |
