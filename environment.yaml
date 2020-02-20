@@ -66,6 +66,7 @@ dependencies:
       - sphinx-jsonschema
       - markdown-include
       - mkdocs
+      - mkautodoc
       - mkdocs-material
       - autodoc-traits
       - sphinxcontrib-napoleon

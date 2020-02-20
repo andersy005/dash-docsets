@@ -1,5 +1,6 @@
 import contextlib
 import itertools
+import json
 import os
 import subprocess
 import tempfile
@@ -14,6 +15,21 @@ ICON_DIR = HOME_DIR / "icons"
 DOCSET_DIR.mkdir(parents=True, exist_ok=True)
 FEED_DIR = HOME_DIR / "feeds"
 FEED_DIR.mkdir(parents=True, exist_ok=True)
+
+
+def dashing_config(name, package, index="index.html", allow_js=True):
+    config = {
+        "name": name,
+        "package": package,
+        "index": "index.html",
+        "selectors": {"dt a": "Command", "title": "Package"},
+        "ignore": ["ABOUT"],
+        "icon32x32": "",
+        "allowJS": allow_js,
+        "ExternalURL": "",
+    }
+
+    return config
 
 
 @contextlib.contextmanager
@@ -86,22 +102,46 @@ def build_docset(project_info, local_store):
         icons = [["--icon", icon.as_posix()] for icon in icons]
         icons = list(itertools.chain(*icons))
 
-    cmd = [
-        "doc2dash",
-        "--force",
-        "--index-page",
-        "index.html",
-        "--enable-js",
-        "--name",
-        project_info["name"],
-        source,
-        "--destination",
-        DOCSET_DIR.as_posix(),
-    ]
-    if icons:
-        cmd += icons
+    if "use_dashing" in project_info:
+        config = dashing_config(project_info["name"], project_info["name"])
+        with open(f"{source}/dashing.json", "w") as fp:
+            json.dump(config, fp)
 
-    subprocess.check_call(cmd)
+        cmd = [
+            "dashing",
+            "build",
+            "--source",
+            source,
+            "--config",
+            f"{source}/dashing.json",
+        ]
+
+        subprocess.check_call(cmd)
+
+        cmd = [
+            "mv",
+            f'{project_info["name"]}.docset',
+            f'{DOCSET_DIR.as_posix()}/{project_info["name"]}.docset',
+        ]
+        subprocess.check_call(cmd)
+
+    else:
+        cmd = [
+            "doc2dash",
+            "--force",
+            "--index-page",
+            "index.html",
+            "--enable-js",
+            "--name",
+            project_info["name"],
+            source,
+            "--destination",
+            DOCSET_DIR.as_posix(),
+        ]
+        if icons:
+            cmd += icons
+
+        subprocess.check_call(cmd)
 
     with working_directory(DOCSET_DIR):
 
@@ -112,6 +152,8 @@ def build_docset(project_info, local_store):
             f"{project_info['name']}.tgz",
             f"{project_info['name']}.docset",
         ]
+
+        # cmd = ["ls", "-ltrh", DOCSET_DIR.as_posix()]
 
         subprocess.check_call(tar_cmd)
 
