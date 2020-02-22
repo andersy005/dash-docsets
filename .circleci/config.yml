@@ -84,7 +84,37 @@ jobs:
     docker:
       - image: circleci/python:latest
     steps:
-      - checkout
+      # - checkout
+      - run:
+          name: Checkout code (Shallow clone)
+          # https://mmeyer2k.github.io/posts/circleci-shallow-clone-large-repo
+          command: |
+            # add github.com to known hosts
+            mkdir -p ~/.ssh
+            echo 'github.com ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ==
+            ' >> ~/.ssh/known_hosts
+
+            # add the user ssh key and set correct perms
+            umask 077
+            echo "$CHECKOUT_KEY" > ~/.ssh/id_rsa
+            chmod 0600 ~/.ssh/id_rsa
+
+            # use git+ssh instead of https
+            git config --global url."ssh://git@github.com".insteadOf "https://github.com" || true
+            git config --global gc.auto 0 || true
+
+            if [ -e /root/project/.git ]
+            then
+              cd /root/project
+              git remote set-url origin "$CIRCLE_REPOSITORY_URL" || true
+
+            else
+              mkdir -p /root/project
+              cd /root/project
+              # get shallow clone of single repo branch for speed purposes
+              git clone --depth=1 "$CIRCLE_REPOSITORY_URL" .
+              # git clone "$CIRCLE_REPOSITORY_URL" .
+            fi
       - attach_workspace:
           # Must be absolute path or relative path from working_directory
           at: /tmp/workspace
@@ -94,7 +124,7 @@ jobs:
             - "70:c1:49:27:4b:65:92:6f:c9:ed:07:43:db:a6:c0:6f"
       # Copying over built website to the live site
       - run:
-          name: Copy over built site files
+          name: Copy over built docsets
           command: |
             ls -ltrh /tmp/workspace/feeds
             ls -ltrh /tmp/workspace/docsets
