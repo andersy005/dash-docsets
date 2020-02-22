@@ -4,6 +4,7 @@ import json
 import os
 import subprocess
 import tempfile
+from concurrent import futures
 from pathlib import Path
 from pprint import pprint as print
 
@@ -23,7 +24,7 @@ def dashing_config(name, package, index="index.html", allow_js=True):
         "package": package,
         "index": "index.html",
         "selectors": {"dt a": "Command", "title": "Package"},
-        "ignore": ["ABOUT"],
+        "ignore": [""],
         "icon32x32": "",
         "allowJS": allow_js,
         "ExternalURL": "",
@@ -79,89 +80,92 @@ def build_docset(project_info, local_store):
     """
     Build Dash Docset for a project
     """
-    base_url = "https://github.com"
-    repo_link = f"{base_url}/{project_info['repo']}.git"
-    folder_name = local_store / project_info["name"]
-    doc_dir = folder_name / project_info["doc_dir"]
-    cmd = ["git", "clone", repo_link, folder_name.as_posix()]
-    subprocess.check_call(cmd)
 
-    with working_directory(doc_dir):
-        if "script" in project_info:
-            cmd = project_info["script"]
-            subprocess.check_call(cmd, shell=True)
+    try:
+        base_url = "https://github.com"
+        repo_link = f"{base_url}/{project_info['repo']}.git"
+        folder_name = local_store / project_info["name"]
+        doc_dir = folder_name / project_info["doc_dir"]
+        cmd = ["git", "clone", repo_link, folder_name.as_posix()]
+        subprocess.check_call(cmd)
+
+        with working_directory(doc_dir):
+            if "script" in project_info:
+                cmd = project_info["script"]
+                subprocess.check_call(cmd, shell=True)
+            else:
+                cmd = ["make", "html"]
+                subprocess.check_call(cmd)
+
+        source = (doc_dir / project_info["html_pages"]).as_posix()
+        icon_dir = ICON_DIR / project_info["name"]
+        icons = []
+        if icon_dir.exists():
+            icons = list(icon_dir.iterdir())
+            icons = [["--icon", icon.as_posix()] for icon in icons]
+            icons = list(itertools.chain(*icons))
+
+        if "use_dashing" in project_info:
+            config = dashing_config(project_info["name"], project_info["name"])
+            with open(f"{source}/dashing.json", "w") as fp:
+                json.dump(config, fp)
+
+            with working_directory(source):
+                cmd = [
+                    "dashing",
+                    "build",
+                    "--config",
+                    f"{source}/dashing.json",
+                ]
+
+                subprocess.check_call(cmd)
+
+                cmd = [
+                    "mv",
+                    f'{project_info["name"]}.docset',
+                    f'{DOCSET_DIR.as_posix()}/{project_info["name"]}.docset',
+                ]
+                subprocess.check_call(cmd)
+
         else:
-            cmd = ["make", "html"]
+            cmd = [
+                "doc2dash",
+                "--force",
+                "--index-page",
+                "index.html",
+                "--enable-js",
+                "--name",
+                project_info["name"],
+                source,
+                "--destination",
+                DOCSET_DIR.as_posix(),
+            ]
+            if icons:
+                cmd += icons
+
             subprocess.check_call(cmd)
 
-    source = (doc_dir / project_info["html_pages"]).as_posix()
-    icon_dir = ICON_DIR / project_info["name"]
-    icons = []
-    if icon_dir.exists():
-        icons = list(icon_dir.iterdir())
-        icons = [["--icon", icon.as_posix()] for icon in icons]
-        icons = list(itertools.chain(*icons))
+        with working_directory(DOCSET_DIR):
 
-    if "use_dashing" in project_info:
-        config = dashing_config(project_info["name"], project_info["name"])
-        with open(f"{source}/dashing.json", "w") as fp:
-            json.dump(config, fp)
+            tar_cmd = [
+                "tar",
+                "--exclude='.DS_Store'",
+                "-cvzf",
+                f"{project_info['name']}.tgz",
+                f"{project_info['name']}.docset",
+            ]
 
-        cmd = [
-            "dashing",
-            "build",
-            "--source",
-            source,
-            "--config",
-            f"{source}/dashing.json",
-        ]
+            # cmd = ["ls", "-ltrh", DOCSET_DIR.as_posix()]
 
-        subprocess.check_call(cmd)
+            subprocess.check_call(tar_cmd)
 
-        cmd = [
-            "mv",
-            f'{project_info["name"]}.docset',
-            f'{DOCSET_DIR.as_posix()}/{project_info["name"]}.docset',
-        ]
-        subprocess.check_call(cmd)
+            cmd = ["rm", "-rf", f"{project_info['name']}.docset"]
 
-    else:
-        cmd = [
-            "doc2dash",
-            "--force",
-            "--index-page",
-            "index.html",
-            "--enable-js",
-            "--name",
-            project_info["name"],
-            source,
-            "--destination",
-            DOCSET_DIR.as_posix(),
-        ]
-        if icons:
-            cmd += icons
+            subprocess.check_call(cmd)
 
-        subprocess.check_call(cmd)
-
-    with working_directory(DOCSET_DIR):
-
-        tar_cmd = [
-            "tar",
-            "--exclude='.DS_Store'",
-            "-cvzf",
-            f"{project_info['name']}.tgz",
-            f"{project_info['name']}.docset",
-        ]
-
-        # cmd = ["ls", "-ltrh", DOCSET_DIR.as_posix()]
-
-        subprocess.check_call(tar_cmd)
-
-        cmd = ["rm", "-rf", f"{project_info['name']}.docset"]
-
-        subprocess.check_call(cmd)
-
-    create_feed(project_info)
+        create_feed(project_info)
+    except Exception as e:
+        print(e)
 
 
 def _main():
@@ -173,11 +177,12 @@ def _main():
 
         local_store = Path(local_store)
         projects = data["docsets"]
-        for project in projects:
-            try:
-                build_docset(project, local_store)
-            except Exception as e:
-                print(e)
+
+        with futures.ThreadPoolExecutor(max_workers=10) as executor:
+            future_tasks = [
+                executor.submit(build_docset, project, local_store)
+                for project in projects
+            ]
 
 
 if __name__ == "__main__":

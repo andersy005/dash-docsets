@@ -72,6 +72,14 @@ docsets:
     doc_dir: docs
     html_pages: _build/html
     script: sphinx-build -W -b html . _build/html
+  - name: arviz
+    repo: arviz-devs/arviz
+    doc_dir: doc
+    html_pages: _build/html
+  - name: skorch
+    repo: skorch-dev/skorch
+    doc_dir: docs
+    html_pages: _build/html
   - name: fastapi
     repo: tiangolo/fastapi
     doc_dir: .
