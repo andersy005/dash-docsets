@@ -176,7 +176,9 @@ def _main():
         local_store = Path(local_store)
         projects = data["docsets"]
 
-        with futures.ThreadPoolExecutor(max_workers=10) as executor:
+        max_workers = len(projects)
+
+        with futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
             future_tasks = [
                 executor.submit(build_docset, project, local_store)
                 for project in projects
