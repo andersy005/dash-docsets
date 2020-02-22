@@ -80,21 +80,21 @@ docsets:
     repo: skorch-dev/skorch
     doc_dir: docs
     html_pages: _build/html
-  - name: fastapi
-    repo: tiangolo/fastapi
-    doc_dir: .
-    script: mkdocs build
-    html_pages: ""
-    use_dashing: true
-  - name: uvicorn
-    repo: encode/uvicorn
-    doc_dir: .
-    script: mkdocs build
-    html_pages: ""
-    use_dashing: true
-  - name: starlette
-    repo: encode/starlette
-    doc_dir: .
-    script: mkdocs build
-    html_pages: ""
-    use_dashing: true
+  # - name: fastapi
+  #   repo: tiangolo/fastapi
+  #   doc_dir: .
+  #   script: mkdocs build
+  #   html_pages: ""
+  #   use_dashing: true
+  # - name: uvicorn
+  #   repo: encode/uvicorn
+  #   doc_dir: .
+  #   script: mkdocs build
+  #   html_pages: ""
+  #   use_dashing: true
+  # - name: starlette
+  #   repo: encode/starlette
+  #   doc_dir: .
+  #   script: mkdocs build
+  #   html_pages: ""
+  #   use_dashing: true
