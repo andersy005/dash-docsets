@@ -28,8 +28,18 @@ jobs:
             git config --global url."ssh://git@github.com".insteadOf "https://github.com" || true
             git config --global gc.auto 0 || true
 
-            # get shallow clone of single repo branch for speed purposes
-            git clone --depth=1 git@github.com:$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME $CIRCLE_WORKING_DIRECTORY
+            if [ -e /root/project/.git ]
+            then
+              cd /root/project
+              git remote set-url origin "$CIRCLE_REPOSITORY_URL" || true
+
+            else
+              mkdir -p /root/project
+              cd /root/project
+              # get shallow clone of single repo branch for speed purposes
+              git clone --depth=1 "$CIRCLE_REPOSITORY_URL" .
+              # git clone "$CIRCLE_REPOSITORY_URL" .
+            fi
 
       - restore_cache:
           key: deps-{{ checksum "environment.yaml" }}-{{ checksum "docsets-config.yaml" }}
