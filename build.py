@@ -155,8 +155,6 @@ def build_docset(project_info, local_store):
                 f"{project_info['name']}.docset",
             ]
 
-            # cmd = ["ls", "-ltrh", DOCSET_DIR.as_posix()]
-
             subprocess.check_call(tar_cmd)
 
             cmd = ["rm", "-rf", f"{project_info['name']}.docset"]

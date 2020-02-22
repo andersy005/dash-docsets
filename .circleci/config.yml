@@ -72,8 +72,8 @@ jobs:
       - persist_to_workspace:
           root: .
           paths:
-            - docsets/
-            - feeds/
+            - docsets/*.tgz
+            - feeds/*.xml
       - save_cache:
           key: deps-{{ checksum "environment.yaml" }}-{{ checksum "docsets-config.yaml" }}
           paths:
