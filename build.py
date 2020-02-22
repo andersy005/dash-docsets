@@ -41,7 +41,6 @@ def working_directory(path):
     try:
         yield
         doc_dir = Path.cwd()
-        print(f"Documentation Directory: {doc_dir}")
     finally:
         os.chdir(prev_cwd)
 
@@ -157,10 +156,6 @@ def build_docset(project_info, local_store):
 
             subprocess.check_call(tar_cmd)
 
-            cmd = ["rm", "-rf", f"{project_info['name']}.docset"]
-
-            subprocess.check_call(cmd)
-
         create_feed(project_info)
     except Exception as e:
         print(e)
@@ -183,6 +178,12 @@ def _main():
                 executor.submit(build_docset, project, local_store)
                 for project in projects
             ]
+
+        with working_directory(DOCSET_DIR):
+            subprocess.check_call(["ls"])
+            cmd = "rm -rf *.docset"
+            subprocess.check_call(cmd, shell=True)
+            subprocess.check_call(["ls"])
 
 
 if __name__ == "__main__":

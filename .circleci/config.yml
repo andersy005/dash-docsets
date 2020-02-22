@@ -106,7 +106,10 @@ jobs:
             cp -r ./.circleci ./images README.md ../
             git checkout docsets
             rm -rf ./* .gitignore .isort.cfg .pre-commit-config.yaml ./.circleci
-            cp -r ../.circleci ../images ../README.md ../docsets ../feeds ./
+            mkdir -p ./docsets ./feeds
+            cp -r ../docsets/* ./docsets/
+            cp -r ../feeds/* ./feeds/
+            cp -r ../.circleci ../images ../README.md ./
             ls -ltrh ./docsets
             ls -ltrh ./feeds
             git status
