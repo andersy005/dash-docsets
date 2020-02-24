@@ -3,7 +3,7 @@ version: 2.1
 jobs:
   build:
     docker:
-      - image: ncarxdev/miniconda:3.8
+      - image: ncarxdev/miniconda:3.7
     environment:
       SPHINXOPTS: "-j4"
       CONDA_PREFIX: "/opt/conda"
@@ -41,8 +41,8 @@ jobs:
               # git clone "$CIRCLE_REPOSITORY_URL" .
             fi
 
-      - restore_cache:
-          key: deps-{{ checksum "environment.yaml" }}-{{ checksum "docsets-config.yaml" }}
+      # - restore_cache:
+      #     key: deps-{{ checksum "environment.yaml" }}-{{ checksum "docsets-config.yaml" }}
 
       - run:
           name: Install Go
@@ -74,10 +74,10 @@ jobs:
           paths:
             - docsets/*.tgz
             - feeds/*.xml
-      - save_cache:
-          key: deps-{{ checksum "environment.yaml" }}-{{ checksum "docsets-config.yaml" }}
-          paths:
-            - "/opt/conda/pkgs"
+      # - save_cache:
+      #     key: deps-{{ checksum "environment.yaml" }}-{{ checksum "docsets-config.yaml" }}
+      #     paths:
+      #       - "/opt/conda/pkgs"
 
   deploy:
     working_directory: ~/project/dash-docsets
