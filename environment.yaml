@@ -25,6 +25,7 @@ dependencies:
   - fsspec
   - h5netcdf
   - intake
+  - ipywidgets
   - iris
   - jax
   - jupyter_telemetry
@@ -39,13 +40,16 @@ dependencies:
   - numba
   - numpydoc
   - paramiko
+  - phantomjs
   - pip
   - pygithub
   - python=3.7
+  - pytorch
   - rasterio
   - recommonmark
   - scipy
   - seaborn
+  - selenium
   - skorch
   - sparse
   - sphinx_bootstrap_theme
@@ -61,9 +65,6 @@ dependencies:
   - xgcm
   - xtensor
   - zarr
-  - phantomjs
-  - pytorch
-  - selenium
   - pip:
       - git+https://github.com/pandas-dev/pandas-sphinx-theme.git@master
       - git+https://github.com/pydata/xarray.git

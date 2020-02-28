@@ -85,6 +85,10 @@ docsets:
     doc_dir: docs
     html_pages: build/html
     script: sphinx-build -b html . build/html
+  - name: ipwidgets
+    repo: jupyter-widgets/ipywidgets
+    doc_dir: docs
+    html_pages: build/html
   # - name: fastapi
   #   repo: tiangolo/fastapi
   #   doc_dir: .
