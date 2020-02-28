@@ -6,6 +6,7 @@ dependencies:
   - arviz
   - basemap
   - bottleneck
+  - bqplot
   - breathe
   - cartopy
   - cfgrib
@@ -25,6 +26,7 @@ dependencies:
   - fsspec
   - h5netcdf
   - intake
+  - ipyleaflet
   - ipywidgets
   - iris
   - jax
@@ -52,13 +54,13 @@ dependencies:
   - selenium
   - skorch
   - sparse
-  - sphinx_bootstrap_theme
-  - sphinx_rtd_theme
   - sphinx-automodapi
   - sphinx-click
   - sphinx-copybutton
   - sphinx-gallery
   - sphinx-issues
+  - sphinx_bootstrap_theme
+  - sphinx_rtd_theme
   - tqdm
   - trio
   - xarray

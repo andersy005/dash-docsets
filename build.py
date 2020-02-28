@@ -3,6 +3,7 @@ import itertools
 import json
 import os
 import subprocess
+import sys
 import tempfile
 from concurrent import futures
 from pathlib import Path
@@ -91,10 +92,12 @@ def build_docset(project_info, local_store):
         with working_directory(doc_dir):
             if "script" in project_info:
                 cmd = project_info["script"]
-                subprocess.check_call(cmd, shell=True)
+                out = subprocess.check_call(
+                    cmd, shell=True, stdout=sys.stdout, stderr=sys.stderr
+                )
             else:
                 cmd = ["make", "html"]
-                subprocess.check_call(cmd)
+                out = subprocess.check_call(cmd, stdout=sys.stdout, stderr=sys.stderr)
 
         source = (doc_dir / project_info["html_pages"]).as_posix()
         icon_dir = ICON_DIR / project_info["name"]
