@@ -67,6 +67,7 @@ dependencies:
   - xgcm
   - xtensor
   - zarr
+  - zfpy
   - pip:
       - git+https://github.com/pandas-dev/pandas-sphinx-theme.git@master
       - git+https://github.com/pydata/xarray.git

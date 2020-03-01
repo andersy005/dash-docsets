@@ -85,26 +85,30 @@ docsets:
     doc_dir: docs
     html_pages: build/html
     script: sphinx-build -b html . build/html
-  - name: ipwidgets
+  - name: ipywidgets
     repo: jupyter-widgets/ipywidgets
     doc_dir: docs
     html_pages: build/html
     script: sphinx-build -b html -D nbsphinx_allow_errors=True ./source build/html
-  # - name: fastapi
-  #   repo: tiangolo/fastapi
-  #   doc_dir: .
-  #   script: mkdocs build
-  #   html_pages: ""
-  #   use_dashing: true
-  # - name: uvicorn
-  #   repo: encode/uvicorn
-  #   doc_dir: .
-  #   script: mkdocs build
-  #   html_pages: ""
-  #   use_dashing: true
-  # - name: starlette
-  #   repo: encode/starlette
-  #   doc_dir: .
-  #   script: mkdocs build
-  #   html_pages: ""
-  #   use_dashing: true
+  - name: zfp
+    repo: LLNL/zfp
+    doc_dir: docs
+    html_pages: build/html
+  - name: fastapi
+    repo: tiangolo/fastapi
+    doc_dir: .
+    script: mkdocs build
+    html_pages: ""
+    use_dashing: true
+  - name: uvicorn
+    repo: encode/uvicorn
+    doc_dir: .
+    script: mkdocs build
+    html_pages: ""
+    use_dashing: true
+  - name: starlette
+    repo: encode/starlette
+    doc_dir: .
+    script: mkdocs build
+    html_pages: ""
+    use_dashing: true
