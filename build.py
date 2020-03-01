@@ -51,13 +51,19 @@ def create_feed(project_info):
     from bs4 import BeautifulSoup
     from github import Github
 
-    g = Github()
+    TOKEN = os.environ.get("GH_TOKEN", None)
+
+    if TOKEN is not None:
+        g = Github(TOKEN)
+    else:
+        g = Github()
 
     repo = g.get_repo(project_info["repo"])
     try:
         latest_tag = list(repo.get_tags())[0].name
     except IndexError:
         latest_tag = "unknown"
+    print(f"Rate Limit: {g.rate_limiting}")
 
     feed_filename = f"{FEED_DIR}/{project_info['name']}.xml"
     base_url = (

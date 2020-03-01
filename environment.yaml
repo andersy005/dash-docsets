@@ -84,3 +84,4 @@ dependencies:
       - sphinx-pangeo-theme
       - sphinxcontrib-napoleon
       - sphinxcontrib-trio
+      - sphinx-fortran
