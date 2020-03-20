@@ -63,6 +63,7 @@ docsets:
     repo: lukelbd/proplot
     doc_dir: docs
     html_pages: _build/html
+    script: sphinx-build -b html -D nbsphinx_allow_errors=True . _build/html
   - name: trio
     repo: python-trio/trio
     doc_dir: docs
