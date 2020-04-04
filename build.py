@@ -9,6 +9,7 @@ from concurrent import futures
 from pathlib import Path
 from pprint import pprint as print
 
+import click
 import yaml
 
 HOME_DIR = Path(".").absolute()
@@ -170,7 +171,11 @@ def build_docset(project_info, local_store):
         print(e)
 
 
-def _main():
+@click.command()
+@click.option(
+    "-t", "--tier", default="tier-1", type=str, show_default=True,
+)
+def _main(tier):
 
     with open(HOME_DIR / "docsets-config.yaml") as f:
         data = yaml.safe_load(f)
@@ -178,7 +183,7 @@ def _main():
     with tempfile.TemporaryDirectory() as local_store:
 
         local_store = Path(local_store)
-        projects = data["docsets"]
+        projects = data["docsets"][tier]
 
         max_workers = len(projects)
 

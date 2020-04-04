@@ -2,24 +2,30 @@ name: dash-docs
 channels:
   - conda-forge
 dependencies:
-  - alembic
-  - arviz
-  - basemap
   - bottleneck
-  - bqplot
-  - breathe
   - cartopy
+  - cfgrib
   - cftime
+  - climpred
   - dask
+  - dask-jobqueue
+  - dask-kubernetes
+  - dask-sphinx-theme
+  - distributed
   - doc2dash
   - docker-py
   - docrep
-  - doxygen
   - escapism
   - fastapi
   - fsspec
   - h5netcdf
+  - intake
+  - ipyleaflet
   - ipywidgets
+  - iris
+  - jax
+  - jupyter_telemetry
+  - jupyterhub
   - jupyterlab
   - make
   - matplotlib>3
@@ -30,15 +36,11 @@ dependencies:
   - numba
   - numpydoc
   - paramiko
-  - phantomjs
   - pip
   - pygithub
-  - pytorch
   - recommonmark
   - scipy
   - seaborn
-  - selenium
-  - skorch
   - sparse
   - sphinx-automodapi
   - sphinx-click
@@ -48,12 +50,16 @@ dependencies:
   - sphinx_bootstrap_theme
   - sphinx_rtd_theme
   - tqdm
+  - trio
   - xarray
-  - zfpy
+  - xgcm
+  - xtensor
+  - zarr
   - pip:
       - git+https://github.com/pandas-dev/pandas-sphinx-theme.git@master
+      - git+https://github.com/pydata/xarray.git
+      - git+https://github.com/numba/numba.git
       - git+https://github.com/lukelbd/sphinx-automodapi@v0.6.proplot-mods
-      - git+https://github.com/lukelbd/proplot.git
       - autodoc-traits
       - markdown-include
       - mkautodoc
