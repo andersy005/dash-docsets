@@ -187,14 +187,14 @@ def _main(tier):
 
         max_workers = len(projects)
 
-        # for project in projects:
-        #     build_docset(project, local_store)
+        for project in projects:
+            build_docset(project, local_store)
 
-        with futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
-            future_tasks = [
-                executor.submit(build_docset, project, local_store)
-                for project in projects
-            ]
+        # with futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
+        #     future_tasks = [
+        #         executor.submit(build_docset, project, local_store)
+        #         for project in projects
+        #     ]
 
         with working_directory(DOCSET_DIR):
             subprocess.check_call(["ls"])
