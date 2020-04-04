@@ -114,3 +114,7 @@ docsets:
     script: mkdocs build
     html_pages: ""
     use_dashing: true
+  - name: zulip
+    repo: zulip/zulip
+    doc_dir: docs
+    html_pages: _build/html
