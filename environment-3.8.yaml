@@ -38,6 +38,7 @@ dependencies:
   - paramiko
   - pip
   - pygithub
+  - rasterio
   - recommonmark
   - scipy
   - seaborn
