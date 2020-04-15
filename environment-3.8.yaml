@@ -37,7 +37,6 @@ dependencies:
   - numpydoc
   - paramiko
   - pip
-  - pygithub
   - rasterio
   - recommonmark
   - scipy

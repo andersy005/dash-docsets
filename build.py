@@ -47,24 +47,9 @@ def working_directory(path):
         os.chdir(prev_cwd)
 
 
-def create_feed(project_info):
+def create_feed(project_info, latest_tag):
     from xml.etree.ElementTree import Element, SubElement, tostring
     from bs4 import BeautifulSoup
-    from github import Github
-
-    TOKEN = os.environ.get("GH_TOKEN", None)
-
-    if TOKEN is not None:
-        g = Github(TOKEN)
-    else:
-        g = Github()
-
-    repo = g.get_repo(project_info["repo"])
-    try:
-        latest_tag = list(repo.get_tags())[0].name
-    except IndexError:
-        latest_tag = "unknown"
-    print(f"Rate Limit: {g.rate_limiting}")
 
     feed_filename = f"{FEED_DIR}/{project_info['name']}.xml"
     base_url = (
@@ -88,6 +73,8 @@ def build_docset(project_info, local_store):
     Build Dash Docset for a project
     """
 
+    latest_tag = ""
+
     try:
         base_url = "https://github.com"
         repo_link = f"{base_url}/{project_info['repo']}.git"
@@ -95,6 +82,11 @@ def build_docset(project_info, local_store):
         doc_dir = folder_name / project_info["doc_dir"]
         cmd = ["git", "clone", repo_link, folder_name.as_posix()]
         subprocess.check_call(cmd)
+
+        with working_directory(folder_name):
+            latest_tag = os.popen("git describe --abbrev=0 --tags").read().strip()
+            if not latest_tag:
+                latest_tag = "unknown"
 
         with working_directory(doc_dir):
             if "script" in project_info:
@@ -166,7 +158,7 @@ def build_docset(project_info, local_store):
 
             subprocess.check_call(tar_cmd)
 
-        create_feed(project_info)
+        create_feed(project_info, latest_tag)
     except Exception as e:
         print(e)
 

@@ -32,7 +32,6 @@ dependencies:
   - paramiko
   - phantomjs
   - pip
-  - pygithub
   - pytorch
   - recommonmark
   - scipy
