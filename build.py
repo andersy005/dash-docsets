@@ -58,7 +58,7 @@ def create_feed(project_info, latest_tag):
 
     entry = Element("entry")
     version = SubElement(entry, "version")
-    version.text = f"master.post.{latest_tag}"
+    version.text = f"master.@.{latest_tag}"
     url = SubElement(entry, "url")
     url.text = f"{base_url}/{project_info['name']}.tgz"
 
