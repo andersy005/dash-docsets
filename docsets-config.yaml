@@ -12,6 +12,10 @@ docsets:
       repo: dask/dask-jobqueue
       doc_dir: docs
       html_pages: _build/html
+    - name: zict
+      repo: dask/zict
+      doc_dir: doc
+      html_pages: build/html
     - name: zarr
       repo: zarr-developers/zarr-python
       doc_dir: docs
