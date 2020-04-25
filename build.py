@@ -84,7 +84,8 @@ def build_docset(project_info, local_store):
         subprocess.check_call(cmd)
 
         with working_directory(folder_name):
-            latest_tag = os.popen("git describe --abbrev=0 --tags").read().strip()
+            # latest_tag = os.popen("git describe --abbrev=0 --tags").read().strip()
+            latest_tag = os.popen("git rev-parse --short HEAD").read().strip()
             if not latest_tag:
                 latest_tag = "unknown"
 
