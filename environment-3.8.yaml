@@ -73,3 +73,5 @@ dependencies:
       - sphinxcontrib-trio
       - sphinx-fortran
       - sphinx_autodoc_typehints
+      - jaxlib
+      - jax
