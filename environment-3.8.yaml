@@ -72,3 +72,4 @@ dependencies:
       - sphinxcontrib-napoleon
       - sphinxcontrib-trio
       - sphinx-fortran
+      - sphinx_autodoc_typehints
