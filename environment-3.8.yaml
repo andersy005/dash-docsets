@@ -58,7 +58,7 @@ dependencies:
   - xtensor
   - zarr
   - pip:
-      - git+https://github.com/pandas-dev/pandas-sphinx-theme.git@master
+      - pydata-sphinx-theme
       - git+https://github.com/pydata/xarray.git
       - git+https://github.com/numba/numba.git
       - git+https://github.com/lukelbd/sphinx-automodapi@v0.6.proplot-mods
@@ -74,5 +74,6 @@ dependencies:
       - sphinxcontrib-trio
       - sphinx-fortran
       - sphinx_autodoc_typehints
+      - sphinxcontrib-autoprogram
       - jaxlib
       - jax
