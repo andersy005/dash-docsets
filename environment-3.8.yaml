@@ -19,11 +19,13 @@ dependencies:
   - fastapi
   - fsspec
   - h5netcdf
+  - heapdict
   - intake
   - ipyleaflet
   - ipywidgets
   - iris
   - jax
+  - jupyter-repo2docker
   - jupyter_telemetry
   - jupyterhub
   - jupyterlab
@@ -55,7 +57,6 @@ dependencies:
   - xgcm
   - xtensor
   - zarr
-  - heapdict
   - pip:
       - git+https://github.com/pandas-dev/pandas-sphinx-theme.git@master
       - git+https://github.com/pydata/xarray.git
