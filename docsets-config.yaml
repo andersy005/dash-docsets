@@ -78,6 +78,10 @@ docsets:
       doc_dir: docs
       html_pages: build/html
       script: sphinx-build -b html . build/html
+    - name: numba
+      repo: numba/numba
+      doc_dir: docs
+      html_pages: _build/html
     - name: ipywidgets
       repo: jupyter-widgets/ipywidgets
       doc_dir: docs
@@ -93,10 +97,6 @@ docsets:
     #   repo: arviz-devs/arviz
     #   doc_dir: doc
     #   html_pages: _build/html
-    - name: numba
-      repo: numba/numba
-      doc_dir: docs
-      html_pages: _build/html
     - name: skorch
       repo: skorch-dev/skorch
       doc_dir: docs
