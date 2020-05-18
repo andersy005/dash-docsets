@@ -79,7 +79,6 @@ jobs:
     environment:
       SPHINXOPTS: "-j4"
       CONDA_PREFIX: "/opt/conda"
-      GO111MODULE: "on"
     steps:
       # Get our data and merge with upstream
       # - checkout
@@ -115,10 +114,17 @@ jobs:
             fi
 
       - run:
-          name: Install Go
+          name: Install singularity deps
           command: |
-            apt update -y
-            apt install golang-go -y
+            apt-get update -y && \
+            apt-get install -f -y build-essential libssl-dev uuid-dev squashfs-tools libseccomp-dev cryptsetup-bin libgpgme-dev
+      - run:
+          name: Install Go 1.13.4
+          command: |
+            wget https://dl.google.com/go/go1.13.4.linux-amd64.tar.gz
+            rm -rf /usr/local/go
+            tar -C /usr/local -xzf go1.13.4.linux-amd64.tar.gz
+            ln -s /usr/local/go/bin/go /usr/local/bin/go
       - run:
           name: Install Dependencies
           command: |
