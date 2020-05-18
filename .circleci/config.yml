@@ -117,7 +117,7 @@ jobs:
           name: Install singularity deps
           command: |
             apt-get update -y && \
-            apt-get install -f -y build-essential libssl-dev uuid-dev squashfs-tools libseccomp-dev cryptsetup-bin libgpgme-dev
+            apt-get install -f -y build-essential libssl-dev uuid-dev squashfs-tools libseccomp-dev cryptsetup-bin libgpgme-dev pkg-config
       - run:
           name: Install Go 1.13.4
           command: |
