@@ -3,49 +3,32 @@ channels:
   - conda-forge
 dependencies:
   - alembic
-  - arviz
   - basemap
   - bottleneck
   - bqplot
   - breathe
   - cartopy
   - cftime
-  - dask
   - doc2dash
-  - docker-py
   - docrep
   - doxygen
-  - escapism
-  - fastapi
-  - fsspec
   - h5netcdf
-  - ipywidgets
   - jupyterlab
   - make
   - matplotlib>3
-  - msgpack-python
   - nbsphinx
   - netcdf4
   - nodejs
-  - numba
+  - numpy
   - numpydoc
   - paramiko
-  - phantomjs
   - pip
   - pytorch
   - recommonmark
   - scipy
   - seaborn
-  - selenium
   - skorch
   - sparse
-  - sphinx-automodapi
-  - sphinx-click
-  - sphinx-copybutton
-  - sphinx-gallery
-  - sphinx-issues
-  - sphinx_bootstrap_theme
-  - sphinx_rtd_theme
   - tqdm
   - xarray
   - zfpy
@@ -55,13 +38,20 @@ dependencies:
       - git+https://github.com/lukelbd/sphinx-automodapi@v0.6.proplot-mods
       - git+https://github.com/lukelbd/proplot.git
       - autodoc-traits
+      - m2r
       - markdown-include
       - mkautodoc
       - mkdocs
       - mkdocs-material
-      - m2r
+      - sphinx-automodapi
+      - sphinx-click
+      - sphinx-copybutton
+      - sphinx-fortran
+      - sphinx-gallery
+      - sphinx-issues
       - sphinx-jsonschema
       - sphinx-pangeo-theme
+      - sphinx_bootstrap_theme
+      - sphinx_rtd_theme
       - sphinxcontrib-napoleon
       - sphinxcontrib-trio
-      - sphinx-fortran
