@@ -80,7 +80,13 @@ def build_docset(project_info, local_store):
         repo_link = f"{base_url}/{project_info['repo']}.git"
         folder_name = local_store / project_info["name"]
         doc_dir = folder_name / project_info["doc_dir"]
-        cmd = ["git", "clone", repo_link, folder_name.as_posix()]
+        cmd = [
+            "git",
+            "clone",
+            "--recurse-submodules",
+            repo_link,
+            folder_name.as_posix(),
+        ]
         subprocess.check_call(cmd)
 
         with working_directory(folder_name):
