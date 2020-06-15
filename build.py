@@ -164,6 +164,8 @@ def build_docset(project_info, local_store):
             ]
 
             subprocess.check_call(tar_cmd)
+            cmd = f"rm -rf {project_info['name']}.docset"
+            subprocess.check_call(cmd, shell=True)
 
         create_feed(project_info, latest_tag)
     except Exception as e:
@@ -196,9 +198,6 @@ def _main(config):
             ]
 
         with working_directory(DOCSET_DIR):
-            subprocess.check_call(["ls"])
-            cmd = "rm -rf *.docset"
-            subprocess.check_call(cmd, shell=True)
             subprocess.check_call(["ls"])
 
 
