@@ -64,7 +64,7 @@ jobs:
       - name: Update Docsets + Feeds
         run: |
           cp -r ./images README.md ../
-          rm -rf ./* .gitignore .isort.cfg .pre-commit-config.yaml ./.circleci
+          rm -rf .gitignore .isort.cfg .pre-commit-config.yaml ./.circleci
           mkdir -p ./docsets ./feeds
           # cp -r /tmp/workspace/docsets/* ./docsets/
           # cp -r /tmp/workspace/feeds/* ./feeds/
@@ -81,3 +81,10 @@ jobs:
           git config --global user.name "Samaritan"
           git add -A
           git commit -m "Automated deploy"
+
+      - name: Push commit
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: docsets
+          force: true
