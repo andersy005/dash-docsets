@@ -42,3 +42,17 @@ jobs:
         with:
           name: dash docsets feeds
           path: feeds
+
+  deploy:
+    name: dash-docsets-deploy
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/download-artifact@v1
+        with:
+          path: /tmp/workspace
+
+      - name: Display structure of downloaded files
+        run: ls -R
+        working-directory: /tmp/workspace
