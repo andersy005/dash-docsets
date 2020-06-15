@@ -58,6 +58,7 @@ dependencies:
   - xtensor
   - zarr
   - pip:
+      - pip
       - pydata-sphinx-theme
       - git+https://github.com/pydata/xarray.git
       - git+https://github.com/numba/numba.git
