@@ -1,0 +1,25 @@
+name: CI
+on:
+  push:
+    branches:
+      - "master"
+
+jobs:
+  build:
+    name: dash-docsets-build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: goanpeca/setup-miniconda@v1
+        with:
+          python-version: 3.7
+          mamba-version: "*"
+          channels: conda-forge,defaults
+          channel-priority: true
+          activate-environment: dash-docs
+          environment-file: ci/environment.yml
+      - shell: bash -l {0}
+        run: |
+          conda info
+          conda list
+          printenv | sort
