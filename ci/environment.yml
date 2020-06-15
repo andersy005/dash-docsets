@@ -35,6 +35,7 @@ dependencies:
   - jupyter_telemetry
   - jupyterhub
   - jupyterlab
+  - jupytext
   - make
   - matplotlib>3
   - mkdocs
@@ -61,8 +62,10 @@ dependencies:
   - sphinx-copybutton
   - sphinx-gallery
   - sphinx-issues
+  - sphinx=2.4.4
   - sphinx_bootstrap_theme
   - sphinx_rtd_theme
+  - tabulate
   - tqdm
   - trio
   - xarray

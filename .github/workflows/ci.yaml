@@ -64,16 +64,17 @@ jobs:
           cp -r ./images README.md ../
           rm -rf ./* .gitignore .isort.cfg .pre-commit-config.yaml ./.circleci
           mkdir -p ./docsets ./feeds
-          cp -r /tmp/workspace/docsets/* ./docsets/
-          cp -r /tmp/workspace/feeds/* ./feeds/
+          # cp -r /tmp/workspace/docsets/* ./docsets/
+          # cp -r /tmp/workspace/feeds/* ./feeds/
+          rsync -a /tmp/workspace/ ./
           cp -r ../images ../README.md ./
           ls -ltrh ./docsets
           ls -ltrh ./feeds
-          git status
-          git remote -v
 
       - name: Commit files
         run: |
+          git status
+          git remote -v
           git config --global user.email "bot@andersonbanihirwe.dev"
           git config --global user.name "Samaritan"
           git add -A
