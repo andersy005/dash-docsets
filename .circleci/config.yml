@@ -51,8 +51,9 @@ jobs:
           name: Install Dependencies
           command: |
             go get -u github.com/technosophos/dashing
-            conda env update -n base -f environment-3.8.yaml
-            conda list
+            conda install -c conda-forge mamba
+            mamba env update -n base -f environment-3.8.yaml
+            mamba list
 
       - run:
           name: Build Dash Docsets
@@ -129,8 +130,9 @@ jobs:
           name: Install Dependencies
           command: |
             go get -u github.com/technosophos/dashing
-            conda env update -n base -f environment.yaml
-            conda list
+            conda install -c conda-forge mamba
+            mamba env update -n base -f environment.yaml
+            mamba list
 
       - run:
           name: Build Dash Docsets
