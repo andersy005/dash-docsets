@@ -1,4 +1,4 @@
-[![CircleCI](https://img.shields.io/circleci/project/github/andersy005/dash-docsets/master.svg?style=for-the-badge&logo=circleci)](https://circleci.com/gh/andersy005/dash-docsets)
+[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/andersy005/dash-docsets/CI?logo=github&style=for-the-badge)](https://github.com/andersy005/dash-docsets/actions)
 
 - [Dash Docsets](#dash-docsets)
   - [Docset Feeds](#docset-feeds)
