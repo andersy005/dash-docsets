@@ -46,6 +46,7 @@ dependencies:
   - nodejs
   - numba
   - numpydoc
+  - panel
   - paramiko
   - pip
   - proplot
@@ -85,4 +86,5 @@ dependencies:
       - sphinx_autodoc_typehints
       - sphinxcontrib-autoprogram
       - sphinxcontrib-napoleon
+      - sphinxcontrib-srclinks
       - sphinxcontrib-trio

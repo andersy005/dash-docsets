@@ -99,13 +99,11 @@ def build_docset(project_info, local_store):
             if "script" in project_info:
                 cmd = project_info["script"]
                 out = subprocess.check_call(
-                    cmd, shell=True, stdout=subprocess.PIPE, stderr=sys.stderr
+                    cmd, shell=True, stdout=sys.stdout, stderr=sys.stderr
                 )
             else:
                 cmd = ["make", "html"]
-                out = subprocess.check_call(
-                    cmd, stdout=subprocess.PIPE, stderr=sys.stderr
-                )
+                out = subprocess.check_call(cmd, stdout=sys.stdout, stderr=sys.stderr)
 
         source = (doc_dir / project_info["html_pages"]).as_posix()
         icon_dir = ICON_DIR / project_info["name"]
@@ -128,14 +126,14 @@ def build_docset(project_info, local_store):
                     f"{source}/dashing.json",
                 ]
 
-                subprocess.check_call(cmd, stdout=subprocess.PIPE, stderr=sys.stderr)
+                subprocess.check_call(cmd, stdout=sys.stdout, stderr=sys.stderr)
 
                 cmd = [
                     "mv",
                     f'{project_info["name"]}.docset',
                     f'{DOCSET_DIR.as_posix()}/{project_info["name"]}.docset',
                 ]
-                subprocess.check_call(cmd, stdout=subprocess.PIPE, stderr=sys.stderr)
+                subprocess.check_call(cmd, stdout=sys.stdout, stderr=sys.stderr)
 
         else:
             cmd = [
@@ -153,7 +151,7 @@ def build_docset(project_info, local_store):
             if icons:
                 cmd += icons
 
-            subprocess.check_call(cmd, stdout=subprocess.PIPE, stderr=sys.stderr)
+            subprocess.check_call(cmd, stdout=sys.stdout, stderr=sys.stderr)
 
         with working_directory(DOCSET_DIR):
 
@@ -165,11 +163,9 @@ def build_docset(project_info, local_store):
                 f"{project_info['name']}.docset",
             ]
 
-            subprocess.check_call(tar_cmd, stdout=subprocess.PIPE, stderr=sys.stderr)
+            subprocess.check_call(tar_cmd, stdout=sys.stdout, stderr=sys.stderr)
             cmd = f"rm -rf {project_info['name']}.docset"
-            subprocess.check_call(
-                cmd, shell=True, stdout=subprocess.PIPE, stderr=sys.stderr
-            )
+            subprocess.check_call(cmd, shell=True, stdout=sys.stdout, stderr=sys.stderr)
 
         create_feed(project_info, latest_tag)
     except Exception as e:
@@ -202,7 +198,7 @@ def _main(config):
             ]
 
         with working_directory(DOCSET_DIR):
-            subprocess.check_call(["ls"], stdout=subprocess.PIPE, stderr=sys.stderr)
+            subprocess.check_call(["ls"], stdout=sys.stdout, stderr=sys.stderr)
 
 
 if __name__ == "__main__":
