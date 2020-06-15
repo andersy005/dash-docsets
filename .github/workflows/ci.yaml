@@ -35,12 +35,12 @@ jobs:
 
       - uses: actions/upload-artifact@v2
         with:
-          name: dash docsets artifacts
+          name: docsets
           path: docsets
 
       - uses: actions/upload-artifact@v2
         with:
-          name: dash docsets feeds
+          name: feeds
           path: feeds
 
   deploy:
