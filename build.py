@@ -172,17 +172,17 @@ def build_docset(project_info, local_store):
 
 @click.command()
 @click.option(
-    "-t", "--tier", default="tier-1", type=str, show_default=True,
+    "-c", "--config", type=click.Path(exists=True), show_default=True,
 )
-def _main(tier):
+def _main(config):
 
-    with open(HOME_DIR / "docsets-config.yaml") as f:
+    with open(HOME_DIR / config) as f:
         data = yaml.safe_load(f)
 
     with tempfile.TemporaryDirectory() as local_store:
 
         local_store = Path(local_store)
-        projects = data["docsets"][tier]
+        projects = data["docsets"]
 
         max_workers = len(projects)
 
