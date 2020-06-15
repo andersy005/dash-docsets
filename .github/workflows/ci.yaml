@@ -14,7 +14,7 @@ jobs:
         with:
           python-version: 3.7
           mamba-version: "*"
-          channels: conda-forge,defaults
+          channels: conda-forge
           channel-priority: true
           add-pip-as-python-dependency: true
           activate-environment: dash-docs
@@ -49,10 +49,31 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/download-artifact@v1
+      - uses: actions/download-artifact@v2
         with:
           path: /tmp/workspace
 
       - name: Display structure of downloaded files
         run: ls -R
         working-directory: /tmp/workspace
+
+      - name: Update Docsets + Feeds
+        run: |
+          cp -r ./images README.md ../
+          git checkout docsets
+          rm -rf ./* .gitignore .isort.cfg .pre-commit-config.yaml ./.circleci
+          mkdir -p ./docsets ./feeds
+          cp -r /tmp/workspace/docsets/* ./docsets/
+          cp -r /tmp/workspace/feeds/* ./feeds/
+          cp -r ../images ../README.md ./
+          ls -ltrh ./docsets
+          ls -ltrh ./feeds
+          git status
+          git remote -v
+
+      - name: Commit files
+        run: |
+          git config --global user.email "bot@andersonbanihirwe.dev"
+          git config --global user.name "Samaritan"
+          git add -A
+          git commit -m "Automated deploy"
