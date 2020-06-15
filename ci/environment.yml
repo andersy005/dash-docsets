@@ -2,7 +2,11 @@ name: dash-docs
 channels:
   - conda-forge
 dependencies:
+  - alembic
+  - basemap
   - bottleneck
+  - bqplot
+  - breathe
   - cartopy
   - cfgrib
   - cftime
@@ -15,6 +19,7 @@ dependencies:
   - doc2dash
   - docker-py
   - docrep
+  - doxygen
   - escapism
   - fastapi
   - fsspec
@@ -24,7 +29,6 @@ dependencies:
   - ipyleaflet
   - ipywidgets
   - iris
-  - jax
   - jax
   - jaxlib
   - jupyter-repo2docker
@@ -45,6 +49,8 @@ dependencies:
   - pip
   - proplot
   - pydata-sphinx-theme
+  - python=3.7
+  - pytorch
   - rasterio
   - recommonmark
   - scipy
@@ -63,6 +69,7 @@ dependencies:
   - xgcm
   - xtensor
   - zarr
+  - zfpy
   - pip:
       - autodoc-traits
       - m2r

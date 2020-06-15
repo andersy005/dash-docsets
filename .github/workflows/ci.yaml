@@ -16,6 +16,7 @@ jobs:
           mamba-version: "*"
           channels: conda-forge,defaults
           channel-priority: true
+          add-pip-as-python-dependency: true
           activate-environment: dash-docs
           environment-file: ci/environment.yml
       - shell: bash -l {0}
