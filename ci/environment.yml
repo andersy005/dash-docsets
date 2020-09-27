@@ -29,8 +29,9 @@ dependencies:
   - ipyleaflet
   - ipywidgets
   - iris
-  - jax
-  - jaxlib
+  - invoke
+  - jax>=0.2.0
+  - jaxlib>=0.1.55
   - jupyter-repo2docker
   - jupyter_telemetry
   - jupyterhub
@@ -64,13 +65,13 @@ dependencies:
   - sphinx-copybutton
   - sphinx-gallery
   - sphinx-issues
-  - sphinx=2.4.4
+  - sphinx>2.4.4
   - sphinx_bootstrap_theme
   - sphinx_rtd_theme
   - tabulate
   - tqdm
   - trio
-  - xarray
+  - xarray>=0.16
   - xgcm
   - xrft
   - xtensor

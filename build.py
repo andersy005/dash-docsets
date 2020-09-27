@@ -1,4 +1,4 @@
-import concurrent
+import concurrent.futures
 import contextlib
 import itertools
 import json
@@ -10,6 +10,9 @@ from pathlib import Path
 
 import click
 import yaml
+
+# from invoke import task
+
 
 ERRORS = []
 FNULL = open(os.devnull, "w")
@@ -31,7 +34,7 @@ def build_feed_readme(
     files = sorted(p.rglob("*.xml"))
     with open(feed_file, "w") as fpt:
         print(
-            "# Docset Feeds\n\nYou can subscribe to the following feeds with a single click.\n\n```bash\n dash-feed://<URL encoded feed URL>\n```\n\n",
+            "# Docset Feeds\n\nYou can subscribe to the following feeds with a single click.\n\n```bash\n dash-feed://<URL encoded feed URL>\n```\n",
             file=fpt,
         )
         for file in files:
@@ -196,9 +199,10 @@ def _main(config):
         data = yaml.safe_load(f)
 
     with tempfile.TemporaryDirectory() as local_store:
+        import random
 
         local_store = Path(local_store)
-        projects = data["docsets"][:3]
+        projects = random.sample(data["docsets"], 3)
 
         max_workers = len(projects)
 
@@ -227,7 +231,8 @@ def _main(config):
         print("NO ERRORS")
     print("*" * 60)
 
+    build_feed_readme()
+
 
 if __name__ == "__main__":
     _main()
-    build_feed_readme()
