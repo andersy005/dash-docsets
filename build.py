@@ -37,6 +37,8 @@ def build_feed_readme(
         for file in files:
             print(f"- **{file.stem}**: {root}/{file.stem}.xml", file=fpt)
 
+        print("\n![](../images/how-to-add-feed.png)", file=fpt)
+
 
 def dashing_config(name, package, index="index.html", allow_js=True):
     config = {
