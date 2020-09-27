@@ -72,6 +72,7 @@ dependencies:
   - trio
   - xarray
   - xgcm
+  - xrft
   - xtensor
   - zarr
   - zfpy

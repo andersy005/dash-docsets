@@ -36,7 +36,7 @@ docsets:
     doc_dir: doc
     html_pages: _build/html
   - name: climpred
-    repo: bradyrx/climpred
+    repo: pangeo-data/climpred
     doc_dir: docs
     html_pages: build/html
   - name: intake
@@ -49,6 +49,10 @@ docsets:
     html_pages: build/html
   - name: xgcm
     repo: xgcm/xgcm
+    doc_dir: doc
+    html_pages: _build/html
+  - name: xrft
+    repo: xgcm/xrft
     doc_dir: doc
     html_pages: _build/html
   - name: jupyterhub
