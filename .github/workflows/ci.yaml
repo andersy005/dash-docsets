@@ -2,12 +2,13 @@ name: CI
 on:
   push:
     branches:
-      - "master"
+      - 'master'
   schedule:
-    - cron: "0 0 * * 0" # “At 00:00 on Sunday.”"
+    - cron: '0 0 * * 0,3' # “At 00:00 on Sunday and Wednesday."
 
 jobs:
   build:
+    if: "!contains(github.event.head_commit.message, 'skip ci')"
     name: dash-docsets-build
     runs-on: ubuntu-latest
     steps:
@@ -15,7 +16,7 @@ jobs:
       - uses: goanpeca/setup-miniconda@v1
         with:
           python-version: 3.7
-          mamba-version: "*"
+          mamba-version: '*'
           channels: conda-forge
           channel-priority: true
           add-pip-as-python-dependency: true
@@ -29,9 +30,9 @@ jobs:
 
       - shell: bash -l {0}
         env:
-          SPHINXOPTS: "-j4"
-          CONDA_PREFIX: "/usr/share/miniconda/condabin/conda"
-          GO111MODULE: "on" # https://stackoverflow.com/questions/56475313/how-to-fix-go-get-warning-modules-disabled-by-go111module-auto-in-gopath-src
+          SPHINXOPTS: '-j4'
+          CONDA_PREFIX: '/usr/share/miniconda/condabin/conda'
+          GO111MODULE: 'on' # https://stackoverflow.com/questions/56475313/how-to-fix-go-get-warning-modules-disabled-by-go111module-auto-in-gopath-src
         run: |
           python build.py --config docsets.yaml
 
@@ -64,7 +65,7 @@ jobs:
       - name: Update Docsets + Feeds
         run: |
           cp -r ./images README.md ../
-          rm -rf .gitignore .isort.cfg .pre-commit-config.yaml ./.circleci
+          rm -rf .gitignore .isort.cfg .pre-commit-config.yaml
           mkdir -p ./docsets ./feeds
           # cp -r /tmp/workspace/docsets/* ./docsets/
           # cp -r /tmp/workspace/feeds/* ./feeds/
@@ -77,10 +78,10 @@ jobs:
         run: |
           git status
           git remote -v
-          git config --global user.email "bot@andersonbanihirwe.dev"
-          git config --global user.name "Samaritan"
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
           git add -A
-          git commit -m "Automated deploy"
+          git commit -m "[skip ci] Automated deploy"
 
       - name: Push commit
         uses: ad-m/github-push-action@master
