@@ -76,17 +76,23 @@ dependencies:
   - xtensor
   - zarr
   - zfpy
+  - coconut
   - pip:
       - autodoc-traits
       - m2r
       - markdown-include
       - mkautodoc
       - myst-nb
+      - sphinx-book-theme
       - sphinx-fortran
       - sphinx-jsonschema
+      - sphinx-panels
       - sphinx-pangeo-theme
+      - sphinx-tabs
       - sphinx_autodoc_typehints
       - sphinxcontrib-autoprogram
+      - sphinxcontrib-bibtex
       - sphinxcontrib-napoleon
       - sphinxcontrib-srclinks
       - sphinxcontrib-trio
+      - sphinxcontrib-apidoc

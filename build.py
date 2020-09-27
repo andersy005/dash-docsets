@@ -7,7 +7,6 @@ import subprocess
 import sys
 import tempfile
 from concurrent import futures
-from multiprocessing import cpu_count
 from pathlib import Path
 from pprint import pprint as print
 
@@ -192,7 +191,7 @@ def _main(config):
         # for project in projects:
         #     build_docset(project, local_store)
 
-        with futures.ProcessPoolExecutor(max_workers=cpu_count() * 2) as executor:
+        with futures.ProcessPoolExecutor(max_workers=max_workers) as executor:
             future_tasks = [
                 executor.submit(build_docset, project, local_store)
                 for project in projects
