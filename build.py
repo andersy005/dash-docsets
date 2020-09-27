@@ -1,3 +1,4 @@
+import concurrent
 import contextlib
 import itertools
 import json
@@ -6,6 +7,7 @@ import subprocess
 import sys
 import tempfile
 from concurrent import futures
+from multiprocessing import cpu_count
 from pathlib import Path
 from pprint import pprint as print
 
@@ -190,11 +192,16 @@ def _main(config):
         # for project in projects:
         #     build_docset(project, local_store)
 
-        with futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
+        with futures.ProcessPoolExecutor(max_workers=cpu_count() * 2) as executor:
             future_tasks = [
                 executor.submit(build_docset, project, local_store)
                 for project in projects
             ]
+            for future in futures.as_completed(future_tasks):
+                try:
+                    _ = future.result()
+                except Exception as exc:
+                    print(exc)
 
         with working_directory(DOCSET_DIR):
             subprocess.check_call(["ls"], stdout=FNULL, stderr=sys.stderr)
