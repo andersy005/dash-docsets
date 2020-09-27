@@ -6,9 +6,7 @@ import os
 import subprocess
 import sys
 import tempfile
-from concurrent import futures
 from pathlib import Path
-from pprint import pprint as print
 
 import click
 import yaml
@@ -22,6 +20,22 @@ ICON_DIR = HOME_DIR / "icons"
 DOCSET_DIR.mkdir(parents=True, exist_ok=True)
 FEED_DIR = HOME_DIR / "feeds"
 FEED_DIR.mkdir(parents=True, exist_ok=True)
+
+
+def build_feed_readme(
+    feed_dir=FEED_DIR,
+    root="https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds",
+    feed_file=FEED_DIR / "README.md",
+):
+    p = Path(feed_dir)
+    files = sorted(p.rglob("*.xml"))
+    with open(feed_file, "w") as fpt:
+        print(
+            "# Docset Feeds\n\nYou can subscribe to the following feeds with a single click.\n\n```bash\n dash-feed://<URL encoded feed URL>\n```\n\n",
+            file=fpt,
+        )
+        for file in files:
+            print(f"- **{file.stem}**: {root}/{file.stem}.xml", file=fpt)
 
 
 def dashing_config(name, package, index="index.html", allow_js=True):
@@ -53,12 +67,11 @@ def working_directory(path):
 
 def create_feed(project_info, latest_tag):
     from xml.etree.ElementTree import Element, SubElement, tostring
+
     from bs4 import BeautifulSoup
 
     feed_filename = f"{FEED_DIR}/{project_info['name']}.xml"
-    base_url = (
-        "https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/docsets"
-    )
+    base_url = "https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/docsets"
 
     entry = Element("entry")
     version = SubElement(entry, "version")
@@ -94,7 +107,6 @@ def build_docset(project_info, local_store):
         subprocess.check_call(cmd)
 
         with working_directory(folder_name):
-            # latest_tag = os.popen("git describe --abbrev=0 --tags").read().strip()
             latest_tag = os.popen("git rev-parse --short HEAD").read().strip()
             if not latest_tag:
                 latest_tag = "unknown"
@@ -102,9 +114,7 @@ def build_docset(project_info, local_store):
         with working_directory(doc_dir):
             if "script" in project_info:
                 cmd = project_info["script"]
-                out = subprocess.check_call(
-                    cmd, shell=True, stdout=FNULL, stderr=sys.stderr
-                )
+                out = subprocess.check_call(cmd, shell=True, stdout=FNULL, stderr=sys.stderr)
             else:
                 cmd = ["make", "html"]
                 out = subprocess.check_call(cmd, stdout=FNULL, stderr=sys.stderr)
@@ -175,7 +185,10 @@ def build_docset(project_info, local_store):
 
 @click.command()
 @click.option(
-    "-c", "--config", type=click.Path(exists=True), show_default=True,
+    "-c",
+    "--config",
+    type=click.Path(exists=True),
+    show_default=True,
 )
 def _main(config):
 
@@ -185,19 +198,15 @@ def _main(config):
     with tempfile.TemporaryDirectory() as local_store:
 
         local_store = Path(local_store)
-        projects = data["docsets"]
+        projects = data["docsets"][:3]
 
         max_workers = len(projects)
 
-        # for project in projects:
-        #     build_docset(project, local_store)
-
-        with futures.ProcessPoolExecutor(max_workers=max_workers) as executor:
+        with concurrent.futures.ProcessPoolExecutor(max_workers=max_workers) as executor:
             future_tasks = [
-                executor.submit(build_docset, project, local_store)
-                for project in projects
+                executor.submit(build_docset, project, local_store) for project in projects
             ]
-            for future in futures.as_completed(future_tasks):
+            for future in concurrent.futures.as_completed(future_tasks):
                 try:
                     _ = future.result()
                 except Exception as exc:
@@ -209,10 +218,16 @@ def _main(config):
             subprocess.check_call(cmd, shell=True, stdout=FNULL, stderr=sys.stderr)
             subprocess.check_call(["ls"])
 
-    print("*" * 100)
-    print(f"ERRORS and/or EXCEPTIONS:\n\n{ERRORS}")
-    print("*" * 100)
+    print("*" * 60)
+    if ERRORS:
+        print("ERRORS and/or EXCEPTIONS")
+        for error in ERRORS:
+            print(error)
+    else:
+        print("NO ERRORS")
+    print("*" * 60)
 
 
 if __name__ == "__main__":
     _main()
+    build_feed_readme()
