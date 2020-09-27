@@ -13,6 +13,7 @@ from pprint import pprint as print
 import click
 import yaml
 
+ERRORS = []
 FNULL = open(os.devnull, "w")
 
 HOME_DIR = Path(".").absolute()
@@ -200,13 +201,17 @@ def _main(config):
                 try:
                     _ = future.result()
                 except Exception as exc:
-                    print(exc)
+                    ERRORS.append(exc)
 
         with working_directory(DOCSET_DIR):
             subprocess.check_call(["ls"], stdout=FNULL, stderr=sys.stderr)
             cmd = "rm -rf *.docset"
             subprocess.check_call(cmd, shell=True, stdout=FNULL, stderr=sys.stderr)
             subprocess.check_call(["ls"])
+
+    print("*" * 100)
+    print(f"ERRORS and/or EXCEPTIONS:\n\n{ERRORS}")
+    print("*" * 100)
 
 
 if __name__ == "__main__":
