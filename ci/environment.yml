@@ -41,6 +41,7 @@ dependencies:
   - mkdocs
   - mkdocs-material
   - msgpack-python
+  - myst-parser
   - nbsphinx
   - netcdf4
   - nodejs
@@ -79,7 +80,7 @@ dependencies:
       - m2r
       - markdown-include
       - mkautodoc
-      - pip
+      - myst-nb
       - sphinx-fortran
       - sphinx-jsonschema
       - sphinx-pangeo-theme

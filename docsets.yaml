@@ -1,4 +1,12 @@
 docsets:
+  - name: myst-parser
+    repo: executablebooks/MyST-Parser
+    doc_dir: docs
+    html_pages: _build/html
+  - name: myst-nb
+    repo: executablebooks/MyST-NB
+    doc_dir: docs
+    html_pages: _build/html
   - name: dask
     repo: dask/dask
     doc_dir: docs
