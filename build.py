@@ -11,9 +11,6 @@ from pathlib import Path
 import click
 import yaml
 
-# from invoke import task
-
-
 ERRORS = []
 FNULL = open(os.devnull, "w")
 
@@ -182,8 +179,8 @@ def build_docset(project_info, local_store):
 
             subprocess.check_call(tar_cmd, stdout=FNULL, stderr=sys.stderr)
         create_feed(project_info, latest_tag)
-    except Exception as e:
-        print(e)
+    except Exception as exc:
+        raise RuntimeError(f"project_info={project_info}") from exc
 
 
 @click.command()
@@ -199,10 +196,10 @@ def _main(config):
         data = yaml.safe_load(f)
 
     with tempfile.TemporaryDirectory() as local_store:
-        import random
-
+        # import random
+        # projects = random.sample(data["docsets"], 3)
         local_store = Path(local_store)
-        projects = random.sample(data["docsets"], 3)
+        projects = data["docsets"]
 
         max_workers = len(projects)
 
@@ -224,7 +221,7 @@ def _main(config):
 
     print("*" * 60)
     if ERRORS:
-        print("ERRORS and/or EXCEPTIONS")
+        print(f"{len(ERRORS)} ERRORS and/or EXCEPTIONS")
         for error in ERRORS:
             print(error)
     else:
