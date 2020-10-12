@@ -22,9 +22,9 @@ jobs:
           channel-priority: true
           add-pip-as-python-dependency: true
           activate-environment: dash-docs
-          environment-file: ci/environment.yml
       - shell: bash -l {0}
         run: |
+          mamba env update -f ci/environment.yml
           conda info
           conda list
           printenv | sort
