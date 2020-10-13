@@ -14,17 +14,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        key:
-          [
-            'jupyter',
-            'dask',
-            'zarr',
-            'xarray',
-            'intake',
-            'xgcm',
-            'misc',
-            'pydata',
-          ]
+        key: ['jupyter', 'dask', 'zarr', 'xarray', 'intake', 'misc', 'pydata']
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v2
