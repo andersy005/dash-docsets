@@ -60,10 +60,10 @@ docsets:
       repo: pydata/xarray
       doc_dir: doc
       html_pages: _build/html
-    - name: climpred
-      repo: pangeo-data/climpred
-      doc_dir: docs
-      html_pages: build/html
+    # - name: climpred
+    #   repo: pangeo-data/climpred
+    #   doc_dir: docs
+    #   html_pages: build/html
   intake:
     - name: intake
       repo: intake/intake

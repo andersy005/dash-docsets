@@ -102,6 +102,8 @@ def build_docset(project_info, local_store):
         cmd = [
             "git",
             "clone",
+            "--depth",
+            "1",
             "--recurse-submodules",
             repo_link,
             folder_name.as_posix(),

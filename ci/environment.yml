@@ -98,3 +98,4 @@ dependencies:
       - sphinxcontrib-trio
       - sphinxcontrib-apidoc
       - sphinx-autosummary-accessors
+      - scanpydoc
