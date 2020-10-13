@@ -192,16 +192,17 @@ def build_docset(project_info, local_store):
     type=click.Path(exists=True),
     show_default=True,
 )
-def _main(config):
+@click.option("-k", "--key", type=click.STRING, show_default=True)
+def _main(config, key):
 
     with open(HOME_DIR / config) as f:
         data = yaml.safe_load(f)
 
     with tempfile.TemporaryDirectory() as local_store:
-        # import random
-        # projects = random.sample(data["docsets"], 3)
         local_store = Path(local_store)
-        projects = data["docsets"]
+        print(data["docsets"].keys())
+        return
+        projects = data["docsets"][key]
 
         max_workers = len(projects)
 
