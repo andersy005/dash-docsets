@@ -235,4 +235,7 @@ def _main(config, key):
 
 
 if __name__ == "__main__":
-    _main()
+    try:
+        _main()
+    except Exception as exc:
+        print(f"Encountered an exception: {exc}")
