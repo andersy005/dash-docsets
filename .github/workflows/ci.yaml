@@ -14,8 +14,18 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        key: ['jupyter', 'dask', 'zarr', 'xarray', 'intake', 'xgcm', 'misc']
-    timeout-minutes: 40
+        key:
+          [
+            'jupyter',
+            'dask',
+            'zarr',
+            'xarray',
+            'intake',
+            'xgcm',
+            'misc',
+            'pydata',
+          ]
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v2
       - uses: goanpeca/setup-miniconda@v1

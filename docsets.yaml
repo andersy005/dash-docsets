@@ -73,7 +73,7 @@ docsets:
       repo: intake/filesystem_spec
       doc_dir: docs
       html_pages: build/html
-  xgcm:
+  pydata:
     - name: xgcm
       repo: xgcm/xgcm
       doc_dir: doc
@@ -82,6 +82,16 @@ docsets:
       repo: xgcm/xrft
       doc_dir: doc
       html_pages: _build/html
+    - name: sparse
+      repo: pydata/sparse
+      doc_dir: docs
+      html_pages: _build/html
+      script: sphinx-build -W -b html . _build/html
+    - name: proplot
+      repo: lukelbd/proplot
+      doc_dir: docs
+      html_pages: _build/html
+      script: sphinx-build -b html -D nbsphinx_allow_errors=True . _build/html
   misc:
     - name: xtensor
       repo: xtensor-stack/xtensor
@@ -91,11 +101,6 @@ docsets:
       repo: python-trio/trio
       doc_dir: docs
       html_pages: build/html
-    - name: sparse
-      repo: pydata/sparse
-      doc_dir: docs
-      html_pages: _build/html
-      script: sphinx-build -W -b html . _build/html
     - name: jax
       repo: google/jax
       doc_dir: docs
@@ -106,11 +111,6 @@ docsets:
       doc_dir: docs
       html_pages: _build/html
 
-    - name: proplot
-      repo: lukelbd/proplot
-      doc_dir: docs
-      html_pages: _build/html
-      script: sphinx-build -b html -D nbsphinx_allow_errors=True . _build/html
     # # - name: arviz
     # #   repo: arviz-devs/arviz
     # #   doc_dir: doc
