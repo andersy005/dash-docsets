@@ -200,8 +200,6 @@ def _main(config, key):
 
     with tempfile.TemporaryDirectory() as local_store:
         local_store = Path(local_store)
-        print(data["docsets"].keys())
-        return
         projects = data["docsets"][key]
 
         max_workers = len(projects)
