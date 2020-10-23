@@ -78,6 +78,10 @@ dependencies:
   - zarr
   - zfpy
   - coconut
+  - pytablewriter
+  - pyarrow
+  - pygit2
+  - paramiko
   - pip:
       - autodoc-traits
       - m2r
@@ -99,3 +103,6 @@ dependencies:
       - sphinxcontrib-apidoc
       - sphinx-autosummary-accessors
       - scanpydoc
+      - sphinxext-rediraffe
+      - alabaster-jupyterhub
+      - jupyter-telemetry
