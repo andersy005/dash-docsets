@@ -69,13 +69,13 @@ jobs:
 
       - name: Update Docsets + Feeds
         run: |
-          cp -r ./images README.md ../
+          # cp -r ./images README.md ../
           rm -rf .gitignore .isort.cfg .pre-commit-config.yaml
           mkdir -p ./docsets ./feeds
           # cp -r /tmp/workspace/docsets/* ./docsets/
           # cp -r /tmp/workspace/feeds/* ./feeds/
           rsync -a /tmp/workspace/ ./
-          cp -r ../images ../README.md ./
+          # cp -r ../images ../README.md ./
           ls -ltrh ./docsets
           ls -ltrh ./feeds
 
@@ -119,6 +119,7 @@ jobs:
           git config --local user.name "GitHub Action"
           git add feeds/README.md
           git commit -m "[skip ci] Automated deploy"
+          ls -ltrh
 
       # - name: Push commit
       #   uses: ad-m/github-push-action@master

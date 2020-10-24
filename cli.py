@@ -224,7 +224,10 @@ def update_feed_list(
             for item in items:
                 print(f"- **{item.stem}**: {root}/{item.stem}.xml", file=fpt)
 
-            print("\n![](../images/how-to-add-feed.png)", file=fpt)
+            print(
+                "\n![](https://github.com/andersy005/dash-docsets/raw/master/images/how-to-add-feed.png)",
+                file=fpt,
+            )
 
 
 if __name__ == "__main__":
