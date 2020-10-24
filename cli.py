@@ -7,6 +7,7 @@ import subprocess
 import tempfile
 from pathlib import Path
 
+import fsspec
 import typer
 import yaml
 from click.core import Argument, Command
@@ -20,6 +21,9 @@ HOME_DIR = Path(".").absolute()
 ICON_DIR = HOME_DIR / "icons"
 DOCSET_DIR = HOME_DIR / "docsets"
 DOCSET_DIR.mkdir(parents=True, exist_ok=True)
+
+FEED_DIR = HOME_DIR / "feeds"
+FEED_DIR.mkdir(parents=True, exist_ok=True)
 
 
 def validate_generator(generator: str):
@@ -117,8 +121,29 @@ def _build_project(
 
             subprocess.run(tar_command, check=True)
             subprocess.run(f"rm -rf {name}.docset", **kwargs)
+        create_feed(name, latest_tag)
     except Exception as exc:
         print(exc)
+
+
+def create_feed(name, latest_tag):
+    from xml.etree.ElementTree import Element, SubElement, tostring
+
+    from bs4 import BeautifulSoup
+
+    feed_filename = f"{FEED_DIR}/{name}.xml"
+    base_url = "https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/docsets"
+
+    entry = Element("entry")
+    version = SubElement(entry, "version")
+    version.text = f"master@{latest_tag}"
+    url = SubElement(entry, "url")
+    url.text = f"{base_url}/{name}.tgz"
+
+    bs = BeautifulSoup(tostring(entry), features="html.parser").prettify()
+
+    with open(feed_filename, "w") as f:
+        f.write(bs)
 
 
 app = typer.Typer(help='Dash docset builder')
@@ -171,6 +196,35 @@ def build_from_config(
         repo = project_info.pop('repo')
 
         _build_project(name, repo, **project_info)
+
+
+@app.command()
+def update_feed_list(
+    feed_file: Path = typer.Argument(f"{FEED_DIR}/README.md"),
+    root: str = typer.Option(
+        "https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds"
+    ),
+    feed_loc: str = typer.Option("https://github.com/andersy005/dash-docsets/tree/docsets/docsets"),
+):
+    """Update docsets feed list"""
+    fs = fsspec.filesystem('https')
+    all_items = fs.ls(feed_loc)
+    items = []
+    for item in all_items:
+        path = Path(item['name'])
+        if item['type'] == 'file' and path.suffix == '.tgz':
+            items.append(path)
+
+    items.sort()
+    with open(feed_file, "w") as fpt:
+        print(
+            "# Docset Feeds\n\nYou can subscribe to the following feeds with a single click.\n\n```bash\n dash-feed://<URL encoded feed URL>\n```\n",
+            file=fpt,
+        )
+        for item in items:
+            print(f"- **{item.stem}**: {root}/{item.stem}.xml", file=fpt)
+
+        print("\n![](../images/how-to-add-feed.png)", file=fpt)
 
 
 if __name__ == "__main__":
