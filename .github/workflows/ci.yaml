@@ -103,7 +103,7 @@ jobs:
         with:
           python-version: 3.8
       - run: |
-          python -m pip install typer fsspec beautifulsoup4 pyyaml requests
+          python -m pip install typer fsspec beautifulsoup4 pyyaml requests aiohttp
 
       - run: |
           python cli.py update-feed-list
