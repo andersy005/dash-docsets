@@ -203,17 +203,10 @@ def update_feed_list(
     root: str = typer.Option(
         "https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds"
     ),
-    feed_loc: str = typer.Option("https://github.com/andersy005/dash-docsets/tree/docsets/docsets"),
 ):
     """Update docsets feed list"""
-    fs = fsspec.filesystem('https')
-    all_items = fs.ls(feed_loc)
-    items = []
-    for item in all_items:
-        path = Path(item['name'])
-        if item['type'] == 'file' and path.suffix == '.tgz':
-            items.append(path)
 
+    items = list(Path(FEED_DIR).rglob("*.tgz"))
     if items:
         items.sort()
         with open(feed_file, "w") as fpt:

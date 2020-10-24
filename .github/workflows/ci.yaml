@@ -76,6 +76,8 @@ jobs:
           python-version: 3.8
       - run: |
           python -m pip install typer fsspec beautifulsoup4 pyyaml requests aiohttp wheel
+      - run: |
+          python cli.py update-feed-list
 
       - name: Update Docsets + Feeds
         run: |
