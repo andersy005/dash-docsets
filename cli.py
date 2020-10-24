@@ -11,6 +11,7 @@ import typer
 import yaml
 from click.core import Argument, Command
 
+BASE_URL = "https://github.com"
 TMPDIR = tempfile.gettempdir()
 REPODIR = Path(TMPDIR) / 'repos'
 REPODIR.mkdir(parents=True, exist_ok=True)
@@ -56,16 +57,15 @@ def _build_project(
         kwargs = dict(shell=True, check=True)
 
         if not local_dir.exists():
+            repo_link = f"{BASE_URL}/{repo}"
             command = [
-                "gh",
-                "repo",
+                "git",
                 "clone",
-                repo,
-                "--",
-                local_dir,
                 "--depth",
                 "1",
                 "--recurse-submodules",
+                repo_link,
+                local_dir,
             ]
             subprocess.run(command, check=True)
         else:
