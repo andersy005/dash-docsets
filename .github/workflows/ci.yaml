@@ -14,7 +14,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        key: ['jupyter', 'dask', 'zarr', 'xarray', 'intake', 'misc', 'pydata']
+        key: ['arctic', 'atlantic', 'indian', 'pacific', 'southern']
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v2
@@ -39,7 +39,7 @@ jobs:
           CONDA_PREFIX: '/usr/share/miniconda/condabin/conda'
           GO111MODULE: 'on' # https://stackoverflow.com/questions/56475313/how-to-fix-go-get-warning-modules-disabled-by-go111module-auto-in-gopath-src
         run: |
-          python build.py --config docsets.yaml --key ${{ matrix.key }}
+          python cli.py build-from-config docsets.yaml --key ${{ matrix.key }}
 
       - uses: actions/upload-artifact@v2
         with:

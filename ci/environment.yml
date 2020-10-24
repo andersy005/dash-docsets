@@ -11,7 +11,8 @@ dependencies:
   - cfgrib
   - cftime
   - climpred
-  - dask
+  - coconut
+  - dask>=2.17
   - dask-jobqueue
   - dask-kubernetes
   - dask-sphinx-theme
@@ -25,11 +26,11 @@ dependencies:
   - fsspec
   - h5netcdf
   - heapdict
-  - intake
+  - intake>=0.6.0
+  - invoke
   - ipyleaflet
   - ipywidgets
   - iris
-  - invoke
   - jax>=0.2.0
   - jaxlib>=0.1.55
   - jupyter-repo2docker
@@ -46,13 +47,16 @@ dependencies:
   - nbsphinx
   - netcdf4
   - nodejs
-  - numba
+  - numba>=0.51
   - numpydoc
   - panel
   - paramiko
   - pip
   - proplot
+  - pyarrow
   - pydata-sphinx-theme
+  - pygit2
+  - pytablewriter
   - python=3.7
   - pytorch
   - rasterio
@@ -72,22 +76,21 @@ dependencies:
   - tqdm
   - trio
   - xarray>=0.16
-  - xgcm
+  - xgcm>=0.5.1
   - xrft
   - xtensor
   - zarr
   - zfpy
-  - coconut
-  - pytablewriter
-  - pyarrow
-  - pygit2
-  - paramiko
   - pip:
+      - alabaster-jupyterhub
       - autodoc-traits
+      - jupyter-telemetry
       - m2r
       - markdown-include
       - mkautodoc
       - myst-nb
+      - scanpydoc
+      - sphinx-autosummary-accessors
       - sphinx-book-theme
       - sphinx-fortran
       - sphinx-jsonschema
@@ -95,14 +98,10 @@ dependencies:
       - sphinx-pangeo-theme
       - sphinx-tabs
       - sphinx_autodoc_typehints
+      - sphinxcontrib-apidoc
       - sphinxcontrib-autoprogram
       - sphinxcontrib-bibtex
       - sphinxcontrib-napoleon
       - sphinxcontrib-srclinks
       - sphinxcontrib-trio
-      - sphinxcontrib-apidoc
-      - sphinx-autosummary-accessors
-      - scanpydoc
       - sphinxext-rediraffe
-      - alabaster-jupyterhub
-      - jupyter-telemetry
