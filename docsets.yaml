@@ -15,11 +15,6 @@ arctic:
     repo: xgcm/xrft
     doc_dir: doc
     html_pages_dir: _build/html
-  - name: proplot
-    repo: lukelbd/proplot
-    doc_dir: docs
-    html_pages_dir: _build/html
-    doc_build_cmd: sphinx-build -b html -D nbsphinx_allow_errors=True . _build/html
 atlantic:
   - name: dask
     repo: dask/dask
@@ -61,10 +56,6 @@ atlantic:
 indian:
   - name: xtensor
     repo: xtensor-stack/xtensor
-    doc_dir: docs
-    html_pages_dir: build/html
-  - name: trio
-    repo: python-trio/trio
     doc_dir: docs
     html_pages_dir: build/html
   - name: jax
@@ -120,6 +111,15 @@ southern:
     repo: hpcng/singularity-admindocs
     doc_dir: .
     html_pages_dir: _build/html
+  - name: proplot
+    repo: lukelbd/proplot
+    doc_dir: docs
+    html_pages_dir: _build/html
+    doc_build_cmd: sphinx-build -b html -D nbsphinx_allow_errors=True . _build/html
+  - name: trio
+    repo: python-trio/trio
+    doc_dir: docs
+    html_pages_dir: build/html
 
     # # - name: arviz
     # #   repo: arviz-devs/arviz

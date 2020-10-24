@@ -75,7 +75,8 @@ jobs:
         with:
           python-version: 3.8
       - run: |
-          python -m pip install typer fsspec beautifulsoup4 pyyaml requests aiohttp wheel
+          python -m pip install --upgrade pip
+          python -m pip install typer beautifulsoup4 pyyaml requests
       - run: |
           python cli.py update-feed-list
 

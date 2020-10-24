@@ -7,7 +7,6 @@ import subprocess
 import tempfile
 from pathlib import Path
 
-import fsspec
 import typer
 import yaml
 
