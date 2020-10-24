@@ -214,16 +214,17 @@ def update_feed_list(
         if item['type'] == 'file' and path.suffix == '.tgz':
             items.append(path)
 
-    items.sort()
-    with open(feed_file, "w") as fpt:
-        print(
-            "# Docset Feeds\n\nYou can subscribe to the following feeds with a single click.\n\n```bash\n dash-feed://<URL encoded feed URL>\n```\n",
-            file=fpt,
-        )
-        for item in items:
-            print(f"- **{item.stem}**: {root}/{item.stem}.xml", file=fpt)
+    if items:
+        items.sort()
+        with open(feed_file, "w") as fpt:
+            print(
+                "# Docset Feeds\n\nYou can subscribe to the following feeds with a single click.\n\n```bash\n dash-feed://<URL encoded feed URL>\n```\n",
+                file=fpt,
+            )
+            for item in items:
+                print(f"- **{item.stem}**: {root}/{item.stem}.xml", file=fpt)
 
-        print("\n![](../images/how-to-add-feed.png)", file=fpt)
+            print("\n![](../images/how-to-add-feed.png)", file=fpt)
 
 
 if __name__ == "__main__":
