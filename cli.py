@@ -10,7 +10,6 @@ from pathlib import Path
 import fsspec
 import typer
 import yaml
-from click.core import Argument, Command
 
 BASE_URL = "https://github.com"
 TMPDIR = tempfile.gettempdir()
