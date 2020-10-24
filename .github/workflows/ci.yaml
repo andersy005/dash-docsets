@@ -99,6 +99,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+        with:
+          ref: docsets
       - uses: actions/setup-python@v2
         with:
           python-version: 3.8
@@ -110,6 +112,7 @@ jobs:
 
       - name: Commit files
         run: |
+          ls -ltrh
           git status
           git remote -v
           git config --local user.email "action@github.com"
