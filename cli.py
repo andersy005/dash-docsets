@@ -207,6 +207,8 @@ def update_feed_list(
 
     items = list(Path(FEED_DIR).rglob("*.tgz"))
     if items:
+        print(f"Found {len(items)} items.")
+        print(items)
         items.sort()
         with open(feed_file, "w") as fpt:
             print(
@@ -220,6 +222,8 @@ def update_feed_list(
                 "\n![](https://github.com/andersy005/dash-docsets/raw/master/images/how-to-add-feed.png)",
                 file=fpt,
             )
+    else:
+        print("Didn't find any files....")
 
 
 if __name__ == "__main__":
