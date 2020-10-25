@@ -205,7 +205,7 @@ def update_feed_list(
 ):
     """Update docsets feed list"""
 
-    items = list(Path(FEED_DIR).rglob("*.tgz"))
+    items = list(Path(DOCSET_DIR).rglob("*.tgz"))
     if items:
         print(f"Found {len(items)} items.")
         print(items)
