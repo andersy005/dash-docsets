@@ -8,6 +8,7 @@ dependencies:
   - bqplot
   - breathe
   - cartopy
+  - cf-units
   - cfgrib
   - cftime
   - climpred
@@ -31,6 +32,8 @@ dependencies:
   - ipyleaflet
   - ipywidgets
   - iris
+  - iris
+  - iris-sample-data
   - jax>=0.2.0
   - jaxlib>=0.1.55
   - jupyter-repo2docker

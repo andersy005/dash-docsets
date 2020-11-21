@@ -106,6 +106,10 @@ pacific:
     doc_dir: docs
     html_pages_dir: build/html
     doc_build_cmd: sphinx-build -b html -D nbsphinx_allow_errors=True ./source build/html
+  - name: cartopy
+    repo: SciTools/cartopy
+    doc_dir: docs
+    html_pages_dir: build/html
 southern:
   - name: singularityadmin
     repo: hpcng/singularity-admindocs
