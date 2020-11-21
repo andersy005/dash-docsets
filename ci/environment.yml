@@ -52,6 +52,7 @@ dependencies:
   - nodejs
   - numba>=0.51
   - numpydoc
+  - owslib
   - panel
   - paramiko
   - pip
