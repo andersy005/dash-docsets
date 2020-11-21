@@ -119,7 +119,7 @@ pacific:
     repo: jupyter-widgets/ipywidgets
     doc_dir: docs
     html_pages_dir: build/html
-    doc_build_cmd: sphinx-build -j 4 -b html -D nbsphinx_allow_errors=True ./source build/html
+    doc_build_cmd: sphinx-build -b html -D nbsphinx_allow_errors=True ./source build/html
 southern:
   - name: panel
     repo: holoviz/panel
@@ -135,6 +135,12 @@ southern:
     repo: SciTools/cartopy
     doc_dir: docs
     html_pages_dir: build/html
+
+tahoe:
+  - name: cryptography
+    repo: pyca/cryptography
+    doc_dir: docs
+    html_pages_dir: _build/html
 
     # # - name: arviz
     # #   repo: arviz-devs/arviz
