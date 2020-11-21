@@ -34,8 +34,8 @@ dependencies:
   - invoke
   - ipyleaflet
   - ipywidgets
-  - iris>=2.4.0
   - iris-sample-data
+  - iris>=2.4.0
   - jax>=0.2.0
   - jaxlib>=0.1.55
   - jupyter-repo2docker
@@ -68,6 +68,7 @@ dependencies:
   - pyarrow
   - pydata-sphinx-theme
   - pygit2
+  - pyparsing==2.2.0
   - pytablewriter
   - python=3.7
   - pytorch
