@@ -1,13 +1,14 @@
 name: dash-docs
 channels:
   - conda-forge
+  - pyviz
 dependencies:
   - alembic
   - basemap
   - bottleneck
   - bqplot
   - breathe
-  - cartopy
+  - cartopy>=0.18.0
   - cf-units
   - cfgrib
   - cftime
@@ -16,44 +17,51 @@ dependencies:
   - dask-jobqueue
   - dask-kubernetes
   - dask-sphinx-theme
-  - dask>=2.17
-  - distributed
+  - dask>=2.20
+  - distributed>=2.20
   - doc2dash
   - docker-py
   - docrep
   - doxygen
   - escapism
-  - fastapi
+  - fastapi>=0.61.2
   - fsspec
+  - geoviews
   - h5netcdf
   - heapdict
+  - holoviews
   - intake>=0.6.0
   - invoke
   - ipyleaflet
   - ipywidgets
-  - iris
-  - iris
+  - iris>=2.4.0
   - iris-sample-data
   - jax>=0.2.0
   - jaxlib>=0.1.55
   - jupyter-repo2docker
   - jupyter_telemetry
-  - jupyterhub
-  - jupyterlab
+  - jupyter_telemetry
+  - jupyterhub>=1.2.1
+  - jupyterlab>=2.2.9
   - jupytext
+  - m2r
   - make
+  - markdown-include
   - matplotlib>3
   - mkdocs
   - mkdocs-material
   - msgpack-python
+  - myst-nb
   - myst-parser
+  - nbsite
   - nbsphinx
   - netcdf4
   - nodejs
   - numba>=0.51
   - numpydoc
   - owslib
-  - panel
+  - panel>=0.10.2
+  - param
   - paramiko
   - pip
   - proplot
@@ -65,48 +73,45 @@ dependencies:
   - pytorch
   - rasterio
   - recommonmark
-  - scipy
+  - scipy>=1.5.3
   - seaborn
   - sparse
   - sphinx-automodapi
+  - sphinx-autosummary-accessors
+  - sphinx-book-theme
   - sphinx-click
   - sphinx-copybutton
-  - sphinx-gallery
+  - sphinx-gallery>=0.8.1
   - sphinx-issues
+  - sphinx-panels
+  - sphinx-tabs
   - sphinx>2.4.4
   - sphinx_bootstrap_theme
   - sphinx_rtd_theme
+  - sphinxcontrib-apidoc
+  - sphinxcontrib-autoprogram
+  - sphinxcontrib-bibtex
+  - sphinxcontrib-napoleon
   - tabulate
   - tqdm
-  - trio
+  - trio>=0.17.0
   - typer
   - xarray>=0.16
   - xgcm>=0.5.1
   - xrft
   - xtensor
-  - zarr
+  - zarr>=2.5.0
   - zfpy
   - pip:
       - alabaster-jupyterhub
       - autodoc-traits
-      - jupyter-telemetry
-      - m2r
-      - markdown-include
       - mkautodoc
-      - myst-nb
       - scanpydoc
-      - sphinx-autosummary-accessors
-      - sphinx-book-theme
       - sphinx-fortran
+      - sphinx-holoviz-theme
       - sphinx-jsonschema
-      - sphinx-panels
       - sphinx-pangeo-theme
-      - sphinx-tabs
       - sphinx_autodoc_typehints
-      - sphinxcontrib-apidoc
-      - sphinxcontrib-autoprogram
-      - sphinxcontrib-bibtex
-      - sphinxcontrib-napoleon
       - sphinxcontrib-srclinks
       - sphinxcontrib-trio
       - sphinxext-rediraffe

@@ -16,6 +16,14 @@ arctic:
     doc_dir: doc
     html_pages_dir: _build/html
 atlantic:
+  - name: singularityadmin
+    repo: hpcng/singularity-admindocs
+    doc_dir: .
+    html_pages_dir: _build/html
+  - name: trio
+    repo: python-trio/trio
+    doc_dir: docs
+    html_pages_dir: build/html
   - name: dask
     repo: dask/dask
     doc_dir: docs
@@ -106,22 +114,19 @@ pacific:
     doc_dir: docs
     html_pages_dir: build/html
     doc_build_cmd: sphinx-build -b html -D nbsphinx_allow_errors=True ./source build/html
-  - name: cartopy
-    repo: SciTools/cartopy
-    doc_dir: docs
-    html_pages_dir: build/html
 southern:
-  - name: singularityadmin
-    repo: hpcng/singularity-admindocs
+  - name: panel
+    repo: holoviz/panel
     doc_dir: .
-    html_pages_dir: _build/html
+    html_pages_dir: builtdocs
+    doc_build_cmd: nbsite generate-rst --org holoviz --project-name panel && python ./doc/generate_modules.py panel -d ./doc/api -n panel -e tests && nbsite build --what=html --output=builtdocs
   - name: proplot
     repo: lukelbd/proplot
     doc_dir: docs
     html_pages_dir: _build/html
     doc_build_cmd: sphinx-build -b html -D nbsphinx_allow_errors=True . _build/html
-  - name: trio
-    repo: python-trio/trio
+  - name: cartopy
+    repo: SciTools/cartopy
     doc_dir: docs
     html_pages_dir: build/html
 
