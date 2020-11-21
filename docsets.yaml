@@ -20,6 +20,7 @@ atlantic:
     repo: hpcng/singularity-admindocs
     doc_dir: .
     html_pages_dir: _build/html
+    install: False
   - name: trio
     repo: python-trio/trio
     doc_dir: docs
@@ -66,6 +67,7 @@ indian:
     repo: xtensor-stack/xtensor
     doc_dir: docs
     html_pages_dir: build/html
+    install: False
   - name: jax
     repo: google/jax
     doc_dir: docs
@@ -84,6 +86,7 @@ indian:
     doc_dir: docs
     html_pages_dir: build/html
     doc_build_cmd: sphinx-build -j 4 -b html ./source build/html
+    install: False
 pacific:
   - name: myst-parser
     repo: executablebooks/MyST-Parser
@@ -102,6 +105,7 @@ pacific:
     repo: jupyterhub/binder
     doc_dir: doc
     html_pages_dir: _build/html
+    install: False
   - name: repo2docker
     repo: jupyter/repo2docker
     doc_dir: docs

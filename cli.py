@@ -50,6 +50,7 @@ def _build_project(
     html_pages_dir='_build/html',
     doc_build_cmd="make -j4 html",
     generator="doc2dash",
+    install=True,
 ):
 
     try:
@@ -74,6 +75,10 @@ def _build_project(
             print(f"{name} directory already exits.")
 
         with working_directory(local_dir):
+
+            if install:
+                command = ["python", "-m", "pip", "install", "-e", "."]
+                subprocess.run(command, check=True)
             latest_tag = os.popen("git rev-parse --short HEAD").read().strip()
             if not latest_tag:
                 latest_tag = "unknown"
@@ -161,10 +166,11 @@ def build(
         "make -j4 html", help='custom command to use when building the docs. Defaults to None'
     ),
     generator: str = typer.Option("doc2dash", help="Documentation Set generator."),
+    install: bool = typer.Option(True, help="Whether to install the package in editable mode"),
 ):
     """Build dash docset for given project/repo"""
 
-    _build_project(name, repo, doc_dir, html_pages_dir, doc_build_cmd, generator)
+    _build_project(name, repo, doc_dir, html_pages_dir, doc_build_cmd, generator, install)
 
 
 @app.command()
