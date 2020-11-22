@@ -87,10 +87,10 @@ indian:
     html_pages_dir: build/html
     doc_build_cmd: sphinx-build -j 4 -b html ./source build/html
     install: False
-  - name: cupy
-    repo: cupy/cupy
-    doc_dir: docs
-    html_pages_dir: build/html
+  # - name: cupy
+  #   repo: cupy/cupy
+  #   doc_dir: docs
+  #   html_pages_dir: build/html
 pacific:
   - name: myst-parser
     repo: executablebooks/MyST-Parser
@@ -125,16 +125,16 @@ pacific:
     html_pages_dir: build/html
     doc_build_cmd: sphinx-build -b html -D nbsphinx_allow_errors=True ./source build/html
 southern:
-  - name: panel
-    repo: holoviz/panel
-    doc_dir: .
-    html_pages_dir: builtdocs
-    doc_build_cmd: nbsite generate-rst --org holoviz --project-name panel && python ./doc/generate_modules.py panel -d ./doc/api -n panel -e tests && nbsite build --what=html --output=builtdocs
-  - name: holoviews
-    repo: holoviz/holoviews
-    doc_dir: .
-    html_pages_dir: builtdocs
-    doc_build_cmd: bokeh sampledata && nbsite generate-rst --org holoviz --project-name holoviews --skip ^reference && python ./doc/generate_modules.py holoviews -d ./doc/reference_manual -n holoviews -e tests && nbsite build --what=html --output=builtdocs
+  # - name: panel
+  #   repo: holoviz/panel
+  #   doc_dir: .
+  #   html_pages_dir: builtdocs
+  #   doc_build_cmd: nbsite generate-rst --org holoviz --project-name panel && python ./doc/generate_modules.py panel -d ./doc/api -n panel -e tests && nbsite build --what=html --output=builtdocs
+  # - name: holoviews
+  #   repo: holoviz/holoviews
+  #   doc_dir: .
+  #   html_pages_dir: builtdocs
+  #   doc_build_cmd: bokeh sampledata && nbsite generate-rst --org holoviz --project-name holoviews --skip ^reference && python ./doc/generate_modules.py holoviews -d ./doc/reference_manual -n holoviews -e tests && nbsite build --what=html --output=builtdocs
   - name: proplot
     repo: lukelbd/proplot
     doc_dir: docs
@@ -165,17 +165,17 @@ superior:
     doc_dir: docs
     html_pages_dir: build/html
 
-  - name: pymc3
-    repo: pymc-devs/pymc3
-    doc_dir: docs
-    html_pages_dir: _build/html
-    doc_build_cmd: sphinx-build -T -W -E -b html ./source _build/html
+  # - name: pymc3
+  #   repo: pymc-devs/pymc3
+  #   doc_dir: docs
+  #   html_pages_dir: _build/html
+  #   doc_build_cmd: sphinx-build -T -W -E -b html ./source _build/html
 
-  - name: arviz
-    repo: arviz-devs/arviz
-    doc_dir: doc
-    html_pages_dir: build/html
-    doc_build_cmd: sphinx-build ./source build/html -b html
+  # - name: arviz
+  #   repo: arviz-devs/arviz
+  #   doc_dir: doc
+  #   html_pages_dir: build/html
+  #   doc_build_cmd: sphinx-build ./source build/html -b html
 
   # - name: singularity
   #   repo: hpcng/singularity-userdocs
