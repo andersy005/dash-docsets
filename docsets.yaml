@@ -134,7 +134,7 @@ southern:
     repo: holoviz/holoviews
     doc_dir: .
     html_pages_dir: builtdocs
-    doc_build_cmd: bokeh sampledata && nbsite generate-rst --org holoviz --project-name holoviews && python ./doc/generate_modules.py holoviews -d ./doc/reference_manual -n holoviews -e tests && nbsite build --what=html --output=builtdocs
+    doc_build_cmd: bokeh sampledata && nbsite generate-rst --org holoviz --project-name holoviews --skip ^reference && python ./doc/generate_modules.py holoviews -d ./doc/reference_manual -n holoviews -e tests && nbsite build --what=html --output=builtdocs
   - name: proplot
     repo: lukelbd/proplot
     doc_dir: docs

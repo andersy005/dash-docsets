@@ -27,7 +27,7 @@ jobs:
             'tahoe',
             'superior',
           ]
-    timeout-minutes: 20
+    timeout-minutes: 30
     steps:
       - name: Cancel Previous Runs
         uses: styfle/cancel-workflow-action@0.6.0
