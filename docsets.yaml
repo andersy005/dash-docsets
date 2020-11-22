@@ -171,11 +171,11 @@ superior:
   #   html_pages_dir: _build/html
   #   doc_build_cmd: sphinx-build -T -W -E -b html ./source _build/html
 
-  # - name: arviz
-  #   repo: arviz-devs/arviz
-  #   doc_dir: doc
-  #   html_pages_dir: build/html
-  #   doc_build_cmd: sphinx-build ./source build/html -b html
+  - name: arviz
+    repo: arviz-devs/arviz
+    doc_dir: doc
+    html_pages_dir: build/html
+    doc_build_cmd: sphinx-build ./source build/html -b html
 
   # - name: singularity
   #   repo: hpcng/singularity-userdocs
