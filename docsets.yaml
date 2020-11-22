@@ -64,7 +64,7 @@ atlantic:
     html_pages_dir: _build/html
 indian:
   - name: xtensor
-    repo: xtensor-stack/xtensor
+    repo: xtensor-stack/tensor
     doc_dir: docs
     html_pages_dir: build/html
     install: False
@@ -87,6 +87,10 @@ indian:
     html_pages_dir: build/html
     doc_build_cmd: sphinx-build -j 4 -b html ./source build/html
     install: False
+  - name: cupy
+    repo: cupy/cupy
+    doc_dir: docs
+    html_pages_dir: build/html
 pacific:
   - name: myst-parser
     repo: executablebooks/MyST-Parser

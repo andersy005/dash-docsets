@@ -15,6 +15,7 @@ dependencies:
   - cftime
   - climpred
   - coconut
+  - cupy
   - cython
   - dask-jobqueue
   - dask-kubernetes
