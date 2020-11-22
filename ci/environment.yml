@@ -119,3 +119,4 @@ dependencies:
       - sphinxcontrib-srclinks
       - sphinxcontrib-trio
       - sphinxext-rediraffe
+      - releases
