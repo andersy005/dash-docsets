@@ -126,6 +126,11 @@ southern:
     doc_dir: .
     html_pages_dir: builtdocs
     doc_build_cmd: nbsite generate-rst --org holoviz --project-name panel && python ./doc/generate_modules.py panel -d ./doc/api -n panel -e tests && nbsite build --what=html --output=builtdocs
+  - name: holoviews
+    repo: holoviz/holoviews
+    doc_dir: .
+    html_pages_dir: builtdocs
+    doc_build_cmd: bokeh sampledata && nbsite generate-rst --org holoviz --project-name holoviews && python ./doc/generate_modules.py holoviews -d ./doc/reference_manual -n holoviews -e tests && nbsite build --what=html --output=builtdocs
   - name: proplot
     repo: lukelbd/proplot
     doc_dir: docs
@@ -151,10 +156,10 @@ tahoe:
     doc_build_cmd: sphinx-build -j 4 -T -E -b html ./ _build/html
 
 superior:
-  # - name: numpyro
-  #   repo: pyro-ppl/numpyro
-  #   doc_dir: docs
-  #   html_pages_dir: build/html
+  - name: numpyro
+    repo: pyro-ppl/numpyro
+    doc_dir: docs
+    html_pages_dir: build/html
 
   - name: pymc3
     repo: pymc-devs/pymc3

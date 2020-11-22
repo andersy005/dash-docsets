@@ -62,6 +62,7 @@ dependencies:
   - nbsite
   - nbsphinx
   - netcdf4
+  - networkx
   - nodejs
   - numba>=0.51
   - numpydoc
