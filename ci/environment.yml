@@ -108,6 +108,8 @@ dependencies:
       - alabaster-jupyterhub
       - autodoc-traits
       - mkautodoc
+      - mkdocs-markdownextradata-plugin
+      - mkdocs-material-extensions
       - scanpydoc
       - sphinx-fortran
       - sphinx-holoviz-theme
