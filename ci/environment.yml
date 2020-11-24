@@ -110,6 +110,7 @@ dependencies:
   - trio>=0.17.0
   - typer
   - xarray>=0.16
+  - xesmf
   - xgcm>=0.5.1
   - xrft
   - xtensor

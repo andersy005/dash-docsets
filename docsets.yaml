@@ -3,6 +3,7 @@ arctic:
     repo: pydata/xarray
     doc_dir: doc
     html_pages_dir: _build/html
+    install: False
   - name: climpred
     repo: pangeo-data/climpred
     doc_dir: docs
