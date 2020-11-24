@@ -15,7 +15,6 @@ dependencies:
   - cftime
   - climpred
   - coconut
-  - cupy
   - cython
   - dask-jobqueue
   - dask-kubernetes
@@ -84,6 +83,7 @@ dependencies:
   - pytorch
   - rasterio
   - recommonmark
+  - regionmask>=0.6.1
   - scipy>=1.5.3
   - seaborn
   - selenium
