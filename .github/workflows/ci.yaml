@@ -61,11 +61,13 @@ jobs:
         with:
           name: docsets
           path: docsets
+          retention-days: 3
 
       - uses: actions/upload-artifact@v2
         with:
           name: feeds
           path: feeds
+          retention-days: 3
 
   deploy:
     name: dash-docsets-deploy
