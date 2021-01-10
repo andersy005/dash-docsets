@@ -163,6 +163,14 @@ tahoe:
     repo: paramiko/paramiko
     doc_dir: sites/www
     doc_build_cmd: sphinx-build -j 4 -T -E -b html ./ _build/html
+  - name: wrapt
+    repo: GrahamDumpleton/wrapt
+    doc_dir: docs
+    html_pages_dir: _build/html
+  - name: attrs
+    repo: python-attrs/attrs
+    doc_dir: docs
+    html_pages_dir: _build/html
 
 superior:
   - name: numpyro
