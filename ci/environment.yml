@@ -16,6 +16,8 @@ dependencies:
   - climpred
   - coconut
   - cython
+  # - dask-gateway
+  # - dask-gateway-server-local
   - dask-jobqueue
   - dask-kubernetes
   - dask-sphinx-theme
@@ -72,6 +74,7 @@ dependencies:
   - param
   - paramiko
   - pip
+  - prefect
   - proplot
   - pyarrow
   - pydantic>=1.7.3
@@ -90,6 +93,7 @@ dependencies:
   - seaborn
   - selenium
   - sparse
+  - skein
   - sphinx_bootstrap_theme
   - sphinx_rtd_theme
   - sphinx-automodapi

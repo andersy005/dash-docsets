@@ -46,6 +46,13 @@ atlantic:
     repo: dask/dask-jobqueue
     doc_dir: docs
     html_pages_dir: _build/html
+  - name: dask-gateway
+    repo: dask/dask-gateway
+    doc_dir: .
+    html_pages_dir: .
+    install: false
+    doc_build_cmd: 'git checkout gh-pages'
+    generator: html2dash
   - name: zict
     repo: dask/zict
     doc_dir: doc
@@ -219,3 +226,10 @@ tanganyika:
     doc_build_cmd: mkdocs build --no-directory-urls
     html_pages_dir: site
     generator: html2dash
+  # - name: prefect
+  #   repo: PrefectHQ/prefect
+  #   doc_dir: .
+  #   doc_build_cmd: echo
+  #   html_pages_dir: docs/.vuepress/dist/
+  #   generator: html2dash
+  #   install: false

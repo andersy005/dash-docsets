@@ -66,8 +66,6 @@ def _build_project(
             command = [
                 "git",
                 "clone",
-                "--depth",
-                "1",
                 "--recurse-submodules",
                 repo_link,
                 local_dir,
