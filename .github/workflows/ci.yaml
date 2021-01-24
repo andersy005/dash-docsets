@@ -67,7 +67,6 @@ jobs:
           CONDA_PREFIX: '/usr/share/miniconda/condabin/conda'
           GO111MODULE: 'on' # https://stackoverflow.com/questions/56475313/how-to-fix-go-get-warning-modules-disabled-by-go111module-auto-in-gopath-src
         run: |
-          conda activate dash-docs
           python cli.py build-from-config docsets.yaml --key ${{ matrix.key }}
 
       - uses: actions/upload-artifact@v2
