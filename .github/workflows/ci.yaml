@@ -2,7 +2,7 @@ name: CI
 on:
   push:
     branches:
-      - 'master'
+      - 'main'
   schedule:
     - cron: '0 0 * * 3' # “At 00:00 on Wednesday."
   workflow_dispatch: # allows you to trigger manually
