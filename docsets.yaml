@@ -29,7 +29,13 @@ atlantic:
     repo: hpcng/singularity-admindocs
     doc_dir: .
     html_pages_dir: _build/html
-    install: False
+    install: false
+  - name: singularity
+    repo: hpcng/singularity-userdocs
+    doc_dir: .
+    html_pages_dir: _build/html
+    install: false
+    doc_build_cmd: make html SKIPCLI=1
   - name: trio
     repo: python-trio/trio
     doc_dir: docs
@@ -137,16 +143,20 @@ pacific:
     html_pages_dir: build/html
     doc_build_cmd: sphinx-build -b html -D nbsphinx_allow_errors=True ./source build/html
 southern:
-  # - name: panel
-  #   repo: holoviz/panel
-  #   doc_dir: .
-  #   html_pages_dir: builtdocs
-  #   doc_build_cmd: nbsite generate-rst --org holoviz --project-name panel && python ./doc/generate_modules.py panel -d ./doc/api -n panel -e tests && nbsite build --what=html --output=builtdocs
-  # - name: holoviews
-  #   repo: holoviz/holoviews
-  #   doc_dir: .
-  #   html_pages_dir: builtdocs
-  #   doc_build_cmd: bokeh sampledata && nbsite generate-rst --org holoviz --project-name holoviews --skip ^reference && python ./doc/generate_modules.py holoviews -d ./doc/reference_manual -n holoviews -e tests && nbsite build --what=html --output=builtdocs
+  - name: panel
+    repo: holoviz/panel
+    doc_dir: .
+    html_pages_dir: .
+    install: false
+    doc_build_cmd: 'git checkout gh-pages'
+    generator: html2dash
+  - name: holoviews
+    repo: holoviz/hvplot
+    doc_dir: .
+    html_pages_dir: .
+    install: false
+    doc_build_cmd: 'git checkout gh-pages'
+    generator: html2dash
   - name: proplot
     repo: lukelbd/proplot
     doc_dir: docs
@@ -184,23 +194,25 @@ superior:
     repo: pyro-ppl/numpyro
     doc_dir: docs
     html_pages_dir: build/html
-
-  # - name: pymc3
-  #   repo: pymc-devs/pymc3
-  #   doc_dir: docs
-  #   html_pages_dir: _build/html
-  #   doc_build_cmd: sphinx-build -T -W -E -b html ./source _build/html
-
+  - name: pymc3
+    repo: pymc-devs/pymc3
+    doc_dir: .
+    html_pages_dir: .
+    install: false
+    doc_build_cmd: 'git checkout gh-pages'
+    generator: html2dash
   - name: arviz
     repo: arviz-devs/arviz
-    doc_dir: doc
-    html_pages_dir: build/html
-    doc_build_cmd: sphinx-build ./source build/html -b html
+    doc_dir: .
+    html_pages_dir: .
+    install: false
+    doc_build_cmd: 'git checkout gh-pages'
+    generator: html2dash
+  - name: cupy
+    repo: cupy/cupy
+    doc_dir: docs
+    html_pages_dir: build
 
-  # - name: singularity
-  #   repo: hpcng/singularity-userdocs
-  #   doc_dir: .
-  #   html_pages_dir: _build/html
 tanganyika:
   - name: fastapi
     repo: tiangolo/fastapi
@@ -226,10 +238,9 @@ tanganyika:
     doc_build_cmd: mkdocs build --no-directory-urls
     html_pages_dir: site
     generator: html2dash
-  # - name: prefect
-  #   repo: PrefectHQ/prefect
-  #   doc_dir: .
-  #   doc_build_cmd: echo
-  #   html_pages_dir: docs/.vuepress/dist/
-  #   generator: html2dash
-  #   install: false
+  - name: typer
+    repo: tiangolo/typer
+    doc_dir: .
+    doc_build_cmd: mkdocs build --no-directory-urls
+    html_pages_dir: site
+    generator: html2dash
