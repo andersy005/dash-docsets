@@ -48,7 +48,7 @@ dependencies:
   - jupyter_telemetry
   - jupyter-repo2docker
   - jupyterhub>=1.2.1
-  - jupyterlab>=2.2.9
+  - jupyterlab>=3
   - jupytext
   - m2r
   - make
@@ -66,6 +66,7 @@ dependencies:
   - numba>=0.51
   - numpydoc
   - numpyro>=0.4.1
+  - orjson
   - owslib
   - panel>=0.10.2
   - param
@@ -73,6 +74,7 @@ dependencies:
   - pip
   - proplot
   - pyarrow
+  - pydantic>=1.7.3
   - pydata-sphinx-theme
   - pygit2
   - pymc3>=3.9.3
@@ -104,13 +106,17 @@ dependencies:
   - sphinxcontrib-autoprogram
   - sphinxcontrib-bibtex
   - sphinxcontrib-napoleon
+  - sqlalchemy
+  - starlette
   - tabulate
   - theano-pymc>=1.0.11
   - tqdm
   - trio>=0.17.0
   - typer
+  - ujson
+  - uvicorn
   - wrapt
-  - xarray>=0.16
+  - xarray>=0.16.2
   - xesmf
   - xgcm>=0.5.1
   - xrft
@@ -119,10 +125,15 @@ dependencies:
   - zfpy
   - pip:
       - alabaster-jupyterhub
+      - ansi2html
       - autodoc-traits
+      - flake8
+      - flake8-quotes
       - funsor>=0.3.0
       - furo
+      - markdown-include
       - mkautodoc
+      - mkdocs-exclude
       - mkdocs-markdownextradata-plugin
       - mkdocs-material-extensions
       - releases

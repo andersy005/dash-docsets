@@ -10,6 +10,8 @@ from pathlib import Path
 import typer
 import yaml
 
+from html2dash import custom_builder
+
 BASE_URL = "https://github.com"
 TMPDIR = tempfile.gettempdir()
 REPODIR = Path(TMPDIR) / 'repos'
@@ -25,7 +27,7 @@ FEED_DIR.mkdir(parents=True, exist_ok=True)
 
 
 def validate_generator(generator: str):
-    generators = ["doc2dash"]
+    generators = ["doc2dash", "html2dash"]
     if generator not in generators:
         message = f"`{generator}` generator is not supported. Valid values are: {generators}."
         raise ValueError(message)
@@ -77,7 +79,7 @@ def _build_project(
         with working_directory(local_dir):
 
             if install:
-                command = ["python", "-m", "pip", "install", "-e", "."]
+                command = ["python", "-m", "pip", "install", ".", "--no-deps"]
                 subprocess.run(command, check=True)
             latest_tag = os.popen("git rev-parse --short HEAD").read().strip()
             if not latest_tag:
@@ -89,10 +91,9 @@ def _build_project(
 
         icon_dir = ICON_DIR / name
         icons = []
+        icon_files = None
         if icon_dir.exists():
-            icons = list(icon_dir.iterdir())
-            icons = [["--icon", icon.as_posix()] for icon in icons if icon.suffix == '.png']
-            icons = list(itertools.chain(*icons))
+            icon_files = list(icon_dir.iterdir())
 
         source = doc_dir / html_pages_dir
         if generator == "doc2dash":
@@ -108,10 +109,31 @@ def _build_project(
                 "--destination",
                 DOCSET_DIR.as_posix(),
             ]
-            if icons:
+            if icon_files:
+                icons = [
+                    ["--icon", icon.as_posix()] for icon in icon_files if icon.suffix == '.png'
+                ]
+                icons = list(itertools.chain(*icons))
                 command += icons
-        command = " ".join(command)
-        subprocess.run(command, **kwargs)
+            command = " ".join(command)
+            subprocess.run(command, **kwargs)
+
+        elif generator == "html2dash":
+            if icon_files:
+                icon = icon_files[0]
+            else:
+                icon = None
+
+            custom_builder(
+                name=name,
+                destination=DOCSET_DIR.as_posix(),
+                index_page="index.html",
+                source=source.as_posix(),
+                icon=icon,
+            )
+
+        else:
+            raise RuntimeError(f"Unknown generator: {generator}")
 
         with working_directory(DOCSET_DIR):
             tar_command = [
@@ -139,7 +161,7 @@ def create_feed(name, latest_tag):
 
     entry = Element("entry")
     version = SubElement(entry, "version")
-    version.text = f"master@{latest_tag}"
+    version.text = f"main@{latest_tag}"
     url = SubElement(entry, "url")
     url.text = f"{base_url}/{name}.tgz"
 

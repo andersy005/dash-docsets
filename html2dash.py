@@ -1,137 +1,210 @@
+#! /usr/bin/env python3
+# -*- coding: utf-8 -*-
+
 import os
 import pathlib
 import re
 import sqlite3
-import urllib.parse
+import subprocess
+import typing
 
-import yaml
-from lxml import html
+from bs4 import BeautifulSoup
 
 
-def yaml2sqlite(yaml_config_file, sqlite_db):
-    db = sqlite3.connect(sqlite_db)
-    cur = db.cursor()
+def update_db(name, path, cur):
+    try:
+        cur.execute("SELECT rowid FROM searchIndex WHERE path = ?", (path,))
+        dbpath = cur.fetchone()
+        cur.execute("SELECT rowid FROM searchIndex WHERE name = ?", (name,))
+        dbname = cur.fetchone()
+
+        if dbpath is None and dbname is None:
+            cur.execute(
+                'INSERT OR IGNORE INTO searchIndex(name, type, path)\
+                    VALUES (?,?,?)',
+                (name, "Section", path),
+            )
+        else:
+            pass
+    except:
+        pass
+
+
+def add_urls(docset_path, cur):
+    index_page = open(os.path.join(docset_path, 'index.html')).read()
+    soup = BeautifulSoup(index_page, "html.parser")
+    any_regex = re.compile('.*')
+    for tag in soup.find_all('a', {'href': any_regex}):
+        name = tag.text.strip()
+        if len(name) > 0:
+            path = tag.attrs['href'].strip()
+            if path.split('#')[0] not in ('index.html'):
+                update_db(name, path, cur)
+
+
+def add_infoplist(info_path, index_page, docset_name):
+    info_path = pathlib.Path(info_path)
+    name = docset_name.split('.')[0]
+    info = f"""
+    <?xml version="1.0" encoding="UTF-8"?>
+    <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+    <plist version="1.0">
+    <dict>
+            <key>CFBundleIdentifier</key>
+            <string>{name}</string>
+            <key>CFBundleName</key>
+            <string>{name}</string>
+            <key>DashDocSetFamily</key>
+            <string>{name}</string>
+            <key>DocSetPlatformFamily</key>
+            <string>{name}</string>
+            <key>isDashDocset</key>
+            <true/>
+            <key>isJavaScriptEnabled</key>
+            <true/>
+            <key>dashIndexFilePath</key>
+            <string>{index_page}</string>
+    </dict>
+    </plist>
+    """
+
+    try:
+        info_path.write_text(info)
+        print("Create the Info.plist File")
+    except Exception as exc:
+        print(f"**Error**:  Create the Info.plist File Failed..")
+        clear_trash(docset_name)
+        raise exc
+
+
+def clear_trash(docset_name):
+    try:
+        subprocess.call(["rm", "-r", docset_name])
+        print("Clear generated useless files!")
+    except Exception as exc:
+        print("**Error**:  Clear trash failed...")
+        raise exc
+
+
+def custom_builder(
+    name: str = None,
+    destination: typing.Union[str, pathlib.Path] = None,
+    icon: typing.Union[str, pathlib.Path] = None,
+    index_page: str = None,
+    source: typing.Union[str, pathlib.Path] = None,
+) -> None:
+    """
+    Parameters
+    ----------
+
+    name: str
+        Name the docset explicitly
+    destination: str
+        Put the resulting docset into PATH
+    icon: str
+        Add PNG icon FILENAME to docset
+    index_page:
+        Set the file that is shown
+    source:
+        Directory containing the HTML documents
+
+    """
+
+    source_dir = source
+    if source_dir[-1] == "/":
+        source_dir = source[:-1]
+
+    source_dir = pathlib.Path(source_dir)
+    source_dir.mkdir(parents=True, exist_ok=True)
+    dir_name = source_dir.stem
+
+    if not name:
+        docset_name = f"{dir_name}.docset"
+    else:
+        docset_name = f"{name}.docset"
+
+    docset_name = pathlib.Path(docset_name)
+
+    # create docset directory and copy files
+    doc_path = docset_name / "Contents/Resources/Documents"
+    dsidx_path = docset_name / "Contents/Resources/docSet.dsidx"
+    info = docset_name / "Contents/info.plist"
+    icon_path = docset_name / "icon.png"
+
+    dest_path = pathlib.Path(destination)
+    docset_path = dest_path / doc_path
+    docset_path.mkdir(parents=True, exist_ok=True)
+    print(f"The {docset_path} Docset Folder is ready!")
+
+    sqlite_path = (dest_path / dsidx_path).as_posix()
+    info_path = (dest_path / info).as_posix()
+    icon_path = (dest_path / icon_path).as_posix()
+
+    docset_path = docset_path.as_posix()
+    source_dir = source_dir.as_posix()
+    docset_name = docset_name.as_posix()
+
+    # Copy the HTML Documentation to the Docset Folder
+    try:
+        arg_list = (
+            ["cp", "-r"] + [source_dir + "/" + f for f in os.listdir(source_dir)] + [docset_path]
+        )
+        subprocess.call(arg_list)
+        print("Copy the HTML Documentation!")
+    except Exception as exc:
+        print("**Error**:  Copy Html Documents Failed...")
+        clear_trash(docset_name)
+        raise exc
+
+    # create and connect to SQLite
+    try:
+        db = sqlite3.connect(sqlite_path)
+        cur = db.cursor()
+    except Exception as exc:
+        print("**Error**:  Create SQLite Index Failed...")
+        clear_trash(docset_name)
+        raise exc
+
+    try:
+        cur.execute('DROP TABLE searchIndex;')
+    except:
+        pass
+
     cur.execute(
-        '''
-    DROP TABLE IF EXISTS searchIndex;
-'''
+        'CREATE TABLE searchIndex(id INTEGER PRIMARY KEY,\
+                name TEXT,\
+                type TEXT,\
+                path TEXT);'
     )
+    cur.execute('CREATE UNIQUE INDEX anchor ON searchIndex (name, type, path);')
+    print("Create the SQLite Index")
 
-    cur.execute(
-        '''
-        CREATE TABLE
-            searchIndex(id INTEGER PRIMARY KEY,
-                        name TEXT,
-                        type TEXT,
-                        path TEXT);
-    '''
-    )
-
-    cur.execute(
-        '''
-        CREATE UNIQUE INDEX
-            anchor
-        ON
-            searchIndex (name, type, path);
-    '''
-    )
-
+    add_urls(docset_path, cur)
     db.commit()
-
-    with open(yaml_config_file) as fpt:
-        data = yaml.load(fpt, Loader=yaml.Loader)
-    print(data.keys())
-
-    if data:
-        prev_title = ''
-        for page in data.get('nav', []):
-            print(page)
-            mdpath, title = page[0], '-'.join(page[1:])
-            if '**HIDDEN**' not in title:
-                if 'index.md' in mdpath:
-                    htmlpath = mdpath.replace('index.md', 'index.html')
-                else:
-                    htmlpath = mdpath.replace('.md', '/index.html')
-
-                if '&blacksquare;' in title:
-                    title = re.sub('.*&blacksquare;&nbsp;\s*', prev_title + ' - ', title)
-                else:
-                    prev_title = title
-                cur.execute(
-                    '''
-                INSERT OR IGNORE INTO
-                    searchIndex(name, type, path)
-                VALUES
-                    (?, ?, ?);
-                ''',
-                    (title, 'Guide', htmlpath),
-                )
-                db.commit()
-                print(
-                    f'Added the following entry to {sqlite_db}\n\tname: {title}\n\ttype: Guide\n\tpath: {htmlpath}'
-                )
-
     db.close()
 
+    # Create the Info.plist File
+    if not index_page:
+        index_page = "index.html"
 
-def abs2rel_func(link):
-    if link[:2] == "//":
-        newlink = f'https:{link}'
-    elif link[:1] == "/":
-        relpath = os.path.relpath(path, root)
-        newlink = f'{relpath}/{link}'
+    add_infoplist(info_path, index_page, docset_name)
+
+    # Add icon file if defined
+    icon_filename = str(icon)
+    if icon_filename:
+        if icon_filename[-4:] == ".png" and os.path.isfile(icon_filename):
+            try:
+                subprocess.call(["cp", icon_filename, icon_path])
+                print("Created the Icon for the Docset!")
+            except Exception as exc:
+                print("**Error**:  Copy Icon file failed...")
+                clear_trash(docset_name)
+                raise exc
+        else:
+            print("**Error**:  Icon file should be a valid PNG image...")
+            clear_trash(docset_name)
+            exit(2)
     else:
-        newlink = link
+        pass
 
-    print(f'old link: {link} ---> new link: {newlink}')
-    return newlink
-
-
-def dashrepl(match):
-    (hopen, id, name, hclose) = match.group(1, 2, 3, 4)
-    dashname = name
-    dashname = re.sub('<.*?>', '', dashname)
-    dashname = re.sub('[^a-zA-Z0-9\.\(\)\?\',:; ]', '-', dashname)
-    dashname = urllib.parse.quote(dashname)
-    dash = f'<a name="//apple_ref/cpp/Section/{dashname}" class="dashAnchor"></a>'
-    header = f'<h{hopen} id="{id}">{name}</h{hclose}>'
-    return f'{dash}\n{header}'
-
-
-def add_dash_anchors(path):
-    for root, dirs, files in os.walk(path):
-        root = pathlib.Path(root)
-        for file in files:
-            if file.find(suffix) != -1:
-                file = root / file
-                with open(file) as fpt:
-                    page = fpt.read()
-                try:
-                    html_content = re.sub('<h([1-2]) id="(.*?)">(.*?)</h([1-2])>', dashrepl, page)
-                    with open(file, 'w') as fpt:
-                        fpt.write(html_content)
-                        print(f'file: {file}')
-                except Exception as exc:
-                    print(f'error: {exc}, file: {file}')
-
-
-path = '/Users/abanihi/devel/personal/dash-docsets/fastapi.docset/Contents/Resources/Documents'
-suffix = '.html'
-# add_dash_anchors(path)
-yaml2sqlite(
-    yaml_config_file='/var/folders/z7/sdhzbbr96bv2wjrsb92qsm3dwz5p3x/T/fastapi/docs/en/mkdocs.yml',
-    sqlite_db='/Users/abanihi/devel/personal/dash-docsets/fastapi.docset/Contents/Resources/docSet.dsidx',
-)
-
-# for root, dirs, files in os.walk(path):
-#     root = pathlib.Path(root)
-#     for file in files:
-#         if file.find(suffix) != -1:
-#             file = root/file
-#             with open(file) as fpt:
-#                 page = fpt.read()
-#             try:
-#                 html_content = html.fromstring(page)
-#                 html_content.rewrite_links(abs2rel_func)
-#             except Exception as exc:
-#                 print(f'error: {exc}')
+    print("Generate Docset Successfully!")

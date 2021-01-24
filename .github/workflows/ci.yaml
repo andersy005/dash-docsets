@@ -29,6 +29,7 @@ jobs:
             'southern',
             'tahoe',
             'superior',
+            'tanganyika',
           ]
     timeout-minutes: 30
     steps:
