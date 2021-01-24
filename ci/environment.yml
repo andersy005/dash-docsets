@@ -3,7 +3,6 @@ channels:
   - conda-forge
 dependencies:
   - alembic
-  - arviz
   - attrs
   - basemap
   - bottleneck
@@ -15,7 +14,6 @@ dependencies:
   - cftime
   - climpred
   - coconut
-  - cupy
   - cython
   # - dask-gateway
   # - dask-gateway-server-local
@@ -34,7 +32,6 @@ dependencies:
   - fastapi>=0.61.2
   - firefox
   - fsspec
-  - geckodriver
   - geoviews
   - h5netcdf
   - heapdict
@@ -81,7 +78,6 @@ dependencies:
   - pydantic>=1.7.3
   - pydata-sphinx-theme
   - pygit2
-  - pymc3>=3.9.3
   - pyparsing==2.2.0
   - pyproj
   - pytablewriter
@@ -92,9 +88,7 @@ dependencies:
   - regionmask>=0.6.1
   - scipy>=1.5.3
   - seaborn
-  - selenium
   - sparse
-  - skein
   - sphinx_bootstrap_theme
   - sphinx_rtd_theme
   - sphinx-automodapi
@@ -114,7 +108,6 @@ dependencies:
   - sqlalchemy
   - starlette
   - tabulate
-  # - theano-pymc>=1.0.11
   - tqdm
   - trio>=0.17.0
   - typer
