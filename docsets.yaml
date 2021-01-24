@@ -150,7 +150,7 @@ southern:
     install: false
     doc_build_cmd: 'git checkout gh-pages'
     generator: html2dash
-  - name: holoviews
+  - name: hvplot
     repo: holoviz/hvplot
     doc_dir: .
     html_pages_dir: .
@@ -208,10 +208,12 @@ superior:
     install: false
     doc_build_cmd: 'git checkout gh-pages'
     generator: html2dash
-  - name: cupy
-    repo: cupy/cupy
-    doc_dir: docs
-    html_pages_dir: build
+  # - name: cupy
+  #   repo: cupy/cupy
+  #   doc_dir: docs
+  #   html_pages_dir: build
+  #   install: false
+  #   doc_build_cmd: SPHINXOPTS=-W make html
 
 tanganyika:
   - name: fastapi
