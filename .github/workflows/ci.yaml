@@ -53,8 +53,10 @@ jobs:
       #     activate-environment: dash-docs
       - name: install mamba
         uses: mamba-org/provision-with-micromamba@main
+        with:
+          environment-file: ci/environment.yml
       - run: |
-          mamba env update -f ci/environment.yml
+          # mamba env update -f ci/environment.yml
           conda activate dash-docs
           conda info
           conda list
