@@ -146,9 +146,15 @@ def custom_builder(
 
     # Copy the HTML Documentation to the Docset Folder
     try:
+        ignored = {".git/", ".doctrees/", "_sources/", "*/*.ipynb"}
+        excludes = [f"--exclude={pat}" for pat in ignored]
         arg_list = (
-            ["cp", "-r"] + [source_dir + "/" + f for f in os.listdir(source_dir)] + [docset_path]
+            ["rsync", "-avhr", "--progress"]
+            + excludes
+            + [source_dir + "/" + f for f in os.listdir(source_dir) if f not in ignored]
+            + [docset_path]
         )
+
         subprocess.call(arg_list)
         print("Copy the HTML Documentation!")
     except Exception as exc:

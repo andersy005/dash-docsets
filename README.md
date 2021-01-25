@@ -36,7 +36,7 @@ You may get the following error:
 - Untar the downloaded docset into zeal's docset storage directory
 
   ```bash
-  tar -zxvf docset.tgz --directory zeal-docset-storage-directory
+  tar -Jcvf docset.tar.xz --directory zeal-docset-storage-directory
   ```
 
-  Replace `docset.tgz` with the location of the downloaded docset, and `zeal-docset-storage-directory` with the found zeal's docset storage directory
+  Replace `docset.tar.xz` with the location of the downloaded docset, and `zeal-docset-storage-directory` with the found zeal's docset storage directory

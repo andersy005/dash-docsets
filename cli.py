@@ -12,6 +12,8 @@ import yaml
 
 from html2dash import custom_builder
 
+DOCSET_EXT = ".tar.xz"
+
 BASE_URL = "https://github.com"
 TMPDIR = tempfile.gettempdir()
 REPODIR = Path(TMPDIR) / 'repos'
@@ -137,12 +139,15 @@ def _build_project(
             tar_command = [
                 "tar",
                 "--exclude='.DS_Store'",
-                "-cvzf",
-                f"{name}.tgz",
+                "-Jcvf",
+                f"{name}{DOCSET_EXT}",
                 f"{name}.docset",
             ]
 
-            subprocess.run(tar_command, check=True)
+            # Compress the result docset with maximum compression with xz:
+            my_env = os.environ.copy()
+            my_env["XZ_OPT"] = "-9"
+            subprocess.run(tar_command, check=True, env=my_env)
             subprocess.run(f"rm -rf {name}.docset", **kwargs)
         create_feed(name, latest_tag)
     except Exception as exc:
@@ -161,7 +166,7 @@ def create_feed(name, latest_tag):
     version = SubElement(entry, "version")
     version.text = f"main@{latest_tag}"
     url = SubElement(entry, "url")
-    url.text = f"{base_url}/{name}.tgz"
+    url.text = f"{base_url}/{name}{DOCSET_EXT}"
 
     bs = BeautifulSoup(tostring(entry), features="html.parser").prettify()
 
@@ -231,7 +236,7 @@ def update_feed_list(
 ):
     """Update docsets feed list"""
 
-    items = list(Path(DOCSET_DIR).rglob("*.tgz"))
+    items = list(Path(DOCSET_DIR).rglob(f"*{DOCSET_EXT}"))
     if items:
         print(f"Found {len(items)} items.")
         print(items)
