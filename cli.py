@@ -247,7 +247,10 @@ def update_feed_list(
                 file=fpt,
             )
             for item in items:
-                print(f"- **{item.stem}**: {root}/{item.stem}.xml", file=fpt)
+                print(
+                    f"- **{item.name.split('.')[0]}**:\n  - Feed:{root}/{item.stem}.xml\n  - Size: {item.stat().st_size / (1024*1024):.1f} MB",
+                    file=fpt,
+                )
 
             print(
                 "\n![](https://github.com/andersy005/dash-docsets/raw/master/images/how-to-add-feed.png)",

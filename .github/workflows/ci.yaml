@@ -52,10 +52,7 @@ jobs:
           add-pip-as-python-dependency: true
           activate-environment: dash-docs
           use-only-tar-bz2: true
-      # - name: install mamba
-      #   uses: mamba-org/provision-with-micromamba@main
-      #   with:
-      #     environment-file: ci/environment.yml
+
       - run: |
           mamba env update -f ci/environment.yml
           conda info
