@@ -1,0 +1,139 @@
+# Docset Feeds
+
+You can subscribe to the following feeds with a single click.
+
+```bash
+ dash-feed://<URL encoded feed URL>
+```
+
+- **arviz**:
+  - Feed:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/arviz.tar.xml
+  - Size: 31.5 MB
+- **attrs**:
+  - Feed:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/attrs.tar.xml
+  - Size: 0.3 MB
+- **cartopy**:
+  - Feed:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/cartopy.tar.xml
+  - Size: 30.5 MB
+- **climpred**:
+  - Feed:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/climpred.tar.xml
+  - Size: 11.6 MB
+- **cryptography**:
+  - Feed:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/cryptography.tar.xml
+  - Size: 2.9 MB
+- **dask-gateway**:
+  - Feed:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/dask-gateway.tar.xml
+  - Size: 4.9 MB
+- **dask-jobqueue**:
+  - Feed:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/dask-jobqueue.tar.xml
+  - Size: 2.6 MB
+- **dask**:
+  - Feed:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/dask.tar.xml
+  - Size: 5.9 MB
+- **distributed**:
+  - Feed:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/distributed.tar.xml
+  - Size: 3.0 MB
+- **fabric**:
+  - Feed:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/fabric.tar.xml
+  - Size: 0.3 MB
+- **fastapi**:
+  - Feed:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/fastapi.tar.xml
+  - Size: 4.8 MB
+- **fsspec**:
+  - Feed:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/fsspec.tar.xml
+  - Size: 2.8 MB
+- **hvplot**:
+  - Feed:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/hvplot.tar.xml
+  - Size: 21.3 MB
+- **intake**:
+  - Feed:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/intake.tar.xml
+  - Size: 4.0 MB
+- **invoke**:
+  - Feed:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/invoke.tar.xml
+  - Size: 0.4 MB
+- **ipywidgets**:
+  - Feed:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/ipywidgets.tar.xml
+  - Size: 3.8 MB
+- **jax**:
+  - Feed:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/jax.tar.xml
+  - Size: 5.9 MB
+- **jupyterhub**:
+  - Feed:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/jupyterhub.tar.xml
+  - Size: 3.1 MB
+- **numcodecs**:
+  - Feed:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/numcodecs.tar.xml
+  - Size: 0.2 MB
+- **numpyro**:
+  - Feed:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/numpyro.tar.xml
+  - Size: 6.2 MB
+- **panel**:
+  - Feed:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/panel.tar.xml
+  - Size: 15.8 MB
+- **paramiko**:
+  - Feed:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/paramiko.tar.xml
+  - Size: 0.4 MB
+- **proplot**:
+  - Feed:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/proplot.tar.xml
+  - Size: 18.0 MB
+- **pydantic**:
+  - Feed:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/pydantic.tar.xml
+  - Size: 0.3 MB
+- **pymc3**:
+  - Feed:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/pymc3.tar.xml
+  - Size: 99.2 MB
+- **regionmask**:
+  - Feed:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/regionmask.tar.xml
+  - Size: 3.2 MB
+- **repo2docker**:
+  - Feed:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/repo2docker.tar.xml
+  - Size: 2.1 MB
+- **rich**:
+  - Feed:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/rich.tar.xml
+  - Size: 2.8 MB
+- **singularity**:
+  - Feed:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/singularity.tar.xml
+  - Size: 3.2 MB
+- **singularityadmin**:
+  - Feed:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/singularityadmin.tar.xml
+  - Size: 2.7 MB
+- **skorch**:
+  - Feed:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/skorch.tar.xml
+  - Size: 2.7 MB
+- **sparse**:
+  - Feed:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/sparse.tar.xml
+  - Size: 3.4 MB
+- **starlette**:
+  - Feed:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/starlette.tar.xml
+  - Size: 0.6 MB
+- **trio**:
+  - Feed:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/trio.tar.xml
+  - Size: 2.8 MB
+- **typer**:
+  - Feed:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/typer.tar.xml
+  - Size: 0.4 MB
+- **uvicorn**:
+  - Feed:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/uvicorn.tar.xml
+  - Size: 0.7 MB
+- **wrapt**:
+  - Feed:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/wrapt.tar.xml
+  - Size: 2.6 MB
+- **xarray**:
+  - Feed:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/xarray.tar.xml
+  - Size: 9.0 MB
+- **xesmf**:
+  - Feed:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/xesmf.tar.xml
+  - Size: 4.5 MB
+- **xgcm**:
+  - Feed:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/xgcm.tar.xml
+  - Size: 6.6 MB
+- **zarr**:
+  - Feed:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/zarr.tar.xml
+  - Size: 2.7 MB
+- **zfp**:
+  - Feed:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/zfp.tar.xml
+  - Size: 0.7 MB
+- **zict**:
+  - Feed:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/zict.tar.xml
+  - Size: 0.1 MB
+
+![](https://github.com/andersy005/dash-docsets/raw/master/images/how-to-add-feed.png)
