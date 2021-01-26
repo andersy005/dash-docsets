@@ -45,7 +45,6 @@ dependencies:
   - jax>=0.2.0
   - jaxlib>=0.1.55
   - jupyter_telemetry
-  - jupyter_telemetry
   - jupyter-repo2docker
   - jupyterhub>=1.2.1
   - jupyterlab>=3
@@ -72,7 +71,6 @@ dependencies:
   - param
   - paramiko
   - pip
-  - prefect
   - proplot
   - pyarrow
   - pydantic>=1.7.3
@@ -140,6 +138,7 @@ dependencies:
       - sphinx_autodoc_typehints
       - sphinx-fortran
       - sphinx-holoviz-theme
+      - sphinx-js
       - sphinx-jsonschema
       - sphinx-notfound-page
       - sphinx-pangeo-theme

@@ -95,7 +95,7 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install typer beautifulsoup4 pyyaml requests
       - run: |
-          python cli.py update-feed-list /tmp/workspace/builds/README.md
+          python cli.py update-feed-list /tmp/workspace/builds/README.md --docset-dir /tmp/workspace/builds/docsets
 
       - name: Display structure of files to upload
         run: ls -R
@@ -108,3 +108,4 @@ jobs:
           publish_dir: /tmp/workspace/builds
           user_name: 'GitHub Action'
           user_email: 'action@github.com'
+          publish_branch: docsets

@@ -9,9 +9,12 @@ from pathlib import Path
 
 import typer
 import yaml
+from rich.console import Console
+from rich.progress import track
 
 from html2dash import custom_builder
 
+console = Console()
 DOCSET_EXT = ".tar.xz"
 
 BASE_URL = "https://github.com"
@@ -74,7 +77,7 @@ def _build_project(
             ]
             subprocess.run(command, check=True)
         else:
-            print(f"{name} directory already exits.")
+            console.log(f"{name} directory already exits.")
 
         with working_directory(local_dir):
 
@@ -151,7 +154,7 @@ def _build_project(
             subprocess.run(f"rm -rf {name}.docset", **kwargs)
         create_feed(name, latest_tag)
     except Exception as exc:
-        print(exc)
+        console.log(exc, styl='red')
 
 
 def create_feed(name, latest_tag):
@@ -218,7 +221,7 @@ def build_from_config(
 
     else:
         data = functools.reduce(operator.iconcat, data.values(), [])
-    for project in data:
+    for project in track(data):
         project_info = project.copy()
 
         name = project_info.pop('name')
@@ -230,25 +233,27 @@ def build_from_config(
 @app.command()
 def update_feed_list(
     feed_file: Path = typer.Argument(f"{FEED_DIR}/README.md"),
-    root: str = typer.Option(
-        "https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds"
+    docset_dir: Path = typer.Option(DOCSET_DIR, help='docset directory'),
+    feed_root_url: str = typer.Option(
+        "https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds",
+        help="Root URL for the feeds",
     ),
 ):
     """Update docsets feed list"""
 
-    items = list(Path(DOCSET_DIR).rglob(f"*{DOCSET_EXT}"))
+    items = list(Path(docset_dir).rglob(f"*{DOCSET_EXT}"))
     if items:
-        print(f"Found {len(items)} items.")
-        print(items)
+        console.log(f"✅ Found {len(items)} items.")
         items.sort()
+        console.log(items)
         with open(feed_file, "w") as fpt:
             print(
                 "# Docset Feeds\n\nYou can subscribe to the following feeds with a single click.\n\n```bash\n dash-feed://<URL encoded feed URL>\n```\n",
                 file=fpt,
             )
-            for item in items:
+            for item in track(items):
                 print(
-                    f"- **{item.name.split('.')[0]}**:\n  - Feed:{root}/{item.stem}.xml\n  - Size: {item.stat().st_size / (1024*1024):.1f} MB",
+                    f"- **{item.name.split('.')[0]}**:\n  - Feed:{feed_root_url}/{item.stem}.xml\n  - Size: {item.stat().st_size / (1024*1024):.1f} MB",
                     file=fpt,
                 )
 
@@ -257,7 +262,7 @@ def update_feed_list(
                 file=fpt,
             )
     else:
-        print("Didn't find any files....")
+        console.log("❌ Didn't find any files...", style='red')
 
 
 if __name__ == "__main__":
