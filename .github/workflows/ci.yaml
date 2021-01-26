@@ -22,14 +22,14 @@ jobs:
       matrix:
         key:
           [
-            # 'arctic',
-            # 'atlantic',
-            # 'indian',
-            # 'pacific',
-            # 'southern',
-            # 'tahoe',
+            'arctic',
+            'atlantic',
+            'indian',
+            'pacific',
+            'southern',
+            'tahoe',
             'superior',
-            # 'tanganyika',
+            'tanganyika',
           ]
     timeout-minutes: 30
     steps:
@@ -86,11 +86,11 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/download-artifact@v2
         with:
-          path: /tmp/workspace
+          path: /tmp/workspace/builds
 
       - name: Display structure of downloaded files
         run: ls -R
-        working-directory: /tmp/workspace
+        working-directory: /tmp/workspace/builds
 
       - uses: actions/setup-python@v2
         with:
@@ -99,35 +99,15 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install typer beautifulsoup4 pyyaml requests
       - run: |
-          python cli.py update-feed-list
+          python cli.py update-feed-list --feed-file /tmp/workspace/builds/README.md
           ls -ltrh
 
-      # - name: Update Docsets + Feeds
-      #   run: |
-
-      #     # cp -r ./images README.md ../
-      #     rm -rf .gitignore .isort.cfg .pre-commit-config.yaml
-      #     mkdir -p ./docsets ./feeds
-      #     # cp -r /tmp/workspace/docsets/* ./docsets/
-      #     # cp -r /tmp/workspace/feeds/* ./feeds/
-      #     rsync -a /tmp/workspace/ ./
-      #     # cp -r ../images ../README.md ./
-      #     python cli.py update-feed-list
-      #     ls -ltrh ./docsets
-      #     ls -ltrh ./feeds
-
-      # - name: Commit files
-      #   run: |
-      #     git status
-      #     git remote -v
-      #     git config --local user.email "action@github.com"
-      #     git config --local user.name "GitHub Action"
-      #     git add -A
-      #     git commit -m "[skip ci] Automated deploy"
-
-      # - name: Push commit
-      #   uses: ad-m/github-push-action@master
-      #   with:
-      #     github_token: ${{ secrets.GITHUB_TOKEN }}
-      #     branch: docsets
-      #     force: true
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3.7.3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: /tmp/workspace/builds
+          user_name: 'GitHub Action'
+          user_email: 'action@github.com'
+          
+    
