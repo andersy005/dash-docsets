@@ -8,84 +8,82 @@ on:
   workflow_dispatch: # allows you to trigger manually
 
 jobs:
-  build:
-    if: "!contains(github.event.head_commit.message, 'skip ci')"
-    name: dash-docsets-build
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        shell: bash -l {0}
-    env:
-      MKL_THREADING_LAYER: GNU
-    strategy:
-      fail-fast: false
-      matrix:
-        key:
-          [
-            'arctic',
-            'atlantic',
-            'indian',
-            'pacific',
-            'southern',
-            'tahoe',
-            'superior',
-            'tanganyika',
-          ]
-    timeout-minutes: 30
-    steps:
-      - name: Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.7.0
-        with:
-          access_token: ${{ github.token }}
-      - uses: actions/checkout@v2
-      - name: Cache conda
-        uses: actions/cache@v2
-        with:
-          path: ~/conda_pkgs_dir
-          key: ${{ runner.os }}-conda-${{ hashFiles('ci/environment.yml') }}
-      - uses: conda-incubator/setup-miniconda@v2
-        with:
-          python-version: 3.7
-          mamba-version: '*'
-          channels: 'conda-forge'
-          channel-priority: strict
-          add-pip-as-python-dependency: true
-          activate-environment: dash-docs
-          use-only-tar-bz2: true
+  # build:
+  #   if: "!contains(github.event.head_commit.message, 'skip ci')"
+  #   name: dash-docsets-build
+  #   runs-on: ubuntu-latest
+  #   defaults:
+  #     run:
+  #       shell: bash -l {0}
+  #   env:
+  #     MKL_THREADING_LAYER: GNU
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       key:
+  #         [
+  #           'arctic',
+  #           'atlantic',
+  #           'indian',
+  #           'pacific',
+  #           'southern',
+  #           'tahoe',
+  #           'superior',
+  #           'tanganyika',
+  #         ]
+  #   timeout-minutes: 30
+  #   steps:
+  #     - name: Cancel Previous Runs
+  #       uses: styfle/cancel-workflow-action@0.7.0
+  #       with:
+  #         access_token: ${{ github.token }}
+  #     - uses: actions/checkout@v2
+  #     - name: Cache conda
+  #       uses: actions/cache@v2
+  #       with:
+  #         path: ~/conda_pkgs_dir
+  #         key: ${{ runner.os }}-conda-${{ hashFiles('ci/environment.yml') }}
+  #     - uses: conda-incubator/setup-miniconda@v2
+  #       with:
+  #         python-version: 3.7
+  #         mamba-version: '*'
+  #         channels: 'conda-forge'
+  #         channel-priority: strict
+  #         add-pip-as-python-dependency: true
+  #         activate-environment: dash-docs
+  #         use-only-tar-bz2: true
 
-      - run: |
-          mamba env update -f ci/environment.yml
-          conda info
-          conda list
-          printenv | sort
+  #     - run: |
+  #         mamba env update -f ci/environment.yml
+  #         conda info
+  #         conda list
+  #         printenv | sort
 
-      - env:
-          SPHINXOPTS: '-j4'
-          CONDA_PREFIX: '/usr/share/miniconda/condabin/conda'
-          GO111MODULE: 'on' # https://stackoverflow.com/questions/56475313/how-to-fix-go-get-warning-modules-disabled-by-go111module-auto-in-gopath-src
-        run: |
-          python cli.py build-from-config docsets.yaml --key ${{ matrix.key }}
+  #     - env:
+  #         SPHINXOPTS: '-j4'
+  #         CONDA_PREFIX: '/usr/share/miniconda/condabin/conda'
+  #         GO111MODULE: 'on' # https://stackoverflow.com/questions/56475313/how-to-fix-go-get-warning-modules-disabled-by-go111module-auto-in-gopath-src
+  #       run: |
+  #         python cli.py build-from-config docsets.yaml --key ${{ matrix.key }}
 
-      - uses: actions/upload-artifact@v2
-        with:
-          name: docsets
-          path: docsets
-          retention-days: 3
+  #     - uses: actions/upload-artifact@v2
+  #       with:
+  #         name: docsets
+  #         path: docsets
+  #         retention-days: 3
 
-      - uses: actions/upload-artifact@v2
-        with:
-          name: feeds
-          path: feeds
-          retention-days: 3
+  #     - uses: actions/upload-artifact@v2
+  #       with:
+  #         name: feeds
+  #         path: feeds
+  #         retention-days: 3
 
   deploy:
     name: dash-docsets-deploy
-    needs: build
+    # needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-        with:
-          ref: docsets
       - uses: actions/download-artifact@v2
         with:
           path: /tmp/workspace
@@ -102,33 +100,34 @@ jobs:
           python -m pip install typer beautifulsoup4 pyyaml requests
       - run: |
           python cli.py update-feed-list
+          ls -ltrh
 
-      - name: Update Docsets + Feeds
-        run: |
+      # - name: Update Docsets + Feeds
+      #   run: |
 
-          # cp -r ./images README.md ../
-          rm -rf .gitignore .isort.cfg .pre-commit-config.yaml
-          mkdir -p ./docsets ./feeds
-          # cp -r /tmp/workspace/docsets/* ./docsets/
-          # cp -r /tmp/workspace/feeds/* ./feeds/
-          rsync -a /tmp/workspace/ ./
-          # cp -r ../images ../README.md ./
-          python cli.py update-feed-list
-          ls -ltrh ./docsets
-          ls -ltrh ./feeds
+      #     # cp -r ./images README.md ../
+      #     rm -rf .gitignore .isort.cfg .pre-commit-config.yaml
+      #     mkdir -p ./docsets ./feeds
+      #     # cp -r /tmp/workspace/docsets/* ./docsets/
+      #     # cp -r /tmp/workspace/feeds/* ./feeds/
+      #     rsync -a /tmp/workspace/ ./
+      #     # cp -r ../images ../README.md ./
+      #     python cli.py update-feed-list
+      #     ls -ltrh ./docsets
+      #     ls -ltrh ./feeds
 
-      - name: Commit files
-        run: |
-          git status
-          git remote -v
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add -A
-          git commit -m "[skip ci] Automated deploy"
+      # - name: Commit files
+      #   run: |
+      #     git status
+      #     git remote -v
+      #     git config --local user.email "action@github.com"
+      #     git config --local user.name "GitHub Action"
+      #     git add -A
+      #     git commit -m "[skip ci] Automated deploy"
 
-      - name: Push commit
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: docsets
-          force: true
+      # - name: Push commit
+      #   uses: ad-m/github-push-action@master
+      #   with:
+      #     github_token: ${{ secrets.GITHUB_TOKEN }}
+      #     branch: docsets
+      #     force: true
