@@ -8,15 +8,15 @@
 
 My Dash (https://kapeli.com/dash) docsets. Let the buyer beware ⚠️;)
 
-**The main difference** between the docsets hosted in this repo and the official dash & dash user contributed docsets is that _these docsets are generated from the master branch of each project_.
+**The main difference** between the docsets hosted in this repo and the official dash & dash user contributed docsets is that _these docsets are generated from the main branch of each project_ and are updated regularly.
 
-Note: It's expected that these docsets should also work in [Zeal](https://zealdocs.org/) with some workarounds. **⚠️ See [Zeal Issues](#zeal-issues)** for more information on how to fix them.
+⚠️ Note: It's expected that these docsets should also work in [Zeal](https://zealdocs.org/) with some workarounds. **⚠️ See [Zeal Issues](#zeal-issues)** for more information on how to fix them.
 
 ![](./images/navigate.png)
 
 ## Docset Feeds
 
-For instructions on how to subscribe to feeds, check this [page](https://github.com/andersy005/dash-docsets/blob/docsets/feeds/README.md).
+For instructions on how to subscribe to feeds, check this [page](https://github.com/andersy005/dash-docsets/blob/docsets/README.md).
 
 ## Zeal Issues
 
