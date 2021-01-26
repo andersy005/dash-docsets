@@ -109,5 +109,3 @@ jobs:
           publish_dir: /tmp/workspace/builds
           user_name: 'GitHub Action'
           user_email: 'action@github.com'
-          
-    
