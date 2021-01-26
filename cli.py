@@ -154,7 +154,7 @@ def _build_project(
             subprocess.run(f"rm -rf {name}.docset", **kwargs)
         create_feed(name, latest_tag)
     except Exception as exc:
-        console.log(exc, styl='red')
+        console.log(exc, style='red')
 
 
 def create_feed(name, latest_tag):
