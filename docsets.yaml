@@ -246,3 +246,12 @@ tanganyika:
     doc_build_cmd: mkdocs build --no-directory-urls
     html_pages_dir: site
     generator: html2dash
+  - name: rich
+    repo: willmcgugan/rich
+    doc_dir: docs
+    html_pages_dir: build/html
+  - name: invoke
+    repo: pyinvoke/invoke
+    doc_dir: sites/docs
+    html_pages_dir: _build/html
+    doc_build_cmd: sphinx-build -j 4 -T -E -b html ./ _build/html

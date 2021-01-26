@@ -86,6 +86,7 @@ dependencies:
   - rasterio
   - recommonmark
   - regionmask>=0.6.1
+  - rich>= 9.9.0
   - scipy>=1.5.3
   - seaborn
   - sparse
