@@ -252,8 +252,9 @@ def update_feed_list(
                 file=fpt,
             )
             for item in track(items):
+                entry = item.name.split('.')[0]
                 print(
-                    f"- **{item.name.split('.')[0]}**:\n  - Feed:{feed_root_url}/{item.stem}.xml\n  - Size: {item.stat().st_size / (1024*1024):.1f} MB",
+                    f"- **{entry}**:\n  - Feed URL:{feed_root_url}/{entry}.xml\n  - Size: {item.stat().st_size / (1024*1024):.1f} MB",
                     file=fpt,
                 )
 
