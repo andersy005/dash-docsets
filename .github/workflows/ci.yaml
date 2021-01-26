@@ -88,10 +88,6 @@ jobs:
         with:
           path: /tmp/workspace/builds
 
-      - name: Display structure of downloaded files
-        run: ls -R
-        working-directory: /tmp/workspace/builds
-
       - uses: actions/setup-python@v2
         with:
           python-version: 3.8
@@ -99,8 +95,11 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install typer beautifulsoup4 pyyaml requests
       - run: |
-          python cli.py update-feed-list --feed-file /tmp/workspace/builds/README.md
-          ls -ltrh
+          python cli.py update-feed-list /tmp/workspace/builds/README.md
+
+      - name: Display structure of files to upload
+        run: ls -R
+        working-directory: /tmp/workspace/builds
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3.7.3
