@@ -8,7 +8,7 @@ You can subscribe to the following feeds with a single click.
 
 - **arviz**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/arviz.xml
-  - Size: 31.5 MB
+  - Size: 30.5 MB
 - **attrs**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/attrs.xml
   - Size: 0.3 MB
@@ -44,7 +44,7 @@ You can subscribe to the following feeds with a single click.
   - Size: 2.8 MB
 - **hvplot**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/hvplot.xml
-  - Size: 21.3 MB
+  - Size: 21.4 MB
 - **intake**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/intake.xml
   - Size: 4.0 MB
@@ -56,16 +56,13 @@ You can subscribe to the following feeds with a single click.
   - Size: 3.8 MB
 - **jax**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/jax.xml
-  - Size: 5.9 MB
+  - Size: 6.0 MB
 - **jupyterhub**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/jupyterhub.xml
   - Size: 3.1 MB
 - **numcodecs**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/numcodecs.xml
   - Size: 0.2 MB
-- **numpyro**:
-  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/numpyro.xml
-  - Size: 6.2 MB
 - **panel**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/panel.xml
   - Size: 15.8 MB
@@ -74,13 +71,13 @@ You can subscribe to the following feeds with a single click.
   - Size: 0.4 MB
 - **proplot**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/proplot.xml
-  - Size: 18.1 MB
+  - Size: 17.6 MB
 - **pydantic**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/pydantic.xml
   - Size: 0.3 MB
 - **pymc3**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/pymc3.xml
-  - Size: 99.2 MB
+  - Size: 99.4 MB
 - **regionmask**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/regionmask.xml
   - Size: 3.2 MB
