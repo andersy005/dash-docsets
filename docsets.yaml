@@ -189,6 +189,11 @@ tahoe:
     doc_dir: docs
     html_pages_dir: _build/html
 
+  - name: psutil
+    repo: giampaolo/psutil
+    doc_dir: docs
+    html_pages_dir: _build/html
+
 superior:
   - name: numpyro
     repo: pyro-ppl/numpyro
