@@ -8,7 +8,7 @@ You can subscribe to the following feeds with a single click.
 
 - **arviz**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/arviz.xml
-  - Size: 30.6 MB
+  - Size: 30.5 MB
 - **attrs**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/attrs.xml
   - Size: 0.3 MB
@@ -72,6 +72,9 @@ You can subscribe to the following feeds with a single click.
 - **proplot**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/proplot.xml
   - Size: 17.6 MB
+- **psutil**:
+  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/psutil.xml
+  - Size: 4.1 MB
 - **pydantic**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/pydantic.xml
   - Size: 0.3 MB
@@ -123,6 +126,9 @@ You can subscribe to the following feeds with a single click.
 - **xgcm**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/xgcm.xml
   - Size: 6.6 MB
+- **xrft**:
+  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/xrft.xml
+  - Size: 2.9 MB
 - **zarr**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/zarr.xml
   - Size: 2.7 MB
