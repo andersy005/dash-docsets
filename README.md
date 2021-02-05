@@ -54,9 +54,6 @@ You can subscribe to the following feeds with a single click.
 - **ipywidgets**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/ipywidgets.xml
   - Size: 3.8 MB
-- **jax**:
-  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/jax.xml
-  - Size: 6.0 MB
 - **jupyterhub**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/jupyterhub.xml
   - Size: 3.1 MB
@@ -105,6 +102,9 @@ You can subscribe to the following feeds with a single click.
 - **starlette**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/starlette.xml
   - Size: 0.6 MB
+- **toolz**:
+  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/toolz.xml
+  - Size: 0.2 MB
 - **trio**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/trio.xml
   - Size: 2.8 MB
