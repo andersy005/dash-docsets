@@ -259,7 +259,7 @@ def update_feed_list(
                 )
 
             print(
-                "\n![](https://github.com/andersy005/dash-docsets/raw/master/images/how-to-add-feed.png)",
+                "\n![dash-docsets](https://github.com/andersy005/dash-docsets/raw/main/images/how-to-add-feed.png)",
                 file=fpt,
             )
     else:
