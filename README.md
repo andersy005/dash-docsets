@@ -12,6 +12,9 @@ You can subscribe to the following feeds with a single click.
 - **attrs**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/attrs.xml
   - Size: 0.3 MB
+- **boltons**:
+  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/boltons.xml
+  - Size: 2.8 MB
 - **cartopy**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/cartopy.xml
   - Size: 30.5 MB
