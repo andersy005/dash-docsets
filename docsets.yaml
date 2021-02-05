@@ -196,6 +196,10 @@ tahoe:
     repo: pytoolz/toolz
     doc_dir: doc
     html_pages_dir: build/html
+  - name: boltons
+    repo: mahmoud/boltons
+    doc_dir: docs
+    html_pages_dir: _build/html
 
 superior:
   - name: numpyro
