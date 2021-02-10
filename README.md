@@ -12,6 +12,12 @@ You can subscribe to the following feeds with a single click.
 - **attrs**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/attrs.xml
   - Size: 0.3 MB
+- **binder**:
+  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/binder.xml
+  - Size: 2.0 MB
+- **binderhub**:
+  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/binderhub.xml
+  - Size: 2.3 MB
 - **boltons**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/boltons.xml
   - Size: 2.8 MB
@@ -60,6 +66,9 @@ You can subscribe to the following feeds with a single click.
 - **jupyterhub**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/jupyterhub.xml
   - Size: 3.1 MB
+- **myst-nb**:
+  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/myst-nb.xml
+  - Size: 2.1 MB
 - **numcodecs**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/numcodecs.xml
   - Size: 0.2 MB
@@ -68,6 +77,9 @@ You can subscribe to the following feeds with a single click.
   - Size: 15.8 MB
 - **paramiko**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/paramiko.xml
+  - Size: 0.4 MB
+- **pluggy**:
+  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/pluggy.xml
   - Size: 0.4 MB
 - **proplot**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/proplot.xml
@@ -142,4 +154,4 @@ You can subscribe to the following feeds with a single click.
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/zict.xml
   - Size: 0.1 MB
 
-![](https://github.com/andersy005/dash-docsets/raw/master/images/how-to-add-feed.png)
+![dash-docsets](https://github.com/andersy005/dash-docsets/raw/main/images/how-to-add-feed.png)
