@@ -24,12 +24,18 @@ You can subscribe to the following feeds with a single click.
 - **cartopy**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/cartopy.xml
   - Size: 30.5 MB
+- **chakra-ui**:
+  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/chakra-ui.xml
+  - Size: 0.0 MB
 - **climpred**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/climpred.xml
   - Size: 11.6 MB
 - **cryptography**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/cryptography.xml
   - Size: 2.9 MB
+- **cupy**:
+  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/cupy.xml
+  - Size: 0.0 MB
 - **dask-gateway**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/dask-gateway.xml
   - Size: 4.9 MB
@@ -42,6 +48,9 @@ You can subscribe to the following feeds with a single click.
 - **distributed**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/distributed.xml
   - Size: 3.0 MB
+- **dokku**:
+  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/dokku.xml
+  - Size: 0.0 MB
 - **fabric**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/fabric.xml
   - Size: 0.3 MB
@@ -62,19 +71,25 @@ You can subscribe to the following feeds with a single click.
   - Size: 0.4 MB
 - **ipywidgets**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/ipywidgets.xml
-  - Size: 3.8 MB
+  - Size: 3.9 MB
 - **jax**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/jax.xml
-  - Size: 9.9 MB
+  - Size: 10.0 MB
 - **jupyterhub**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/jupyterhub.xml
   - Size: 3.1 MB
 - **myst-nb**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/myst-nb.xml
-  - Size: 2.1 MB
+  - Size: 1.9 MB
+- **nextjs**:
+  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/nextjs.xml
+  - Size: 0.0 MB
 - **numcodecs**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/numcodecs.xml
   - Size: 0.2 MB
+- **nuxtjs**:
+  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/nuxtjs.xml
+  - Size: 0.0 MB
 - **panel**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/panel.xml
   - Size: 15.8 MB
@@ -84,6 +99,15 @@ You can subscribe to the following feeds with a single click.
 - **pluggy**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/pluggy.xml
   - Size: 0.4 MB
+- **prefect**:
+  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/prefect.xml
+  - Size: 0.0 MB
+- **primereact**:
+  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/primereact.xml
+  - Size: 0.0 MB
+- **primevue**:
+  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/primevue.xml
+  - Size: 0.0 MB
 - **proplot**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/proplot.xml
   - Size: 19.0 MB
@@ -96,6 +120,12 @@ You can subscribe to the following feeds with a single click.
 - **pymc3**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/pymc3.xml
   - Size: 99.5 MB
+- **react-bootstrap**:
+  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/react-bootstrap.xml
+  - Size: 0.0 MB
+- **react-native**:
+  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/react-native.xml
+  - Size: 0.0 MB
 - **regionmask**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/regionmask.xml
   - Size: 3.2 MB
@@ -120,6 +150,9 @@ You can subscribe to the following feeds with a single click.
 - **starlette**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/starlette.xml
   - Size: 0.6 MB
+- **strapi**:
+  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/strapi.xml
+  - Size: 0.0 MB
 - **toolz**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/toolz.xml
   - Size: 0.2 MB
