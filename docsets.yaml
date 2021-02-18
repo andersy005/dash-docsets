@@ -272,3 +272,58 @@ tanganyika:
     doc_dir: sites/docs
     html_pages_dir: _build/html
     doc_build_cmd: sphinx-build -j 4 -T -E -b html ./ _build/html
+  - name: react-bootstrap
+    repo: react-bootstrap/react-bootstrap
+    doc_dir: .
+    url: https://react-bootstrap.github.io
+    generator: dash-webgen
+  - name: prefect
+    repo: PrefectHQ/prefect
+    doc_dir: .
+    url: https://docs.prefect.io/
+    generator: dash-webgen
+  - name: cupy
+    repo: cupy/cupy
+    doc_dir: .
+    url: https://docs.cupy.dev/en/latest/
+    generator: dash-webgen
+  - name: chakra-ui
+    repo: chakra-ui/chakra-ui
+    url: https://chakra-ui.com/
+    generator: dash-webgen
+    doc_dir: .
+  - name: react-native
+    repo: facebook/react-native
+    url: https://reactnative.dev/
+    doc_dir: .
+    generator: dash-webgen
+  - name: primevue
+    repo: primefaces/primevue
+    url: https://www.primefaces.org/primevue
+    doc_dir: .
+    generator: dash-webgen
+  - name: primereact
+    repo: primefaces/primereact
+    url: https://www.primefaces.org/primereact
+    doc_dir: .
+    generator: dash-webgen
+  - name: strapi
+    repo: strapi/strapi
+    url: https://strapi.io/
+    doc_dir: .
+    generator: dash-webgen
+  - name: nextjs
+    repo: vercel/next.js
+    url: https://nextjs.org/
+    doc_dir: .
+    generator: dash-webgen
+  - name: nuxtjs
+    repo: nuxt/nuxt.js
+    url: https://nuxtjs.org
+    doc_dir: .
+    generator: dash-webgen
+  - name: dokku
+    repo: dokku/dokku
+    url: http://dokku.viewdocs.io/dokku/
+    doc_dir: .
+    generator: dash-webgen

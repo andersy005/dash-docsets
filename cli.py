@@ -12,7 +12,7 @@ import yaml
 from rich.console import Console
 from rich.progress import track
 
-from html2dash import custom_builder
+from html2dash import custom_builder, dash_webgen
 
 console = Console()
 DOCSET_EXT = ".tar.xz"
@@ -32,7 +32,7 @@ FEED_DIR.mkdir(parents=True, exist_ok=True)
 
 
 def validate_generator(generator: str):
-    generators = ["doc2dash", "html2dash"]
+    generators = ["doc2dash", "html2dash", "dash-webgen"]
     if generator not in generators:
         message = f"`{generator}` generator is not supported. Valid values are: {generators}."
         raise ValueError(message)
@@ -58,6 +58,7 @@ def _build_project(
     doc_build_cmd="make -j4 html",
     generator="doc2dash",
     install=True,
+    url=None,
 ):
 
     try:
@@ -81,16 +82,16 @@ def _build_project(
 
         with working_directory(local_dir):
 
-            if install:
+            if install and generator != "dash-webgen":
                 command = ["python", "-m", "pip", "install", ".", "--no-deps"]
                 subprocess.run(command, check=True)
             latest_tag = os.popen("git rev-parse --short HEAD").read().strip()
             if not latest_tag:
                 latest_tag = "unknown"
-
-        with working_directory(doc_dir):
-            command = doc_build_cmd
-            subprocess.run(command, **kwargs)
+        if generator != "dash-webgen":
+            with working_directory(doc_dir):
+                command = doc_build_cmd
+                subprocess.run(command, **kwargs)
 
         icon_dir = ICON_DIR / name
         icons = []
@@ -135,23 +136,33 @@ def _build_project(
                 icon=icon,
             )
 
+        elif generator == "dash-webgen":
+            dash_webgen(name=name, url=url, destination=DOCSET_DIR.as_posix())
+
         else:
             raise RuntimeError(f"Unknown generator: {generator}")
 
         with working_directory(DOCSET_DIR):
+            if generator == "dash-webgen":
+                docset_path = f"{name}/{name}.docset"
+                dir_to_delete = f"{name}"
+            else:
+                docset_path = f"{name}.docset"
+                dir_to_delete = docset_path
+
             tar_command = [
                 "tar",
                 "--exclude='.DS_Store'",
                 "-Jcvf",
                 f"{name}{DOCSET_EXT}",
-                f"{name}.docset",
+                docset_path,
             ]
 
             # Compress the result docset with maximum compression with xz:
             my_env = os.environ.copy()
             my_env["XZ_OPT"] = "-9"
             subprocess.run(tar_command, check=True, env=my_env)
-            subprocess.run(f"rm -rf {name}.docset", **kwargs)
+            subprocess.run(f"rm -rf {dir_to_delete}", **kwargs)
         create_feed(name, latest_tag)
     except Exception as exc:
         console.log(exc, style='red')
@@ -195,10 +206,11 @@ def build(
     ),
     generator: str = typer.Option("doc2dash", help="Documentation Set generator."),
     install: bool = typer.Option(True, help="Whether to install the package in editable mode"),
+    url: str = typer.Option(None, help="URL of the docset"),
 ):
     """Build dash docset for given project/repo"""
 
-    _build_project(name, repo, doc_dir, html_pages_dir, doc_build_cmd, generator, install)
+    _build_project(name, repo, doc_dir, html_pages_dir, doc_build_cmd, generator, install, url)
 
 
 @app.command()

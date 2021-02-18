@@ -86,6 +86,25 @@ def clear_trash(docset_name):
         raise exc
 
 
+def dash_webgen(
+    name: str = None, url: str = None, destination: typing.Union[str, pathlib.Path] = None
+) -> None:
+    """Build dash docset from a URL.
+    Parameters
+    ----------
+    name: str
+      Name of the docset
+    url: str
+      URL of the docset
+    destination: str
+      Output directory
+    """
+
+    destination = pathlib.Path(destination).as_posix()
+    command = ["npx", "dash-webgen", "--name", name, "--url", url, "--out", destination]
+    subprocess.call(command)
+
+
 def custom_builder(
     name: str = None,
     destination: typing.Union[str, pathlib.Path] = None,
