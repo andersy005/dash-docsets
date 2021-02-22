@@ -133,6 +133,7 @@ dependencies:
       - mkdocs-exclude
       - mkdocs-markdownextradata-plugin
       - mkdocs-material-extensions
+      - pywebcopy
       - releases
       - scanpydoc
       - sphinx_autodoc_typehints
