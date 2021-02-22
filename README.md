@@ -8,7 +8,7 @@ You can subscribe to the following feeds with a single click.
 
 - **arviz**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/arviz.xml
-  - Size: 30.5 MB
+  - Size: 31.0 MB
 - **attrs**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/attrs.xml
   - Size: 0.3 MB
@@ -74,7 +74,7 @@ You can subscribe to the following feeds with a single click.
   - Size: 3.9 MB
 - **jax**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/jax.xml
-  - Size: 10.0 MB
+  - Size: 10.2 MB
 - **jupyterhub**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/jupyterhub.xml
   - Size: 3.1 MB
@@ -120,6 +120,9 @@ You can subscribe to the following feeds with a single click.
 - **pymc3**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/pymc3.xml
   - Size: 99.5 MB
+- **pynacl**:
+  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/pynacl.xml
+  - Size: 2.7 MB
 - **react-bootstrap**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/react-bootstrap.xml
   - Size: 0.0 MB
@@ -168,9 +171,6 @@ You can subscribe to the following feeds with a single click.
 - **wrapt**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/wrapt.xml
   - Size: 2.6 MB
-- **xarray**:
-  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/xarray.xml
-  - Size: 9.0 MB
 - **xesmf**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/xesmf.xml
   - Size: 4.5 MB
