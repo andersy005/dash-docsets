@@ -8,7 +8,7 @@ You can subscribe to the following feeds with a single click.
 
 - **arviz**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/arviz.xml
-  - Size: 31.0 MB
+  - Size: 31.1 MB
 - **attrs**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/attrs.xml
   - Size: 0.3 MB
@@ -29,7 +29,7 @@ You can subscribe to the following feeds with a single click.
   - Size: 0.0 MB
 - **climpred**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/climpred.xml
-  - Size: 11.6 MB
+  - Size: 11.4 MB
 - **cryptography**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/cryptography.xml
   - Size: 2.9 MB
@@ -62,7 +62,7 @@ You can subscribe to the following feeds with a single click.
   - Size: 2.8 MB
 - **hvplot**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/hvplot.xml
-  - Size: 21.6 MB
+  - Size: 21.9 MB
 - **intake**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/intake.xml
   - Size: 4.0 MB
@@ -74,7 +74,7 @@ You can subscribe to the following feeds with a single click.
   - Size: 3.9 MB
 - **jax**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/jax.xml
-  - Size: 10.2 MB
+  - Size: 10.3 MB
 - **jupyterhub**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/jupyterhub.xml
   - Size: 3.1 MB
@@ -92,7 +92,7 @@ You can subscribe to the following feeds with a single click.
   - Size: 0.0 MB
 - **panel**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/panel.xml
-  - Size: 15.8 MB
+  - Size: 21.2 MB
 - **paramiko**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/paramiko.xml
   - Size: 0.4 MB
@@ -110,16 +110,13 @@ You can subscribe to the following feeds with a single click.
   - Size: 0.0 MB
 - **proplot**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/proplot.xml
-  - Size: 19.0 MB
+  - Size: 19.4 MB
 - **psutil**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/psutil.xml
   - Size: 4.1 MB
-- **pydantic**:
-  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/pydantic.xml
-  - Size: 0.3 MB
 - **pymc3**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/pymc3.xml
-  - Size: 99.5 MB
+  - Size: 99.2 MB
 - **pynacl**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/pynacl.xml
   - Size: 2.7 MB
@@ -167,10 +164,13 @@ You can subscribe to the following feeds with a single click.
   - Size: 0.4 MB
 - **uvicorn**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/uvicorn.xml
-  - Size: 0.7 MB
+  - Size: 0.6 MB
 - **wrapt**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/wrapt.xml
   - Size: 2.6 MB
+- **xarray**:
+  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/xarray.xml
+  - Size: 9.2 MB
 - **xesmf**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/xesmf.xml
   - Size: 4.5 MB
