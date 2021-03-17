@@ -16,7 +16,7 @@ dependencies:
   - cftime
   - climpred
   - coconut
-  - cupy
+  # - cupy
   - cython
   - dask-jobqueue
   - dask-kubernetes
@@ -111,6 +111,7 @@ dependencies:
   # - dask-gateway
   # - dask-gateway-server-local
   - pip:
+      - lumen
       - alabaster-jupyterhub
       - ansi2html
       - autodoc-traits
