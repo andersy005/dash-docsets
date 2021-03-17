@@ -12,6 +12,9 @@ You can subscribe to the following feeds with a single click.
 - **attrs**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/attrs.xml
   - Size: 0.3 MB
+- **authlib**:
+  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/authlib.xml
+  - Size: 0.3 MB
 - **binder**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/binder.xml
   - Size: 2.0 MB
@@ -29,12 +32,12 @@ You can subscribe to the following feeds with a single click.
   - Size: 0.0 MB
 - **climpred**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/climpred.xml
-  - Size: 11.4 MB
+  - Size: 12.4 MB
 - **cryptography**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/cryptography.xml
   - Size: 2.9 MB
-- **cupy**:
-  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/cupy.xml
+- **dapr**:
+  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/dapr.xml
   - Size: 0.0 MB
 - **dask-gateway**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/dask-gateway.xml
@@ -74,7 +77,7 @@ You can subscribe to the following feeds with a single click.
   - Size: 3.9 MB
 - **jax**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/jax.xml
-  - Size: 10.3 MB
+  - Size: 10.2 MB
 - **jupyterhub**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/jupyterhub.xml
   - Size: 3.1 MB
@@ -84,6 +87,9 @@ You can subscribe to the following feeds with a single click.
 - **nextjs**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/nextjs.xml
   - Size: 0.0 MB
+- **numba**:
+  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/numba.xml
+  - Size: 3.2 MB
 - **numcodecs**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/numcodecs.xml
   - Size: 0.2 MB
@@ -92,7 +98,7 @@ You can subscribe to the following feeds with a single click.
   - Size: 0.0 MB
 - **panel**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/panel.xml
-  - Size: 21.1 MB
+  - Size: 20.9 MB
 - **paramiko**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/paramiko.xml
   - Size: 0.4 MB
@@ -168,18 +174,15 @@ You can subscribe to the following feeds with a single click.
 - **wrapt**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/wrapt.xml
   - Size: 2.6 MB
-- **xarray**:
-  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/xarray.xml
-  - Size: 9.3 MB
 - **xesmf**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/xesmf.xml
   - Size: 4.5 MB
 - **xgcm**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/xgcm.xml
-  - Size: 6.6 MB
+  - Size: 6.7 MB
 - **xrft**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/xrft.xml
-  - Size: 2.9 MB
+  - Size: 3.6 MB
 - **zarr**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/zarr.xml
   - Size: 2.7 MB
