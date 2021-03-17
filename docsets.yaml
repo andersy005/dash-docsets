@@ -216,6 +216,11 @@ southern:
     html_pages_dir: _build/html
 
 atlantic:
+  - name: array-api
+    repo: data-apis/array-api
+    doc_dir: spec
+    install: false
+    html_pages_dir: _build/html
   - name: numpyro
     repo: pyro-ppl/numpyro
     doc_dir: docs

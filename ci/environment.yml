@@ -111,7 +111,6 @@ dependencies:
   # - dask-gateway
   # - dask-gateway-server-local
   - pip:
-      - lumen
       - alabaster-jupyterhub
       - ansi2html
       - autodoc-traits
@@ -119,6 +118,7 @@ dependencies:
       - flake8-quotes
       - funsor>=0.3.0
       - furo
+      - lumen
       - markdown-include
       - mkautodoc
       - mkdocs-exclude
@@ -129,6 +129,8 @@ dependencies:
       - scanpydoc
       - sphinx_autodoc_typehints
       - sphinx_bootstrap_theme
+      - sphinx_markdown_tables
+      - sphinx_material
       - sphinx_rtd_theme
       - sphinx_typlog_theme
       - sphinx-automodapi
