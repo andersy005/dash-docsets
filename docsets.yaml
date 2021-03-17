@@ -209,6 +209,10 @@ tahoe:
     doc_dir: docs
     html_pages_dir: _build/html
     doc_build_cmd: sphinx-build -j 4 -T -E -b html ./ _build/html
+  - name: authlib
+    repo: lepture/authlib
+    doc_dir: docs
+    html_pages_dir: _build/html
 
 superior:
   - name: numpyro
@@ -332,7 +336,7 @@ tanganyika:
     doc_dir: .
     generator: dash-webgen
   - name: dapr
-    repo: https://github.com/dapr/docs
+    repo: dapr/docs
     url: https://docs.dapr.io/
     doc_dir: .
     generator: dash-webgen

@@ -1,9 +1,11 @@
 name: dash-docs
 channels:
   - conda-forge
+  - nodefaults
 dependencies:
   - alembic
   - attrs
+  - Authlib
   - basemap
   - bottleneck
   - bqplot
@@ -15,14 +17,13 @@ dependencies:
   - climpred
   - coconut
   - cython
-  # - dask-gateway
-  # - dask-gateway-server-local
   - dask-jobqueue
   - dask-kubernetes
   - dask-sphinx-theme
   - dask>=2.20
   - dill>=0.3.3
   - distributed>=2.20
+  - django
   - doc2dash
   - docker-py
   - docrep
@@ -31,11 +32,13 @@ dependencies:
   - escapism
   - fastapi>=0.61.2
   - firefox
+  - flask
   - fsspec
   - geoviews
   - h5netcdf
   - heapdict
   - holoviews
+  - httpx
   - intake>=0.6.0
   - invoke
   - ipyleaflet
@@ -105,6 +108,7 @@ dependencies:
   - sphinxcontrib-bibtex
   - sphinxcontrib-napoleon
   - sqlalchemy
+  - sqlalchemy<1.4
   - starlette
   - tabulate
   - tqdm
@@ -120,6 +124,8 @@ dependencies:
   - xtensor
   - zarr>=2.5.0
   - zfpy
+  # - dask-gateway
+  # - dask-gateway-server-local
   - pip:
       - alabaster-jupyterhub
       - ansi2html
@@ -147,3 +153,4 @@ dependencies:
       - sphinxcontrib-trio
       - sphinxext-rediraffe
       - zope.interface
+      - sphinx_typlog_theme

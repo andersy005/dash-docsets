@@ -47,7 +47,7 @@ jobs:
         with:
           python-version: 3.7
           mamba-version: '*'
-          channels: 'conda-forge'
+          channels: conda-forge,nodefaults
           channel-priority: strict
           add-pip-as-python-dependency: true
           activate-environment: dash-docs
