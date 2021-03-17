@@ -233,10 +233,10 @@ superior:
     install: false
     doc_build_cmd: 'git checkout gh-pages'
     generator: html2dash
-  # - name: cupy
-  #   repo: cupy/cupy
-  #   doc_dir: docs
-  #   html_pages_dir: build
+  - name: cupy
+    repo: cupy/cupy
+    doc_dir: docs
+    html_pages_dir: build/html
   #   install: false
   #   doc_build_cmd: SPHINXOPTS=-W make html
 
@@ -289,11 +289,6 @@ tanganyika:
     repo: PrefectHQ/prefect
     doc_dir: .
     url: https://docs.prefect.io/
-    generator: dash-webgen
-  - name: cupy
-    repo: cupy/cupy
-    doc_dir: .
-    url: https://docs.cupy.dev/en/latest/
     generator: dash-webgen
   - name: chakra-ui
     repo: chakra-ui/chakra-ui
