@@ -156,7 +156,7 @@ indian:
     generator: html2dash
   - name: lumen
     repo: holoviz/lumen
-    doc_dirs: docs
+    doc_dir: docs
     html_pages_dir: _build/html
   - name: proplot
     repo: lukelbd/proplot
