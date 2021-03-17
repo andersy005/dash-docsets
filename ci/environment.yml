@@ -92,23 +92,6 @@ dependencies:
   - scipy>=1.5.3
   - seaborn
   - sparse
-  - sphinx_bootstrap_theme
-  - sphinx_rtd_theme
-  - sphinx-automodapi
-  - sphinx-autosummary-accessors
-  - sphinx-book-theme
-  - sphinx-click
-  - sphinx-copybutton
-  - sphinx-gallery>=0.8.1
-  - sphinx-issues
-  - sphinx-panels
-  - sphinx-tabs
-  - sphinx>2.4.4
-  - sphinxcontrib-apidoc
-  - sphinxcontrib-autoprogram
-  - sphinxcontrib-bibtex
-  - sphinxcontrib-napoleon
-  - sqlalchemy
   - sqlalchemy<1.4
   - starlette
   - tabulate
@@ -144,14 +127,31 @@ dependencies:
       - releases
       - scanpydoc
       - sphinx_autodoc_typehints
+      - sphinx_bootstrap_theme
+      - sphinx_rtd_theme
+      - sphinx_typlog_theme
+      - sphinx-automodapi
+      - sphinx-autosummary-accessors
+      - sphinx-book-theme
+      - sphinx-click
+      - sphinx-copybutton
       - sphinx-fortran
+      - sphinx-gallery>=0.8.1
       - sphinx-holoviz-theme
+      - sphinx-issues
       - sphinx-js
       - sphinx-jsonschema
       - sphinx-notfound-page
+      - sphinx-panels
       - sphinx-pangeo-theme
+      - sphinx-tabs
+      - sphinx>2.4.4
+      - sphinxcontrib-apidoc
+      - sphinxcontrib-autoprogram
+      - sphinxcontrib-bibtex
+      - sphinxcontrib-napoleon
       - sphinxcontrib-srclinks
       - sphinxcontrib-trio
       - sphinxext-rediraffe
+      - tensorflow_probability
       - zope.interface
-      - sphinx_typlog_theme
