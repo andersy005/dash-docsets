@@ -6,6 +6,9 @@ You can subscribe to the following feeds with a single click.
  dash-feed://<URL encoded feed URL>
 ```
 
+- **array-api**:
+  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/array-api.xml
+  - Size: 1.0 MB
 - **arviz**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/arviz.xml
   - Size: 31.0 MB
@@ -81,6 +84,9 @@ You can subscribe to the following feeds with a single click.
 - **jupyterhub**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/jupyterhub.xml
   - Size: 3.1 MB
+- **lumen**:
+  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/lumen.xml
+  - Size: 3.7 MB
 - **myst-nb**:
   - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/myst-nb.xml
   - Size: 2.1 MB
