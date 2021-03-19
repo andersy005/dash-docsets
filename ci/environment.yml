@@ -158,3 +158,4 @@ dependencies:
       - sphinxext-rediraffe
       - tensorflow_probability
       - zope.interface
+      - sphinxext-opengraph

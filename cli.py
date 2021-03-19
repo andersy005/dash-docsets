@@ -1,6 +1,7 @@
 import contextlib
 import functools
 import itertools
+import json
 import operator
 import os
 import subprocess
@@ -61,111 +62,106 @@ def _build_project(
     url=None,
 ):
 
-    try:
-        local_dir = REPODIR / name
-        doc_dir = local_dir / doc_dir
-        validate_generator(generator)
-        kwargs = dict(shell=True, check=True)
+    local_dir = REPODIR / name
+    doc_dir = local_dir / doc_dir
+    validate_generator(generator)
+    kwargs = dict(shell=True, check=True)
 
-        if not local_dir.exists():
-            repo_link = f"{BASE_URL}/{repo}"
-            command = [
-                "git",
-                "clone",
-                "--recurse-submodules",
-                repo_link,
-                local_dir,
-            ]
+    if not local_dir.exists():
+        repo_link = f"{BASE_URL}/{repo}"
+        command = [
+            "git",
+            "clone",
+            "--recurse-submodules",
+            repo_link,
+            local_dir,
+        ]
+        subprocess.run(command, check=True)
+    else:
+        console.log(f"{name} directory already exits.")
+
+    with working_directory(local_dir):
+
+        if install and generator != "dash-webgen":
+            command = ["python", "-m", "pip", "install", ".", "--no-deps"]
             subprocess.run(command, check=True)
-        else:
-            console.log(f"{name} directory already exits.")
-
-        with working_directory(local_dir):
-
-            if install and generator != "dash-webgen":
-                command = ["python", "-m", "pip", "install", ".", "--no-deps"]
-                subprocess.run(command, check=True)
-            latest_tag = os.popen("git rev-parse --short HEAD").read().strip()
-            if not latest_tag:
-                latest_tag = "unknown"
-        if generator != "dash-webgen":
-            with working_directory(doc_dir):
-                command = doc_build_cmd
-                subprocess.run(command, **kwargs)
-
-        icon_dir = ICON_DIR / name
-        icons = []
-        icon_files = None
-        if icon_dir.exists():
-            icon_files = list(icon_dir.iterdir())
-
-        source = doc_dir / html_pages_dir
-        if generator == "doc2dash":
-            command = [
-                "doc2dash",
-                "--force",
-                "--index-page",
-                "index.html",
-                "--enable-js",
-                "--name",
-                name,
-                source.as_posix(),
-                "--destination",
-                DOCSET_DIR.as_posix(),
-            ]
-            if icon_files:
-                icons = [
-                    ["--icon", icon.as_posix()] for icon in icon_files if icon.suffix == '.png'
-                ]
-                icons = list(itertools.chain(*icons))
-                command += icons
-            command = " ".join(command)
+        latest_tag = os.popen("git rev-parse --short HEAD").read().strip()
+        if not latest_tag:
+            latest_tag = "unknown"
+    if generator != "dash-webgen":
+        with working_directory(doc_dir):
+            command = doc_build_cmd
             subprocess.run(command, **kwargs)
 
-        elif generator == "html2dash":
-            if icon_files:
-                icon = icon_files[0]
-            else:
-                icon = None
+    icon_dir = ICON_DIR / name
+    icons = []
+    icon_files = None
+    if icon_dir.exists():
+        icon_files = list(icon_dir.iterdir())
 
-            custom_builder(
-                name=name,
-                destination=DOCSET_DIR.as_posix(),
-                index_page="index.html",
-                source=source.as_posix(),
-                icon=icon,
-            )
+    source = doc_dir / html_pages_dir
+    if generator == "doc2dash":
+        command = [
+            "doc2dash",
+            "--force",
+            "--index-page",
+            "index.html",
+            "--enable-js",
+            "--name",
+            name,
+            source.as_posix(),
+            "--destination",
+            DOCSET_DIR.as_posix(),
+        ]
+        if icon_files:
+            icons = [["--icon", icon.as_posix()] for icon in icon_files if icon.suffix == '.png']
+            icons = list(itertools.chain(*icons))
+            command += icons
+        command = " ".join(command)
+        subprocess.run(command, **kwargs)
 
-        elif generator == "dash-webgen":
-            dash_webgen(name=name, url=url, destination=DOCSET_DIR.as_posix())
-
+    elif generator == "html2dash":
+        if icon_files:
+            icon = icon_files[0]
         else:
-            raise RuntimeError(f"Unknown generator: {generator}")
+            icon = None
 
-        with working_directory(DOCSET_DIR):
-            if generator == "dash-webgen":
-                docset_path = f"{name}/{name}.docset"
-                dir_to_delete = f"{name}"
-            else:
-                docset_path = f"{name}.docset"
-                dir_to_delete = docset_path
+        custom_builder(
+            name=name,
+            destination=DOCSET_DIR.as_posix(),
+            index_page="index.html",
+            source=source.as_posix(),
+            icon=icon,
+        )
 
-            tar_command = [
-                "tar",
-                "--exclude='.DS_Store'",
-                "-Jcvf",
-                f"{name}{DOCSET_EXT}",
-                docset_path,
-            ]
+    elif generator == "dash-webgen":
+        dash_webgen(name=name, url=url, destination=DOCSET_DIR.as_posix())
 
-            # Compress the result docset with maximum compression with xz:
-            my_env = os.environ.copy()
-            my_env["XZ_OPT"] = "-9"
-            subprocess.run(tar_command, check=True, env=my_env)
-            subprocess.run(f"rm -rf {dir_to_delete}", **kwargs)
-        create_feed(name, latest_tag)
-    except Exception as exc:
-        console.log(exc, style='red')
+    else:
+        raise RuntimeError(f"Unknown generator: {generator}")
+
+    with working_directory(DOCSET_DIR):
+        if generator == "dash-webgen":
+            docset_path = f"{name}/{name}.docset"
+            dir_to_delete = f"{name}"
+        else:
+            docset_path = f"{name}.docset"
+            dir_to_delete = docset_path
+
+        tar_command = [
+            "tar",
+            "--exclude='.DS_Store'",
+            "-Jcvf",
+            f"{name}{DOCSET_EXT}",
+            docset_path,
+        ]
+
+        # Compress the result docset with maximum compression with xz:
+        my_env = os.environ.copy()
+        my_env["XZ_OPT"] = "-9"
+        subprocess.run(tar_command, check=True, env=my_env)
+        subprocess.run(f"rm -rf {dir_to_delete}", **kwargs)
+    create_feed(name, latest_tag)
 
 
 def create_feed(name, latest_tag):
@@ -233,13 +229,21 @@ def build_from_config(
 
     else:
         data = functools.reduce(operator.iconcat, data.values(), [])
+    errors = []
     for project in track(data):
         project_info = project.copy()
 
         name = project_info.pop('name')
         repo = project_info.pop('repo')
 
-        _build_project(name, repo, **project_info)
+        try:
+            _build_project(name, repo, **project_info)
+        except Exception as exc:
+            errors.append(dict(project=exc))
+
+    if errors:
+        with open(f'errors-{key}.json', 'w') as f:
+            json.dump(errors, f)
 
 
 @app.command()

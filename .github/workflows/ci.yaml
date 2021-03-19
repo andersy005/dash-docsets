@@ -50,6 +50,12 @@ jobs:
         run: |
           python cli.py build-from-config docsets.yaml --key ${{ matrix.key }}
 
+      - name: Report errors
+        uses: actions/upload-artifact@v2
+        if: hashFiles('errors-${{ matrix.key }}.json') != ''
+        run: |
+          cat errors-${{ matrix.key }}.json
+
       - uses: actions/upload-artifact@v2
         with:
           name: docsets
