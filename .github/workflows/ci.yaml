@@ -4,7 +4,7 @@ on:
     branches:
       - 'main'
   schedule:
-    - cron: '0 0 * * 3' # “At 00:00 on Wednesday."
+    - cron: '0 0 * * 3,6' # “At 00:00 on Wednesday and Saturday"
   workflow_dispatch: # allows you to trigger manually
 
 jobs:
@@ -28,7 +28,7 @@ jobs:
         with:
           access_token: ${{ github.token }}
       - uses: actions/checkout@v2
-      - uses: conda-incubator/setup-miniconda@v2
+      - uses: conda-incubator/setup-miniconda@master
         with:
           python-version: 3.7
           mamba-version: '*'
@@ -37,6 +37,8 @@ jobs:
           add-pip-as-python-dependency: true
           activate-environment: dash-docs
           environment-file: ci/environment.yml
+          miniforge-version: latest
+          miniforge-variant: Mambaforge
 
       - run: |
           conda info
