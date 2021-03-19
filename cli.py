@@ -239,7 +239,7 @@ def build_from_config(
         try:
             _build_project(name, repo, **project_info)
         except Exception as exc:
-            errors.append(dict(project=exc))
+            errors.append(name=exc)
 
     if errors:
         with open(f'errors-{key}.json', 'w') as f:
