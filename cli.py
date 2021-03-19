@@ -1,18 +1,20 @@
 import contextlib
 import functools
 import itertools
-import json
 import operator
 import os
 import subprocess
 import tempfile
 import traceback
 from pathlib import Path
+from xml.etree.ElementTree import Element, SubElement, tostring
 
 import typer
 import yaml
+from bs4 import BeautifulSoup
 from rich.console import Console
 from rich.progress import track
+from rich.table import Table
 
 from html2dash import custom_builder, dash_webgen
 
@@ -166,10 +168,6 @@ def _build_project(
 
 
 def create_feed(name, latest_tag):
-    from xml.etree.ElementTree import Element, SubElement, tostring
-
-    from bs4 import BeautifulSoup
-
     feed_filename = f"{FEED_DIR}/{name}.xml"
     base_url = "https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/docsets"
 
@@ -240,10 +238,16 @@ def build_from_config(
         try:
             _build_project(name, repo, **project_info)
         except Exception as exc:
-            errors.append({name: "\n".join(traceback.format_tb(exc.__traceback__))})
+            errors.append((name, "\n".join(traceback.format_tb(exc.__traceback__))))
     if errors:
-        with open(f'errors-{key}.json', 'w') as f:
-            json.dump(errors, f)
+        console.rule("Errors")
+        table = Table(title="")
+        table.add_column("Package/Project", justify="right", style="cyan")
+        table.add_column("Traceback", style="magenta")
+
+        for error in errors:
+            table.add_row(error[0], error[1])
+        console.print(table)
 
 
 @app.command()
