@@ -51,9 +51,8 @@ jobs:
           python cli.py build-from-config docsets.yaml --key ${{ matrix.key }}
 
       - name: Report errors
-        if: hashFiles('errors-${{ matrix.key }}.json') != ''
         run: |
-          cat errors-${{ matrix.key }}.json
+          cat errors-${{ matrix.key }}.json 2>/dev/null
 
       - uses: actions/upload-artifact@v2
         with:
