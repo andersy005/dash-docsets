@@ -6,6 +6,7 @@ import operator
 import os
 import subprocess
 import tempfile
+import traceback
 from pathlib import Path
 
 import typer
@@ -239,8 +240,7 @@ def build_from_config(
         try:
             _build_project(name, repo, **project_info)
         except Exception as exc:
-            errors.append({name: exc})
-
+            errors.append({name: "\n".join(traceback.format_tb(exc.__traceback__))})
     if errors:
         with open(f'errors-{key}.json', 'w') as f:
             json.dump(errors, f)
