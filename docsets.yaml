@@ -273,9 +273,14 @@ atlantic:
     generator: html2dash
   - name: uvicorn
     repo: encode/uvicorn
+    # doc_dir: .
+    # doc_build_cmd: mkdocs build --no-directory-urls
+    # html_pages_dir: site
+    # generator: html2dash
     doc_dir: .
-    doc_build_cmd: mkdocs build --no-directory-urls
-    html_pages_dir: site
+    html_pages_dir: .
+    install: false
+    doc_build_cmd: 'git checkout gh-pages'
     generator: html2dash
   - name: starlette
     repo: encode/starlette
