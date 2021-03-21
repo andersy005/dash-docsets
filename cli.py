@@ -11,6 +11,7 @@ import traceback
 from pathlib import Path
 from xml.etree.ElementTree import Element, SubElement, tostring
 
+import pandas as pd
 import typer
 import yaml
 from bs4 import BeautifulSoup
@@ -305,22 +306,29 @@ def update_feed_list(
         console.log(f"✅ Found {len(items)} items.")
         items.sort()
         console.log(items)
+        entries = []
         with open(feed_file, "w") as fpt:
             print(
                 "# Docset Feeds\n\nYou can subscribe to the following feeds with a single click.\n\n```bash\n dash-feed://<URL encoded feed URL>\n```\n",
                 file=fpt,
             )
-            for item in track(items):
-                entry = item.name.split('.')[0]
-                print(
-                    f"- **{entry}**:\n  - Feed URL:{feed_root_url}/{entry}.xml\n  - Size: {item.stat().st_size / (1024*1024):.1f} MB",
-                    file=fpt,
-                )
-
             print(
                 "\n![dash-docsets](https://github.com/andersy005/dash-docsets/raw/main/images/how-to-add-feed.png)",
                 file=fpt,
             )
+            for item in track(items):
+                entry = item.name.split('.')[0]
+                entries.append(
+                    {
+                        'Name': entry,
+                        'Feed URL': f'{feed_root_url}/{entry}.xml',
+                        'Size': f'{item.stat().st_size / (1024*1024):.1f} MB',
+                    }
+                )
+
+            table = pd.DataFrame(entries).to_markdown(tablefmt="github")
+            print(table, file=fpt)
+
     else:
         console.log("❌ Didn't find any files...", style='red')
 
