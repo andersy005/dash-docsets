@@ -16,7 +16,7 @@ dependencies:
   - cftime
   - climpred
   - coconut
-  # - cupy
+  - cupy
   - cython
   - dask-jobqueue
   - dask-kubernetes
@@ -32,7 +32,6 @@ dependencies:
   - emcee
   - escapism
   - fastapi>=0.61.2
-  - firefox
   - flask
   - fsspec
   - geoviews
@@ -66,6 +65,8 @@ dependencies:
   - netcdf4
   - networkx
   - nodejs
+  - rust
+  - pint
   - numba>=0.51
   - numpydoc
   - numpyro>=0.4.1
@@ -75,15 +76,16 @@ dependencies:
   - param
   - paramiko
   - pip
+  - plotly
   - proplot
   - pyarrow
-  - pydantic>=1.7.3
+  - pydantic>=1.8
   - pydata-sphinx-theme
   - pygit2
-  - pyparsing==2.2.0
+  - pyparsing
   - pyproj
   - pytablewriter
-  - python=3.7
+  - python=3.8
   - pytorch
   - rasterio
   - recommonmark
@@ -114,19 +116,19 @@ dependencies:
       - alabaster-jupyterhub
       - ansi2html
       - autodoc-traits
+      - cPyparsing<2.4.5.0.1.2,>=2.4.5.0.1.1
       - flake8
       - flake8-quotes
       - funsor>=0.3.0
       - furo
       - lumen
+      - manimgl
       - markdown-include
       - mkautodoc
       - mkdocs-exclude
       - mkdocs-markdownextradata-plugin
       - mkdocs-material-extensions
-      - pywebcopy
       - releases
-      - scanpydoc
       - sphinx_autodoc_typehints
       - sphinx_bootstrap_theme
       - sphinx_markdown_tables
@@ -155,7 +157,7 @@ dependencies:
       - sphinxcontrib-napoleon
       - sphinxcontrib-srclinks
       - sphinxcontrib-trio
+      - sphinxext-opengraph
       - sphinxext-rediraffe
       - tensorflow_probability
       - zope.interface
-      - sphinxext-opengraph

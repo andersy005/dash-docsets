@@ -73,7 +73,7 @@ arctic:
     repo: pydata/sparse
     doc_dir: docs
     html_pages_dir: _build/html
-    doc_build_cmd: sphinx-build -j 4 -W -b html . _build/html
+    doc_build_cmd: sphinx-build -j auto -W -b html . _build/html
   - name: zarr
     repo: zarr-developers/zarr-python
     doc_dir: docs
@@ -84,7 +84,7 @@ arctic:
     html_pages_dir: _build/html
 indian:
   - name: xtensor
-    repo: xtensor-stack/tensor
+    repo: xtensor-stack/xtensor
     doc_dir: docs
     html_pages_dir: build/html
     install: false
@@ -92,7 +92,7 @@ indian:
     repo: google/jax
     doc_dir: docs
     html_pages_dir: build/html
-    doc_build_cmd: sphinx-build -j 4 -b html . build/html
+    doc_build_cmd: sphinx-build -j auto -b html . build/html
   - name: numba
     repo: numba/numba
     doc_dir: docs
@@ -105,7 +105,7 @@ indian:
     repo: LLNL/zfp
     doc_dir: docs
     html_pages_dir: build/html
-    doc_build_cmd: sphinx-build -j 4 -b html ./source build/html
+    doc_build_cmd: sphinx-build -j auto -b html ./source build/html
     install: false
   - name: myst-parser
     repo: executablebooks/MyST-Parser
@@ -119,7 +119,7 @@ indian:
     repo: jupyterhub/jupyterhub
     doc_dir: docs
     html_pages_dir: build/html
-    doc_build_cmd: sphinx-build -j 4 -T -E -b html ./source build/html
+    doc_build_cmd: sphinx-build -j auto -T -E -b html ./source build/html
   - name: binder
     repo: jupyterhub/binder
     doc_dir: doc
@@ -133,7 +133,7 @@ indian:
     repo: jupyterhub/binderhub
     doc_dir: doc
     html_pages_dir: _build/html
-    doc_build_cmd: sphinx-build -j 4 -T -E -b html ./ _build/html
+    doc_build_cmd: sphinx-build -j auto -T -E -b html ./ _build/html
   - name: ipywidgets
     repo: jupyter-widgets/ipywidgets
     doc_dir: docs
@@ -161,7 +161,7 @@ indian:
     repo: lukelbd/proplot
     doc_dir: docs
     html_pages_dir: _build/html
-    doc_build_cmd: sphinx-build -j 4 -b html -D nbsphinx_allow_errors=True . _build/html
+    doc_build_cmd: sphinx-build -j auto -b html -D nbsphinx_allow_errors=True . _build/html
   - name: cartopy
     repo: SciTools/cartopy
     doc_dir: docs
@@ -172,6 +172,7 @@ southern:
     repo: pyca/cryptography
     doc_dir: docs
     html_pages_dir: _build/html
+    install: false
   - name: pynacl
     repo: pyca/pynacl
     doc_dir: docs
@@ -179,11 +180,11 @@ southern:
   - name: fabric
     repo: fabric/fabric
     doc_dir: sites/docs
-    doc_build_cmd: sphinx-build -j 4 -T -E -b html ./ _build/html
+    doc_build_cmd: sphinx-build -j auto -T -E -b html ./ _build/html
   - name: paramiko
     repo: paramiko/paramiko
     doc_dir: sites/www
-    doc_build_cmd: sphinx-build -j 4 -T -E -b html ./ _build/html
+    doc_build_cmd: sphinx-build -j auto -T -E -b html ./ _build/html
   - name: wrapt
     repo: GrahamDumpleton/wrapt
     doc_dir: docs
@@ -208,11 +209,32 @@ southern:
     repo: pytest-dev/pluggy
     doc_dir: docs
     html_pages_dir: _build/html
-    doc_build_cmd: sphinx-build -j 4 -T -E -b html ./ _build/html
+    doc_build_cmd: sphinx-build -j auto -T -E -b html ./ _build/html
   - name: authlib
     repo: lepture/authlib
     doc_dir: docs
     html_pages_dir: _build/html
+  - name: pooch
+    repo: fatiando/pooch
+    doc_dir: doc
+    html_pages_dir: _build/html
+  - name: cf-xarray
+    repo: xarray-contrib/cf-xarray
+    doc_dir: doc
+    html_pages_dir: _build/html
+  - name: xoak
+    repo: xarray-contrib/xoak
+    doc_dir: doc
+    html_pages_dir: _build/html
+  - name: pint-xarray
+    repo: xarray-contrib/pint-xarray
+    doc_dir: docs
+    html_pages_dir: _build/html
+    doc_build_cmd: sphinx-build -j auto -T -E -b html ./ _build/html
+  - name: manim
+    repo: 3b1b/manim
+    doc_dir: docs
+    html_pages_dir: build/html
 
 atlantic:
   - name: array-api
@@ -242,10 +264,7 @@ atlantic:
     repo: cupy/cupy
     doc_dir: docs
     html_pages_dir: build/html
-  #   install: false
-  #   doc_build_cmd: SPHINXOPTS=-W make html
-
-pacific:
+    install: false
   - name: fastapi
     repo: tiangolo/fastapi
     doc_dir: docs/en
@@ -284,7 +303,7 @@ pacific:
     repo: pyinvoke/invoke
     doc_dir: sites/docs
     html_pages_dir: _build/html
-    doc_build_cmd: sphinx-build -j 4 -T -E -b html ./ _build/html
+    doc_build_cmd: sphinx-build -j auto -T -E -b html ./ _build/html
   - name: react-bootstrap
     repo: react-bootstrap/react-bootstrap
     doc_dir: .

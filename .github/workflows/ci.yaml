@@ -20,7 +20,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        key: ['arctic', 'atlantic', 'indian', 'pacific', 'southern']
+        key: ['arctic', 'atlantic', 'indian', 'southern']
     timeout-minutes: 60
     steps:
       - name: Cancel Previous Runs
