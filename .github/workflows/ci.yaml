@@ -45,11 +45,11 @@ jobs:
           conda list
           printenv | sort
 
-      - env:
-          SPHINXOPTS: '-j4'
-          CONDA_PREFIX: '/usr/share/miniconda/condabin/conda'
-          GO111MODULE: 'on' # https://stackoverflow.com/questions/56475313/how-to-fix-go-get-warning-modules-disabled-by-go111module-auto-in-gopath-src
-        run: |
+      # - env:
+      #     SPHINXOPTS: '-j4'
+      #     CONDA_PREFIX: '/usr/share/miniconda/condabin/conda'
+      #     GO111MODULE: 'on' # https://stackoverflow.com/questions/56475313/how-to-fix-go-get-warning-modules-disabled-by-go111module-auto-in-gopath-src
+      - run: |
           python cli.py build-from-config docsets.yaml --key ${{ matrix.key }}
 
       - uses: actions/upload-artifact@v2
