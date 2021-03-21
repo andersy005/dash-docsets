@@ -260,11 +260,11 @@ atlantic:
     install: false
     doc_build_cmd: 'git checkout gh-pages'
     generator: html2dash
-  - name: cupy
-    repo: cupy/cupy
-    doc_dir: docs
-    html_pages_dir: build/html
-    install: false
+  # - name: cupy
+  #   repo: cupy/cupy
+  #   doc_dir: docs
+  #   html_pages_dir: build/html
+  #   install: false
   - name: fastapi
     repo: tiangolo/fastapi
     doc_dir: docs/en

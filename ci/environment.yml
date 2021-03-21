@@ -16,7 +16,6 @@ dependencies:
   - cftime
   - climpred
   - coconut
-  - cupy
   - cython
   - dask-jobqueue
   - dask-kubernetes
@@ -65,8 +64,6 @@ dependencies:
   - netcdf4
   - networkx
   - nodejs
-  - rust
-  - pint
   - numba>=0.51
   - numpydoc
   - numpyro>=0.4.1
@@ -75,6 +72,7 @@ dependencies:
   - panel>=0.10.2
   - param
   - paramiko
+  - pint
   - pip
   - plotly
   - proplot
@@ -124,6 +122,7 @@ dependencies:
       - lumen
       - manimgl
       - markdown-include
+      - mdx_truly_sane_lists
       - mkautodoc
       - mkdocs-exclude
       - mkdocs-markdownextradata-plugin
