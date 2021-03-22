@@ -6,200 +6,68 @@ You can subscribe to the following feeds with a single click.
  dash-feed://<URL encoded feed URL>
 ```
 
-- **array-api**:
-  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/array-api.xml
-  - Size: 1.0 MB
-- **arviz**:
-  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/arviz.xml
-  - Size: 30.2 MB
-- **attrs**:
-  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/attrs.xml
-  - Size: 0.3 MB
-- **authlib**:
-  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/authlib.xml
-  - Size: 0.3 MB
-- **binder**:
-  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/binder.xml
-  - Size: 2.0 MB
-- **binderhub**:
-  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/binderhub.xml
-  - Size: 2.3 MB
-- **boltons**:
-  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/boltons.xml
-  - Size: 2.8 MB
-- **cartopy**:
-  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/cartopy.xml
-  - Size: 28.6 MB
-- **chakra-ui**:
-  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/chakra-ui.xml
-  - Size: 0.0 MB
-- **climpred**:
-  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/climpred.xml
-  - Size: 12.4 MB
-- **cryptography**:
-  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/cryptography.xml
-  - Size: 2.9 MB
-- **dapr**:
-  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/dapr.xml
-  - Size: 0.0 MB
-- **dask-gateway**:
-  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/dask-gateway.xml
-  - Size: 4.9 MB
-- **dask-jobqueue**:
-  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/dask-jobqueue.xml
-  - Size: 2.6 MB
-- **dask**:
-  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/dask.xml
-  - Size: 5.9 MB
-- **distributed**:
-  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/distributed.xml
-  - Size: 3.0 MB
-- **dokku**:
-  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/dokku.xml
-  - Size: 0.0 MB
-- **fabric**:
-  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/fabric.xml
-  - Size: 0.4 MB
-- **fastapi**:
-  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/fastapi.xml
-  - Size: 4.8 MB
-- **fsspec**:
-  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/fsspec.xml
-  - Size: 2.8 MB
-- **hvplot**:
-  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/hvplot.xml
-  - Size: 22.0 MB
-- **intake**:
-  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/intake.xml
-  - Size: 4.0 MB
-- **invoke**:
-  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/invoke.xml
-  - Size: 0.4 MB
-- **ipywidgets**:
-  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/ipywidgets.xml
-  - Size: 3.9 MB
-- **jax**:
-  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/jax.xml
-  - Size: 10.2 MB
-- **jupyterhub**:
-  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/jupyterhub.xml
-  - Size: 3.1 MB
-- **lumen**:
-  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/lumen.xml
-  - Size: 3.7 MB
-- **myst-nb**:
-  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/myst-nb.xml
-  - Size: 2.1 MB
-- **nextjs**:
-  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/nextjs.xml
-  - Size: 0.0 MB
-- **numba**:
-  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/numba.xml
-  - Size: 3.2 MB
-- **numcodecs**:
-  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/numcodecs.xml
-  - Size: 0.2 MB
-- **nuxtjs**:
-  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/nuxtjs.xml
-  - Size: 0.0 MB
-- **panel**:
-  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/panel.xml
-  - Size: 20.9 MB
-- **paramiko**:
-  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/paramiko.xml
-  - Size: 0.4 MB
-- **pluggy**:
-  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/pluggy.xml
-  - Size: 0.4 MB
-- **prefect**:
-  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/prefect.xml
-  - Size: 0.0 MB
-- **primereact**:
-  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/primereact.xml
-  - Size: 0.0 MB
-- **primevue**:
-  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/primevue.xml
-  - Size: 0.0 MB
-- **proplot**:
-  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/proplot.xml
-  - Size: 19.2 MB
-- **psutil**:
-  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/psutil.xml
-  - Size: 4.1 MB
-- **pymc3**:
-  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/pymc3.xml
-  - Size: 99.3 MB
-- **pynacl**:
-  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/pynacl.xml
-  - Size: 2.7 MB
-- **react-bootstrap**:
-  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/react-bootstrap.xml
-  - Size: 0.0 MB
-- **react-native**:
-  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/react-native.xml
-  - Size: 0.0 MB
-- **regionmask**:
-  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/regionmask.xml
-  - Size: 3.2 MB
-- **repo2docker**:
-  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/repo2docker.xml
-  - Size: 2.1 MB
-- **rich**:
-  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/rich.xml
-  - Size: 2.8 MB
-- **singularity**:
-  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/singularity.xml
-  - Size: 3.2 MB
-- **singularityadmin**:
-  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/singularityadmin.xml
-  - Size: 2.7 MB
-- **skorch**:
-  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/skorch.xml
-  - Size: 2.7 MB
-- **sparse**:
-  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/sparse.xml
-  - Size: 3.4 MB
-- **starlette**:
-  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/starlette.xml
-  - Size: 0.6 MB
-- **strapi**:
-  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/strapi.xml
-  - Size: 0.0 MB
-- **toolz**:
-  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/toolz.xml
-  - Size: 0.2 MB
-- **trio**:
-  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/trio.xml
-  - Size: 2.8 MB
-- **typer**:
-  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/typer.xml
-  - Size: 0.4 MB
-- **uvicorn**:
-  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/uvicorn.xml
-  - Size: 0.6 MB
-- **wrapt**:
-  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/wrapt.xml
-  - Size: 2.6 MB
-- **xarray**:
-  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/xarray.xml
-  - Size: 8.7 MB
-- **xesmf**:
-  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/xesmf.xml
-  - Size: 4.5 MB
-- **xgcm**:
-  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/xgcm.xml
-  - Size: 6.7 MB
-- **xrft**:
-  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/xrft.xml
-  - Size: 3.6 MB
-- **zarr**:
-  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/zarr.xml
-  - Size: 2.7 MB
-- **zfp**:
-  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/zfp.xml
-  - Size: 0.7 MB
-- **zict**:
-  - Feed URL:https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/zict.xml
-  - Size: 0.1 MB
 
 ![dash-docsets](https://github.com/andersy005/dash-docsets/raw/main/images/how-to-add-feed.png)
+|    | Name             | Feed URL                                                                                     | Size    |
+|----|------------------|----------------------------------------------------------------------------------------------|---------|
+|  0 | array-api        | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/array-api.xml        | 1.0 MB  |
+|  1 | arviz            | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/arviz.xml            | 30.3 MB |
+|  2 | attrs            | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/attrs.xml            | 0.3 MB  |
+|  3 | authlib          | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/authlib.xml          | 0.3 MB  |
+|  4 | binder           | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/binder.xml           | 2.0 MB  |
+|  5 | binderhub        | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/binderhub.xml        | 2.3 MB  |
+|  6 | boltons          | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/boltons.xml          | 2.8 MB  |
+|  7 | cartopy          | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/cartopy.xml          | 28.6 MB |
+|  8 | cf-xarray        | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/cf-xarray.xml        | 2.0 MB  |
+|  9 | climpred         | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/climpred.xml         | 12.4 MB |
+| 10 | cryptography     | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/cryptography.xml     | 2.9 MB  |
+| 11 | dask-gateway     | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/dask-gateway.xml     | 4.9 MB  |
+| 12 | dask-jobqueue    | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/dask-jobqueue.xml    | 2.6 MB  |
+| 13 | dask             | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/dask.xml             | 5.9 MB  |
+| 14 | distributed      | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/distributed.xml      | 3.0 MB  |
+| 15 | fabric           | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/fabric.xml           | 0.4 MB  |
+| 16 | fastapi          | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/fastapi.xml          | 4.8 MB  |
+| 17 | fsspec           | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/fsspec.xml           | 2.8 MB  |
+| 18 | hvplot           | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/hvplot.xml           | 22.0 MB |
+| 19 | intake           | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/intake.xml           | 4.0 MB  |
+| 20 | invoke           | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/invoke.xml           | 0.4 MB  |
+| 21 | ipywidgets       | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/ipywidgets.xml       | 3.9 MB  |
+| 22 | jax              | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/jax.xml              | 10.2 MB |
+| 23 | jupyterhub       | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/jupyterhub.xml       | 3.1 MB  |
+| 24 | lumen            | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/lumen.xml            | 3.7 MB  |
+| 25 | manim            | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/manim.xml            | 19.7 MB |
+| 26 | myst-nb          | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/myst-nb.xml          | 2.1 MB  |
+| 27 | myst-parser      | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/myst-parser.xml      | 2.1 MB  |
+| 28 | numba            | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/numba.xml            | 3.2 MB  |
+| 29 | numcodecs        | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/numcodecs.xml        | 0.2 MB  |
+| 30 | panel            | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/panel.xml            | 20.9 MB |
+| 31 | paramiko         | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/paramiko.xml         | 0.4 MB  |
+| 32 | pint-xarray      | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/pint-xarray.xml      | 3.2 MB  |
+| 33 | pluggy           | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/pluggy.xml           | 0.4 MB  |
+| 34 | pooch            | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/pooch.xml            | 2.7 MB  |
+| 35 | proplot          | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/proplot.xml          | 19.2 MB |
+| 36 | psutil           | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/psutil.xml           | 4.1 MB  |
+| 37 | pydantic         | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/pydantic.xml         | 0.3 MB  |
+| 38 | pymc3            | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/pymc3.xml            | 99.3 MB |
+| 39 | pynacl           | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/pynacl.xml           | 2.7 MB  |
+| 40 | regionmask       | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/regionmask.xml       | 3.2 MB  |
+| 41 | repo2docker      | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/repo2docker.xml      | 2.1 MB  |
+| 42 | rich             | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/rich.xml             | 2.8 MB  |
+| 43 | singularity      | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/singularity.xml      | 3.2 MB  |
+| 44 | singularityadmin | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/singularityadmin.xml | 2.7 MB  |
+| 45 | skorch           | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/skorch.xml           | 2.7 MB  |
+| 46 | sparse           | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/sparse.xml           | 3.4 MB  |
+| 47 | starlette        | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/starlette.xml        | 0.6 MB  |
+| 48 | toolz            | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/toolz.xml            | 0.2 MB  |
+| 49 | trio             | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/trio.xml             | 2.8 MB  |
+| 50 | typer            | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/typer.xml            | 0.4 MB  |
+| 51 | uvicorn          | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/uvicorn.xml          | 0.7 MB  |
+| 52 | wrapt            | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/wrapt.xml            | 2.6 MB  |
+| 53 | xarray           | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/xarray.xml           | 8.7 MB  |
+| 54 | xesmf            | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/xesmf.xml            | 4.5 MB  |
+| 55 | xgcm             | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/xgcm.xml             | 6.7 MB  |
+| 56 | xoak             | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/xoak.xml             | 2.7 MB  |
+| 57 | xrft             | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/xrft.xml             | 3.6 MB  |
+| 58 | zarr             | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/zarr.xml             | 2.7 MB  |
+| 59 | zfp              | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/zfp.xml              | 0.7 MB  |
+| 60 | zict             | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/zict.xml             | 0.1 MB  |
