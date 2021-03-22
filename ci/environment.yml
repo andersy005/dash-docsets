@@ -119,6 +119,7 @@ dependencies:
       - flake8-quotes
       - funsor>=0.3.0
       - furo
+      - linkify-it-py
       - lumen
       - manimgl
       - markdown-include
@@ -152,7 +153,7 @@ dependencies:
       - sphinx>2.4.4
       - sphinxcontrib-apidoc
       - sphinxcontrib-autoprogram
-      - sphinxcontrib-bibtex
+      - sphinxcontrib-bibtex<2.0.0
       - sphinxcontrib-napoleon
       - sphinxcontrib-srclinks
       - sphinxcontrib-trio
