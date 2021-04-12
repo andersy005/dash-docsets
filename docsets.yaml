@@ -317,13 +317,13 @@ atlantic:
     repo: pyro-ppl/numpyro
     doc_dir: docs
     html_pages_dir: build/html
-  - name: pymc3
-    repo: pymc-devs/pymc3
-    doc_dir: .
-    html_pages_dir: .
-    install: false
-    doc_build_cmd: 'git checkout gh-pages'
-    generator: html2dash
+  # - name: pymc3
+  #   repo: pymc-devs/pymc3
+  #   doc_dir: .
+  #   html_pages_dir: .
+  #   install: false
+  #   doc_build_cmd: 'git checkout gh-pages'
+  #   generator: html2dash
   - name: arviz
     repo: arviz-devs/arviz
     doc_dir: .
