@@ -16,7 +16,6 @@ dependencies:
   - cftime
   - climpred
   - coconut
-  # - cupy
   - cython
   - dask-jobqueue
   - dask-kubernetes
@@ -32,7 +31,6 @@ dependencies:
   - emcee
   - escapism
   - fastapi>=0.61.2
-  - firefox
   - flask
   - fsspec
   - geoviews
@@ -74,16 +72,18 @@ dependencies:
   - panel>=0.10.2
   - param
   - paramiko
+  - pint
   - pip
+  - plotly
   - proplot
   - pyarrow
-  - pydantic>=1.7.3
+  - pydantic>=1.8
   - pydata-sphinx-theme
   - pygit2
-  - pyparsing==2.2.0
+  - pyparsing
   - pyproj
   - pytablewriter
-  - python=3.7
+  - python=3.8
   - pytorch
   - rasterio
   - recommonmark
@@ -114,19 +114,21 @@ dependencies:
       - alabaster-jupyterhub
       - ansi2html
       - autodoc-traits
+      - cPyparsing<2.4.6,>=2.4.5.0.1.2
       - flake8
       - flake8-quotes
       - funsor>=0.3.0
       - furo
+      - linkify-it-py
       - lumen
+      - manimgl
       - markdown-include
+      - mdx_truly_sane_lists
       - mkautodoc
       - mkdocs-exclude
       - mkdocs-markdownextradata-plugin
       - mkdocs-material-extensions
-      - pywebcopy
       - releases
-      - scanpydoc
       - sphinx_autodoc_typehints
       - sphinx_bootstrap_theme
       - sphinx_markdown_tables
@@ -151,11 +153,11 @@ dependencies:
       - sphinx>2.4.4
       - sphinxcontrib-apidoc
       - sphinxcontrib-autoprogram
-      - sphinxcontrib-bibtex
+      - sphinxcontrib-bibtex<2.0.0
       - sphinxcontrib-napoleon
       - sphinxcontrib-srclinks
       - sphinxcontrib-trio
+      - sphinxext-opengraph
       - sphinxext-rediraffe
       - tensorflow_probability
       - zope.interface
-      - sphinxext-opengraph

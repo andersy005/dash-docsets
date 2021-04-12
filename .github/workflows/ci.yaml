@@ -20,17 +20,17 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        key: ['arctic', 'atlantic', 'indian', 'pacific', 'southern']
+        key: ['arctic', 'atlantic', 'indian', 'southern']
     timeout-minutes: 60
     steps:
       - name: Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.8.0
+        uses: styfle/cancel-workflow-action@0.9.0
         with:
           access_token: ${{ github.token }}
       - uses: actions/checkout@v2
       - uses: conda-incubator/setup-miniconda@master
         with:
-          python-version: 3.7
+          # python-version: 3.8
           mamba-version: '*'
           channels: conda-forge,nodefaults
           channel-priority: strict
@@ -45,11 +45,11 @@ jobs:
           conda list
           printenv | sort
 
-      - env:
-          SPHINXOPTS: '-j4'
-          CONDA_PREFIX: '/usr/share/miniconda/condabin/conda'
-          GO111MODULE: 'on' # https://stackoverflow.com/questions/56475313/how-to-fix-go-get-warning-modules-disabled-by-go111module-auto-in-gopath-src
-        run: |
+      # - env:
+      #     SPHINXOPTS: '-j4'
+      #     CONDA_PREFIX: '/usr/share/miniconda/condabin/conda'
+      #     GO111MODULE: 'on' # https://stackoverflow.com/questions/56475313/how-to-fix-go-get-warning-modules-disabled-by-go111module-auto-in-gopath-src
+      - run: |
           python cli.py build-from-config docsets.yaml --key ${{ matrix.key }}
 
       - uses: actions/upload-artifact@v2
@@ -79,7 +79,7 @@ jobs:
           python-version: 3.8
       - run: |
           python -m pip install --upgrade pip
-          python -m pip install typer beautifulsoup4 pyyaml requests rich
+          python -m pip install typer beautifulsoup4 pyyaml requests rich pandas tabulate
       - run: |
           python cli.py update-feed-list /tmp/workspace/builds/README.md --docset-dir /tmp/workspace/builds/docsets
 
@@ -88,7 +88,7 @@ jobs:
         working-directory: /tmp/workspace/builds
 
       - name: Deploy
-        uses: peaceiris/actions-gh-pages@v3.7.3
+        uses: peaceiris/actions-gh-pages@v3.8.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: /tmp/workspace/builds

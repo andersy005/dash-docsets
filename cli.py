@@ -3,12 +3,15 @@ import functools
 import itertools
 import operator
 import os
+import re
 import subprocess
+import sys
 import tempfile
 import traceback
 from pathlib import Path
 from xml.etree.ElementTree import Element, SubElement, tostring
 
+import pandas as pd
 import typer
 import yaml
 from bs4 import BeautifulSoup
@@ -35,6 +38,43 @@ FEED_DIR = HOME_DIR / "feeds"
 FEED_DIR.mkdir(parents=True, exist_ok=True)
 
 
+def _stream_command(cmd, no_newline_regexp="Progess", **kwargs):
+    """stream a command (yield) back to the user, as each line is available.
+    # Example usage:
+    results = []
+    for line in stream_command(cmd):
+        print(line, end="")
+        results.append(line)
+    Parameters
+    ==========
+    cmd: the command to send, should be a list for subprocess
+    no_newline_regexp: the regular expression to determine skipping a
+                       newline. Defaults to finding Progress
+    """
+
+    if isinstance(cmd, str):
+        cmd = cmd.split(" ")
+
+    console.log(cmd)
+
+    process = subprocess.Popen(
+        cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, **kwargs
+    )
+    for line in iter(process.stdout.readline, ""):
+        if not re.search(no_newline_regexp, line):
+            yield line
+    process.stdout.close()
+    return_code = process.wait()
+    if return_code:
+        print(process.stderr.read(), file=sys.stderr)
+        raise subprocess.CalledProcessError(return_code, cmd)
+
+
+def stream_command(cmd, no_newline_regexp="Progess", **kwargs):
+    for _ in _stream_command(cmd, no_newline_regexp, **kwargs):
+        pass
+
+
 def validate_generator(generator: str):
     generators = ["doc2dash", "html2dash", "dash-webgen"]
     if generator not in generators:
@@ -59,7 +99,7 @@ def _build_project(
     repo,
     doc_dir='docs',
     html_pages_dir='_build/html',
-    doc_build_cmd="make -j4 html",
+    doc_build_cmd="make -j10 html",
     generator="doc2dash",
     install=True,
     url=None,
@@ -68,7 +108,7 @@ def _build_project(
     local_dir = REPODIR / name
     doc_dir = local_dir / doc_dir
     validate_generator(generator)
-    kwargs = dict(shell=True, check=True)
+    kwargs = dict()
 
     if not local_dir.exists():
         repo_link = f"{BASE_URL}/{repo}"
@@ -79,7 +119,7 @@ def _build_project(
             repo_link,
             local_dir,
         ]
-        subprocess.run(command, check=True)
+        stream_command(command)
     else:
         console.log(f"{name} directory already exits.")
 
@@ -87,14 +127,14 @@ def _build_project(
 
         if install and generator != "dash-webgen":
             command = ["python", "-m", "pip", "install", ".", "--no-deps"]
-            subprocess.run(command, check=True)
+            stream_command(command)
         latest_tag = os.popen("git rev-parse --short HEAD").read().strip()
         if not latest_tag:
             latest_tag = "unknown"
     if generator != "dash-webgen":
         with working_directory(doc_dir):
             command = doc_build_cmd
-            subprocess.run(command, **kwargs)
+            stream_command(command, **kwargs)
 
     icon_dir = ICON_DIR / name
     icons = []
@@ -121,7 +161,7 @@ def _build_project(
             icons = list(itertools.chain(*icons))
             command += icons
         command = " ".join(command)
-        subprocess.run(command, **kwargs)
+        stream_command(command, **kwargs)
 
     elif generator == "html2dash":
         if icon_files:
@@ -162,8 +202,8 @@ def _build_project(
         # Compress the result docset with maximum compression with xz:
         my_env = os.environ.copy()
         my_env["XZ_OPT"] = "-9"
-        subprocess.run(tar_command, check=True, env=my_env)
-        subprocess.run(f"rm -rf {dir_to_delete}", **kwargs)
+        stream_command(tar_command, env=my_env)
+        stream_command(f"rm -rf {dir_to_delete}", **kwargs)
     create_feed(name, latest_tag)
 
 
@@ -197,7 +237,7 @@ def build(
         '_build/html', help='location of built html pages relative to `doc_dir`'
     ),
     doc_build_cmd: str = typer.Option(
-        "make -j4 html", help='custom command to use when building the docs. Defaults to None'
+        "make -j10 html", help='custom command to use when building the docs. Defaults to None'
     ),
     generator: str = typer.Option("doc2dash", help="Documentation Set generator."),
     install: bool = typer.Option(True, help="Whether to install the package in editable mode"),
@@ -266,22 +306,29 @@ def update_feed_list(
         console.log(f"✅ Found {len(items)} items.")
         items.sort()
         console.log(items)
+        entries = []
         with open(feed_file, "w") as fpt:
             print(
                 "# Docset Feeds\n\nYou can subscribe to the following feeds with a single click.\n\n```bash\n dash-feed://<URL encoded feed URL>\n```\n",
                 file=fpt,
             )
-            for item in track(items):
-                entry = item.name.split('.')[0]
-                print(
-                    f"- **{entry}**:\n  - Feed URL:{feed_root_url}/{entry}.xml\n  - Size: {item.stat().st_size / (1024*1024):.1f} MB",
-                    file=fpt,
-                )
-
             print(
                 "\n![dash-docsets](https://github.com/andersy005/dash-docsets/raw/main/images/how-to-add-feed.png)",
                 file=fpt,
             )
+            for item in track(items):
+                entry = item.name.split('.')[0]
+                entries.append(
+                    {
+                        'Name': entry,
+                        'Feed URL': f'{feed_root_url}/{entry}.xml',
+                        'Size': f'{item.stat().st_size / (1024*1024):.1f} MB',
+                    }
+                )
+
+            table = pd.DataFrame(entries).to_markdown(tablefmt="github")
+            print(table, file=fpt)
+
     else:
         console.log("❌ Didn't find any files...", style='red')
 
