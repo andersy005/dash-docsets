@@ -11,7 +11,7 @@ You can subscribe to the following feeds with a single click.
 |    | Name             | Feed URL                                                                                     | Size    |
 |----|------------------|----------------------------------------------------------------------------------------------|---------|
 |  0 | array-api        | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/array-api.xml        | 1.1 MB  |
-|  1 | arviz            | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/arviz.xml            | 30.5 MB |
+|  1 | arviz            | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/arviz.xml            | 30.6 MB |
 |  2 | attrs            | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/attrs.xml            | 0.3 MB  |
 |  3 | authlib          | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/authlib.xml          | 0.3 MB  |
 |  4 | binder           | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/binder.xml           | 1.3 MB  |
@@ -30,7 +30,7 @@ You can subscribe to the following feeds with a single click.
 | 17 | intake           | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/intake.xml           | 5.8 MB  |
 | 18 | ipywidgets       | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/ipywidgets.xml       | 5.7 MB  |
 | 19 | jupyterhub       | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/jupyterhub.xml       | 2.5 MB  |
-| 20 | lumen            | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/lumen.xml            | 3.4 MB  |
+| 20 | lumen            | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/lumen.xml            | 3.3 MB  |
 | 21 | manim            | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/manim.xml            | 19.7 MB |
 | 22 | myst-nb          | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/myst-nb.xml          | 1.4 MB  |
 | 23 | myst-parser      | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/myst-parser.xml      | 1.4 MB  |
