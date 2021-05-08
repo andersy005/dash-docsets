@@ -25,14 +25,14 @@ You can subscribe to the following feeds with a single click.
 | 12 | distributed      | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/distributed.xml      | 4.8 MB  |
 | 13 | fabric           | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/fabric.xml           | 0.4 MB  |
 | 14 | fsspec           | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/fsspec.xml           | 4.6 MB  |
-| 15 | hvplot           | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/hvplot.xml           | 21.8 MB |
+| 15 | hvplot           | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/hvplot.xml           | 21.5 MB |
 | 16 | intake           | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/intake.xml           | 5.8 MB  |
 | 17 | ipywidgets       | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/ipywidgets.xml       | 5.7 MB  |
 | 18 | jupyterhub       | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/jupyterhub.xml       | 2.5 MB  |
 | 19 | manim            | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/manim.xml            | 19.7 MB |
 | 20 | numba            | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/numba.xml            | 5.0 MB  |
 | 21 | numcodecs        | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/numcodecs.xml        | 0.2 MB  |
-| 22 | panel            | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/panel.xml            | 21.7 MB |
+| 22 | panel            | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/panel.xml            | 21.8 MB |
 | 23 | paramiko         | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/paramiko.xml         | 0.4 MB  |
 | 24 | pint-xarray      | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/pint-xarray.xml      | 5.0 MB  |
 | 25 | pluggy           | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/pluggy.xml           | 0.4 MB  |
@@ -47,7 +47,7 @@ You can subscribe to the following feeds with a single click.
 | 34 | toolz            | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/toolz.xml            | 0.2 MB  |
 | 35 | trio             | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/trio.xml             | 4.6 MB  |
 | 36 | wrapt            | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/wrapt.xml            | 4.4 MB  |
-| 37 | xarray           | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/xarray.xml           | 10.4 MB |
+| 37 | xarray           | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/xarray.xml           | 9.8 MB  |
 | 38 | xesmf            | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/xesmf.xml            | 6.3 MB  |
 | 39 | xgcm             | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/xgcm.xml             | 6.7 MB  |
 | 40 | xoak             | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/xoak.xml             | 4.5 MB  |
