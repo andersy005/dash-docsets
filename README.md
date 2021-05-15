@@ -11,7 +11,7 @@ You can subscribe to the following feeds with a single click.
 |    | Name             | Feed URL                                                                                     | Size    |
 |----|------------------|----------------------------------------------------------------------------------------------|---------|
 |  0 | array-api        | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/array-api.xml        | 1.1 MB  |
-|  1 | arviz            | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/arviz.xml            | 30.6 MB |
+|  1 | arviz            | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/arviz.xml            | 31.0 MB |
 |  2 | attrs            | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/attrs.xml            | 0.3 MB  |
 |  3 | authlib          | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/authlib.xml          | 0.3 MB  |
 |  4 | boltons          | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/boltons.xml          | 4.6 MB  |
@@ -32,7 +32,7 @@ You can subscribe to the following feeds with a single click.
 | 19 | manim            | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/manim.xml            | 19.7 MB |
 | 20 | numba            | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/numba.xml            | 5.0 MB  |
 | 21 | numcodecs        | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/numcodecs.xml        | 0.2 MB  |
-| 22 | panel            | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/panel.xml            | 21.7 MB |
+| 22 | panel            | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/panel.xml            | 21.8 MB |
 | 23 | paramiko         | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/paramiko.xml         | 0.4 MB  |
 | 24 | pint-xarray      | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/pint-xarray.xml      | 5.0 MB  |
 | 25 | pluggy           | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/pluggy.xml           | 0.4 MB  |
