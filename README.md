@@ -11,7 +11,7 @@ You can subscribe to the following feeds with a single click.
 |    | Name             | Feed URL                                                                                     | Size    |
 |----|------------------|----------------------------------------------------------------------------------------------|---------|
 |  0 | array-api        | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/array-api.xml        | 1.1 MB  |
-|  1 | arviz            | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/arviz.xml            | 31.0 MB |
+|  1 | arviz            | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/arviz.xml            | 31.1 MB |
 |  2 | attrs            | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/attrs.xml            | 0.3 MB  |
 |  3 | authlib          | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/authlib.xml          | 0.3 MB  |
 |  4 | boltons          | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/boltons.xml          | 4.6 MB  |
