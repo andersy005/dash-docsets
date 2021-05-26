@@ -11,7 +11,7 @@ You can subscribe to the following feeds with a single click.
 |    | Name             | Feed URL                                                                                     | Size    |
 |----|------------------|----------------------------------------------------------------------------------------------|---------|
 |  0 | array-api        | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/array-api.xml        | 1.1 MB  |
-|  1 | arviz            | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/arviz.xml            | 30.9 MB |
+|  1 | arviz            | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/arviz.xml            | 31.0 MB |
 |  2 | attrs            | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/attrs.xml            | 0.3 MB  |
 |  3 | authlib          | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/authlib.xml          | 0.3 MB  |
 |  4 | boltons          | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/boltons.xml          | 4.6 MB  |
@@ -24,7 +24,7 @@ You can subscribe to the following feeds with a single click.
 | 11 | distributed      | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/distributed.xml      | 4.8 MB  |
 | 12 | fabric           | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/fabric.xml           | 0.4 MB  |
 | 13 | fsspec           | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/fsspec.xml           | 4.6 MB  |
-| 14 | hvplot           | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/hvplot.xml           | 21.2 MB |
+| 14 | hvplot           | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/hvplot.xml           | 23.4 MB |
 | 15 | intake           | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/intake.xml           | 5.8 MB  |
 | 16 | ipywidgets       | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/ipywidgets.xml       | 5.7 MB  |
 | 17 | jupyterhub       | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/jupyterhub.xml       | 2.5 MB  |
