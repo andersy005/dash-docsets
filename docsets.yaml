@@ -83,11 +83,11 @@ arctic:
     doc_dir: docs
     html_pages_dir: _build/html
 indian:
-  # - name: xtensor
-  #   repo: xtensor-stack/xtensor
-  #   doc_dir: docs
-  #   html_pages_dir: build/html
-  #   install: false
+  - name: xtensor
+    repo: xtensor-stack/xtensor
+    doc_dir: docs
+    html_pages_dir: build/html
+    install: false
   - name: jax
     repo: google/jax
     doc_dir: docs
@@ -241,10 +241,6 @@ southern:
     doc_dir: spec
     install: false
     html_pages_dir: _build/html
-  - name: numpyro
-    repo: pyro-ppl/numpyro
-    doc_dir: docs
-    html_pages_dir: build/html
   # - name: pymc3
   #   repo: pymc-devs/pymc3
   #   doc_dir: .

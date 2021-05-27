@@ -212,6 +212,8 @@ def create_feed(name, latest_tag):
     base_url = "https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/docsets"
 
     entry = Element("entry")
+    name = SubElement(entry, "name")
+    name.text = f"{name}"
     version = SubElement(entry, "version")
     version.text = f"main@{latest_tag}"
     url = SubElement(entry, "url")
