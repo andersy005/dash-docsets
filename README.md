@@ -48,7 +48,7 @@ You can subscribe to the following feeds with a single click.
 | 35 | wrapt            | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/wrapt.xml            | 4.5 MB  |
 | 36 | xarray           | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/xarray.xml           | 14.8 MB |
 | 37 | xesmf            | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/xesmf.xml            | 6.4 MB  |
-| 38 | xgcm             | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/xgcm.xml             | 20.6 MB |
+| 38 | xgcm             | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/xgcm.xml             | 20.5 MB |
 | 39 | xoak             | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/xoak.xml             | 4.6 MB  |
 | 40 | xrft             | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/xrft.xml             | 5.5 MB  |
 | 41 | zarr             | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/zarr.xml             | 4.6 MB  |
