@@ -22,7 +22,7 @@ from rich.table import Table
 from html2dash import custom_builder, dash_webgen
 
 console = Console()
-DOCSET_EXT = ".tar.xz"
+DOCSET_EXT = ".tar.gz"
 
 BASE_URL = "https://github.com"
 TMPDIR = tempfile.gettempdir()
@@ -108,7 +108,7 @@ def _build_project(
     local_dir = REPODIR / name
     doc_dir = local_dir / doc_dir
     validate_generator(generator)
-    kwargs = dict()
+    kwargs = {}
 
     if not local_dir.exists():
         repo_link = f"{BASE_URL}/{repo}"
@@ -164,11 +164,7 @@ def _build_project(
         stream_command(command, **kwargs)
 
     elif generator == "html2dash":
-        if icon_files:
-            icon = icon_files[0]
-        else:
-            icon = None
-
+        icon = icon_files[0] if icon_files else None
         custom_builder(
             name=name,
             destination=DOCSET_DIR.as_posix(),
@@ -198,11 +194,7 @@ def _build_project(
             f"{name}{DOCSET_EXT}",
             docset_path,
         ]
-
-        # Compress the result docset with maximum compression with xz:
-        my_env = os.environ.copy()
-        my_env["XZ_OPT"] = "-9"
-        stream_command(tar_command, env=my_env)
+        stream_command(tar_command)
         stream_command(f"rm -rf {dir_to_delete}", **kwargs)
     create_feed(name, latest_tag)
 
@@ -279,8 +271,8 @@ def build_from_config(
 
         try:
             _build_project(name, repo, **project_info)
-        except Exception as exc:
-            errors.append((name, "\n".join(traceback.format_tb(exc.__traceback__))))
+        except Exception:
+            errors.append((name, traceback.format_exc()))
     if errors:
         console.rule("Errors")
         table = Table(title="")
@@ -308,7 +300,6 @@ def update_feed_list(
         console.log(f"✅ Found {len(items)} items.")
         items.sort()
         console.log(items)
-        entries = []
         with open(feed_file, "w") as fpt:
             print(
                 "# Docset Feeds\n\nYou can subscribe to the following feeds with a single click.\n\n```bash\n dash-feed://<URL encoded feed URL>\n```\n",
@@ -318,6 +309,7 @@ def update_feed_list(
                 "\n![dash-docsets](https://github.com/andersy005/dash-docsets/raw/main/images/how-to-add-feed.png)",
                 file=fpt,
             )
+            entries = []
             for item in track(items):
                 entry = item.name.split('.')[0]
                 entries.append(
