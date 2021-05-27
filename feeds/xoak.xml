@@ -1,8 +1,11 @@
 <entry>
+ <name>
+  &lt;Element 'name' at 0x7feae01c3180&gt;
+ </name>
  <version>
   main@b3c6418
  </version>
  <url>
-  https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/docsets/xoak.tar.xz
+  https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/docsets/&lt;Element 'name' at 0x7feae01c3180&gt;.tar.gz
  </url>
 </entry>

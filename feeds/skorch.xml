@@ -1,8 +1,11 @@
 <entry>
+ <name>
+  &lt;Element 'name' at 0x7f5e557ccf40&gt;
+ </name>
  <version>
-  main@1d37ef3
+  main@54796f1
  </version>
  <url>
-  https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/docsets/skorch.tar.xz
+  https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/docsets/&lt;Element 'name' at 0x7f5e557ccf40&gt;.tar.gz
  </url>
 </entry>

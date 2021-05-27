@@ -1,8 +1,11 @@
 <entry>
+ <name>
+  &lt;Element 'name' at 0x7feae01b4090&gt;
+ </name>
  <version>
   main@857f73a
  </version>
  <url>
-  https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/docsets/pint-xarray.tar.xz
+  https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/docsets/&lt;Element 'name' at 0x7feae01b4090&gt;.tar.gz
  </url>
 </entry>

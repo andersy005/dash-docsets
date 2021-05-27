@@ -1,8 +1,11 @@
 <entry>
+ <name>
+  &lt;Element 'name' at 0x7fb0f1649400&gt;
+ </name>
  <version>
   main@d16d1ea
  </version>
  <url>
-  https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/docsets/numcodecs.tar.xz
+  https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/docsets/&lt;Element 'name' at 0x7fb0f1649400&gt;.tar.gz
  </url>
 </entry>

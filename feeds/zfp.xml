@@ -1,8 +1,11 @@
 <entry>
+ <name>
+  &lt;Element 'name' at 0x7f5e557d2400&gt;
+ </name>
  <version>
-  main@2d92b09
+  main@fcae077
  </version>
  <url>
-  https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/docsets/zfp.tar.xz
+  https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/docsets/&lt;Element 'name' at 0x7f5e557d2400&gt;.tar.gz
  </url>
 </entry>

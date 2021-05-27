@@ -1,8 +1,11 @@
 <entry>
+ <name>
+  &lt;Element 'name' at 0x7feae01b4db0&gt;
+ </name>
  <version>
-  main@0c76909
+  main@9709dd8
  </version>
  <url>
-  https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/docsets/attrs.tar.xz
+  https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/docsets/&lt;Element 'name' at 0x7feae01b4db0&gt;.tar.gz
  </url>
 </entry>

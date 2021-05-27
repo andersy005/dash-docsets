@@ -1,8 +1,11 @@
 <entry>
+ <name>
+  &lt;Element 'name' at 0x7feae01b4cc0&gt;
+ </name>
  <version>
   main@9d7509e
  </version>
  <url>
-  https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/docsets/pynacl.tar.xz
+  https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/docsets/&lt;Element 'name' at 0x7feae01b4cc0&gt;.tar.gz
  </url>
 </entry>
