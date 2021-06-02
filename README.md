@@ -11,7 +11,7 @@ You can subscribe to the following feeds with a single click.
 |    | Name             | Feed URL                                                                                     | Size    |
 |----|------------------|----------------------------------------------------------------------------------------------|---------|
 |  0 | array-api        | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/array-api.xml        | 1.1 MB  |
-|  1 | arviz            | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/arviz.xml            | 42.0 MB |
+|  1 | arviz            | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/arviz.xml            | 42.4 MB |
 |  2 | attrs            | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/attrs.xml            | 0.3 MB  |
 |  3 | authlib          | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/authlib.xml          | 0.3 MB  |
 |  4 | boltons          | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/boltons.xml          | 4.7 MB  |
@@ -36,7 +36,7 @@ You can subscribe to the following feeds with a single click.
 | 23 | paramiko         | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/paramiko.xml         | 0.4 MB  |
 | 24 | pint-xarray      | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/pint-xarray.xml      | 5.2 MB  |
 | 25 | pluggy           | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/pluggy.xml           | 0.4 MB  |
-| 26 | pooch            | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/pooch.xml            | 4.6 MB  |
+| 26 | pooch            | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/pooch.xml            | 1.3 MB  |
 | 27 | psutil           | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/psutil.xml           | 6.0 MB  |
 | 28 | pynacl           | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/pynacl.xml           | 4.6 MB  |
 | 29 | repo2docker      | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/repo2docker.xml      | 1.5 MB  |
@@ -49,7 +49,7 @@ You can subscribe to the following feeds with a single click.
 | 36 | wrapt            | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/wrapt.xml            | 4.5 MB  |
 | 37 | xarray           | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/xarray.xml           | 14.8 MB |
 | 38 | xesmf            | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/xesmf.xml            | 6.4 MB  |
-| 39 | xgcm             | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/xgcm.xml             | 20.5 MB |
+| 39 | xgcm             | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/xgcm.xml             | 20.6 MB |
 | 40 | xoak             | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/xoak.xml             | 4.6 MB  |
 | 41 | xrft             | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/xrft.xml             | 5.5 MB  |
 | 42 | zarr             | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/zarr.xml             | 4.6 MB  |
