@@ -11,7 +11,7 @@ You can subscribe to the following feeds with a single click.
 |    | Name             | Feed URL                                                                                     | Size    |
 |----|------------------|----------------------------------------------------------------------------------------------|---------|
 |  0 | array-api        | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/array-api.xml        | 1.1 MB  |
-|  1 | arviz            | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/arviz.xml            | 43.8 MB |
+|  1 | arviz            | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/arviz.xml            | 44.0 MB |
 |  2 | attrs            | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/attrs.xml            | 0.3 MB  |
 |  3 | authlib          | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/authlib.xml          | 0.3 MB  |
 |  4 | boltons          | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/boltons.xml          | 4.8 MB  |
@@ -43,15 +43,14 @@ You can subscribe to the following feeds with a single click.
 | 30 | singularity      | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/singularity.xml      | 5.2 MB  |
 | 31 | singularityadmin | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/singularityadmin.xml | 4.6 MB  |
 | 32 | skorch           | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/skorch.xml           | 4.6 MB  |
-| 33 | sparse           | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/sparse.xml           | 5.6 MB  |
-| 34 | toolz            | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/toolz.xml            | 0.2 MB  |
-| 35 | trio             | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/trio.xml             | 4.8 MB  |
-| 36 | wrapt            | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/wrapt.xml            | 4.6 MB  |
-| 37 | xarray           | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/xarray.xml           | 14.8 MB |
-| 38 | xesmf            | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/xesmf.xml            | 6.5 MB  |
-| 39 | xgcm             | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/xgcm.xml             | 18.7 MB |
-| 40 | xoak             | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/xoak.xml             | 4.7 MB  |
-| 41 | xrft             | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/xrft.xml             | 5.9 MB  |
-| 42 | zarr             | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/zarr.xml             | 4.7 MB  |
-| 43 | zfp              | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/zfp.xml              | 0.7 MB  |
-| 44 | zict             | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/zict.xml             | 0.1 MB  |
+| 33 | toolz            | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/toolz.xml            | 0.2 MB  |
+| 34 | trio             | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/trio.xml             | 4.8 MB  |
+| 35 | wrapt            | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/wrapt.xml            | 4.6 MB  |
+| 36 | xarray           | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/xarray.xml           | 14.8 MB |
+| 37 | xesmf            | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/xesmf.xml            | 6.5 MB  |
+| 38 | xgcm             | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/xgcm.xml             | 18.7 MB |
+| 39 | xoak             | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/xoak.xml             | 4.7 MB  |
+| 40 | xrft             | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/xrft.xml             | 5.9 MB  |
+| 41 | zarr             | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/zarr.xml             | 4.7 MB  |
+| 42 | zfp              | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/zfp.xml              | 0.7 MB  |
+| 43 | zict             | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/zict.xml             | 0.1 MB  |
