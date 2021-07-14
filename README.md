@@ -33,7 +33,7 @@ You can subscribe to the following feeds with a single click.
 | 20 | pint-xarray      | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/pint-xarray.xml      | 5.3 MB  |
 | 21 | pluggy           | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/pluggy.xml           | 0.4 MB  |
 | 22 | pooch            | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/pooch.xml            | 2.0 MB  |
-| 23 | proplot          | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/proplot.xml          | 43.0 MB |
+| 23 | proplot          | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/proplot.xml          | 61.5 MB |
 | 24 | psutil           | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/psutil.xml           | 6.1 MB  |
 | 25 | pynacl           | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/pynacl.xml           | 4.7 MB  |
 | 26 | repo2docker      | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/repo2docker.xml      | 2.1 MB  |
