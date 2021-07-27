@@ -92,6 +92,7 @@ dependencies:
   - scipy>=1.5.3
   - seaborn
   - sparse
+  - sphinx<4
   - sqlalchemy
   - starlette
   - tabulate
