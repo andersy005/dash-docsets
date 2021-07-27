@@ -92,7 +92,7 @@ dependencies:
   - scipy>=1.5.3
   - seaborn
   - sparse
-  - sqlalchemy<1.4
+  - sqlalchemy
   - starlette
   - tabulate
   - tqdm
@@ -101,7 +101,7 @@ dependencies:
   - ujson
   - uvicorn
   - wrapt
-  - xarray>=0.16.2
+  - xarray>=0.18.2
   - xesmf
   - xgcm>=0.5.1
   - xrft
@@ -119,6 +119,7 @@ dependencies:
       - flake8-quotes
       - funsor>=0.3.0
       - furo
+      - jaxns
       - linkify-it-py
       - lumen
       - manimgl
