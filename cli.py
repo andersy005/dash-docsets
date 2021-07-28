@@ -3,6 +3,7 @@ import functools
 import itertools
 import operator
 import os
+import platform
 import re
 import subprocess
 import sys
@@ -12,6 +13,7 @@ from pathlib import Path
 from xml.etree.ElementTree import Element, SubElement, tostring
 
 import pandas as pd
+import psutil
 import typer
 import yaml
 from bs4 import BeautifulSoup
@@ -20,6 +22,9 @@ from rich.progress import track
 from rich.table import Table
 
 from html2dash import custom_builder, dash_webgen
+
+SYSTEM = platform.system().lower()
+MAKE_CMD = "make html" if SYSTEM == 'darwin' else f"make -j{psutil.cpu_count()} html"
 
 console = Console()
 DOCSET_EXT = ".tar.gz"
@@ -99,7 +104,7 @@ def _build_project(
     repo,
     doc_dir='docs',
     html_pages_dir='_build/html',
-    doc_build_cmd="make -j10 html",
+    doc_build_cmd=MAKE_CMD,
     generator="doc2dash",
     install=True,
     url=None,
