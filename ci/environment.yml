@@ -55,7 +55,7 @@ dependencies:
   - make
   - markdown-include
   - matplotlib>3
-  - mkdocs
+  - mkdocs==1.1.2
   - mkdocs-material
   - msgpack-python
   - myst-nb
@@ -152,7 +152,6 @@ dependencies:
       - sphinx-panels
       - sphinx-pangeo-theme
       - sphinx-tabs
-      - sphinx>2.4.4
       - sphinxcontrib-apidoc
       - sphinxcontrib-autoprogram
       - sphinxcontrib-bibtex<2.0.0
@@ -163,3 +162,6 @@ dependencies:
       - sphinxext-rediraffe
       - tensorflow_probability
       - zope.interface
+      - sphinxcontrib-mermaid
+      - sphinxcontrib-programoutput
+      - sphinx<4

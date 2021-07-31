@@ -1,11 +1,3 @@
-- name: xarray
-  repo: pydata/xarray
-  doc_dir: doc
-  html_pages_dir: _build/html
-- name: trio
-  repo: python-trio/trio
-  doc_dir: docs
-  html_pages_dir: build/html
 - name: dask
   repo: dask/dask
   doc_dir: docs
@@ -18,3 +10,119 @@
   repo: dask/dask-jobqueue
   doc_dir: docs
   html_pages_dir: _build/html
+
+- name: dask-gateway
+  repo: dask/dask-gateway
+  doc_dir: .
+  html_pages_dir: .
+  install: false
+  doc_build_cmd: 'git checkout gh-pages'
+  generator: html2dash
+- name: zict
+  repo: dask/zict
+  doc_dir: doc
+  html_pages_dir: build/html
+- name: intake
+  repo: intake/intake
+  doc_dir: docs
+  html_pages_dir: build/html
+- name: fsspec
+  repo: intake/filesystem_spec
+  doc_dir: docs
+  html_pages_dir: build/html
+
+- name: xarray
+  repo: pydata/xarray
+  doc_dir: doc
+  html_pages_dir: _build/html
+- name: climpred
+  repo: pangeo-data/climpred
+  doc_dir: docs
+  html_pages_dir: build/html
+- name: xgcm
+  repo: xgcm/xgcm
+  doc_dir: doc
+  html_pages_dir: _build/html
+- name: xrft
+  repo: xgcm/xrft
+  doc_dir: doc
+  html_pages_dir: _build/html
+- name: xesmf
+  repo: pangeo-data/xESMF
+  doc_dir: doc
+  html_pages_dir: _build/html
+- name: regionmask
+  repo: mathause/regionmask
+  doc_dir: docs
+  html_pages_dir: _build/html
+- name: pooch
+  repo: fatiando/pooch
+  doc_dir: doc
+  html_pages_dir: _build/html
+- name: cf-xarray
+  repo: xarray-contrib/cf-xarray
+  doc_dir: doc
+  html_pages_dir: _build/html
+- name: xoak
+  repo: xarray-contrib/xoak
+  doc_dir: doc
+  html_pages_dir: _build/html
+- name: pint-xarray
+  repo: xarray-contrib/pint-xarray
+  doc_dir: docs
+  html_pages_dir: _build/html
+  doc_build_cmd: sphinx-build -j auto -T -E -b html ./ _build/html
+
+- name: sparse
+  repo: pydata/sparse
+  doc_dir: docs
+  html_pages_dir: _build/html
+  doc_build_cmd: sphinx-build -j auto -W -b html . _build/html
+- name: zarr
+  repo: zarr-developers/zarr-python
+  doc_dir: docs
+  html_pages_dir: _build/html
+- name: numcodecs
+  repo: zarr-developers/numcodecs
+  doc_dir: docs
+  html_pages_dir: _build/html
+
+- name: xtensor
+  repo: xtensor-stack/xtensor
+  doc_dir: docs
+  html_pages_dir: build/html
+  install: false
+- name: jax
+  repo: google/jax
+  doc_dir: docs
+  html_pages_dir: build/html
+  doc_build_cmd: sphinx-build -j auto -b html . build/html
+- name: numba
+  repo: numba/numba
+  doc_dir: docs
+  html_pages_dir: _build/html
+- name: skorch
+  repo: skorch-dev/skorch
+  doc_dir: docs
+  html_pages_dir: _build/html
+
+- name: numpyro
+  repo: pyro-ppl/numpyro
+  doc_dir: docs
+  html_pages_dir: build/html
+
+- name: zfp
+  repo: LLNL/zfp
+  doc_dir: docs
+  html_pages_dir: build/html
+  doc_build_cmd: sphinx-build -j auto -b html ./source build/html
+  install: false
+- name: proplot
+  repo: lukelbd/proplot
+  doc_dir: docs
+  html_pages_dir: _build/html
+  doc_build_cmd: sphinx-build -j auto -b html -D nbsphinx_allow_errors=True . _build/html
+- name: cartopy
+  repo: SciTools/cartopy
+  doc_dir: docs
+  html_pages_dir: build/html

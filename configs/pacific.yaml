@@ -1,0 +1,91 @@
+- name: fastapi
+  repo: tiangolo/fastapi
+  doc_dir: docs/en
+  doc_build_cmd: mkdocs build --no-directory-urls
+  html_pages_dir: site
+  generator: html2dash
+- name: uvicorn
+  repo: encode/uvicorn
+  doc_dir: .
+  html_pages_dir: .
+  install: false
+  doc_build_cmd: 'git checkout gh-pages'
+  generator: html2dash
+- name: starlette
+  repo: encode/starlette
+  doc_dir: .
+  doc_build_cmd: mkdocs build --no-directory-urls
+  html_pages_dir: site
+  generator: html2dash
+- name: pydantic
+  repo: samuelcolvin/pydantic
+  doc_dir: .
+  doc_build_cmd: mkdocs build --no-directory-urls
+  html_pages_dir: site
+  generator: html2dash
+- name: typer
+  repo: tiangolo/typer
+  doc_dir: .
+  doc_build_cmd: mkdocs build --no-directory-urls
+  html_pages_dir: site
+  generator: html2dash
+- name: rich
+  repo: willmcgugan/rich
+  doc_dir: docs
+  html_pages_dir: build/html
+- name: invoke
+  repo: pyinvoke/invoke
+  doc_dir: sites/docs
+  html_pages_dir: _build/html
+  doc_build_cmd: sphinx-build -j auto -T -E -b html ./ _build/html
+- name: trio
+  repo: python-trio/trio
+  doc_dir: docs
+  html_pages_dir: build/html
+
+- name: cryptography
+  repo: pyca/cryptography
+  doc_dir: docs
+  html_pages_dir: _build/html
+  install: false
+- name: pynacl
+  repo: pyca/pynacl
+  doc_dir: docs
+  html_pages_dir: _build/html
+- name: fabric
+  repo: fabric/fabric
+  doc_dir: sites/docs
+  doc_build_cmd: sphinx-build -j auto -T -E -b html ./ _build/html
+- name: paramiko
+  repo: paramiko/paramiko
+  doc_dir: sites/www
+  doc_build_cmd: sphinx-build -j auto -T -E -b html ./ _build/html
+- name: wrapt
+  repo: GrahamDumpleton/wrapt
+  doc_dir: docs
+  html_pages_dir: _build/html
+- name: attrs
+  repo: python-attrs/attrs
+  doc_dir: docs
+  html_pages_dir: _build/html
+- name: psutil
+  repo: giampaolo/psutil
+  doc_dir: docs
+  html_pages_dir: _build/html
+- name: toolz
+  repo: pytoolz/toolz
+  doc_dir: doc
+  html_pages_dir: build/html
+- name: boltons
+  repo: mahmoud/boltons
+  doc_dir: docs
+  html_pages_dir: _build/html
+- name: pluggy
+  repo: pytest-dev/pluggy
+  doc_dir: docs
+  html_pages_dir: _build/html
+  doc_build_cmd: sphinx-build -j auto -T -E -b html ./ _build/html
+- name: authlib
+  repo: lepture/authlib
+  doc_dir: docs
+  html_pages_dir: _build/html

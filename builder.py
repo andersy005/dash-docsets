@@ -9,12 +9,16 @@ import subprocess
 import sys
 import tempfile
 import typing
+from xml.etree.ElementTree import Element, SubElement, tostring
 
+import pandas as pd
 import psutil
 import pydantic
 import ruamel.yaml
 import typer
+from bs4 import BeautifulSoup
 from rich.console import Console
+from rich.progress import track
 
 from html2dash import custom_builder
 
@@ -171,12 +175,62 @@ class Builder:
         elif project.generator == "html2dash":
             icon = icon_files[0] if icon_files else None
             custom_builder(
-                name=name,
+                name=project.name,
                 destination=DOCSET_DIR.as_posix(),
                 index_page="index.html",
                 source=source.as_posix(),
                 icon=icon,
             )
+
+        with working_directory(DOCSET_DIR):
+            docset_path = f"{project.name}.docset"
+            dir_to_delete = docset_path
+
+            tar_command = [
+                "tar",
+                "--exclude='.DS_Store'",
+                "-Jcvf",
+                f"{project.name}{DOCSET_EXT}",
+                docset_path,
+            ]
+            stream_command(tar_command)
+            stream_command(f"rm -rf {dir_to_delete}", **kwargs)
+
+        return project.name, latest_tag
+
+    def _create_feed(self, name, latest_tag):
+        feed_filename = f"{FEED_DIR}/{name}.xml"
+        base_url = "https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/docsets"
+
+        entry = Element("entry")
+        pkg_name = SubElement(entry, "name")
+        pkg_name.text = f"{name}"
+        version = SubElement(entry, "version")
+        version.text = f"main@{latest_tag}"
+        url = SubElement(entry, "url")
+        url.text = f"{base_url}/{name}{DOCSET_EXT}"
+
+        bs = BeautifulSoup(tostring(entry), features="html.parser").prettify()
+
+        with open(feed_filename, "w") as f:
+            f.write(bs)
+
+    def create_docset(self, project: Project) -> None:
+        name, latest_tag = self._build_docs(project)
+        self._create_feed(name, latest_tag)
+
+    def build_all(self):
+        self.errors = []
+        for project in track(self.projects):
+            try:
+                self.create_docset(project)
+            except Exception:
+                self.errors.append(project.name)
+
+        if self.errors:
+            error_console = Console(stderr=True, style="bold red")
+            error_console.print(f"Errors occured while building docsets:")
+            error_console.print(self.errors)
 
 
 @app.command()
@@ -191,9 +245,51 @@ def build(
         config = ruamel.yaml.safe_load(f)
 
     projects = [Project(**p) for p in config]
-
     builder = Builder(projects=projects)
-    builder._build_docs(projects[-1])
+    builder.build_all()
+
+
+@app.command()
+def update_feed_list(
+    feed_file: pathlib.Path = typer.Argument(f"{FEED_DIR}/README.md"),
+    docset_dir: pathlib.Path = typer.Option(DOCSET_DIR, help='docset directory'),
+    feed_root_url: str = typer.Option(
+        "https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds",
+        help="Root URL for the feeds",
+    ),
+):
+    """Update docsets feed list"""
+
+    items = list(pathlib.Path(docset_dir).rglob(f"*{DOCSET_EXT}"))
+    if items:
+        console.log(f"✅ Found {len(items)} items.")
+        items.sort()
+        console.log(items)
+        with open(feed_file, "w") as fpt:
+            print(
+                "# Docset Feeds\n\nYou can subscribe to the following feeds with a single click.\n\n```bash\n dash-feed://<URL encoded feed URL>\n```\n",
+                file=fpt,
+            )
+            print(
+                "\n![dash-docsets](https://github.com/andersy005/dash-docsets/raw/main/images/how-to-add-feed.png)",
+                file=fpt,
+            )
+            entries = []
+            for item in track(items):
+                entry = item.name.split('.')[0]
+                entries.append(
+                    {
+                        'Name': entry,
+                        'Feed URL': f'{feed_root_url}/{entry}.xml',
+                        'Size': f'{item.stat().st_size / (1024*1024):.1f} MB',
+                    }
+                )
+
+            table = pd.DataFrame(entries).to_markdown(tablefmt="github")
+            print(table, file=fpt)
+
+    else:
+        console.log("❌ Didn't find any files...", style='red')
 
 
 if __name__ == '__main__':
