@@ -31,10 +31,10 @@
   doc_dir: docs
   html_pages_dir: build/html
 
-- name: xarray
-  repo: pydata/xarray
-  doc_dir: doc
-  html_pages_dir: _build/html
+# - name: xarray
+#   repo: pydata/xarray
+#   doc_dir: doc
+#   html_pages_dir: _build/html
 - name: climpred
   repo: pangeo-data/climpred
   doc_dir: docs

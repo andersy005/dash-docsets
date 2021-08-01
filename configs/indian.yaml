@@ -60,8 +60,7 @@
   html_pages_dir: _build/html
   install: false
   doc_build_cmd: make html SKIPCLI=1
-
-- name: spack
-  repo: spack/spack
-  doc_dir: lib/spack/docs
-  html_pages_dir: _build/html
+# - name: spack
+#   repo: spack/spack
+#   doc_dir: lib/spack/docs
+#   html_pages_dir: _build/html
