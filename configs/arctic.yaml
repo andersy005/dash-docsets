@@ -90,11 +90,11 @@
   doc_dir: docs
   html_pages_dir: _build/html
 
-- name: xtensor
-  repo: xtensor-stack/xtensor
-  doc_dir: docs
-  html_pages_dir: build/html
-  install: false
+# - name: xtensor
+#   repo: xtensor-stack/xtensor
+#   doc_dir: docs
+#   html_pages_dir: build/html
+#   install: false
 - name: jax
   repo: google/jax
   doc_dir: docs
