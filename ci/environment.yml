@@ -55,8 +55,8 @@ dependencies:
   - make
   - markdown-include
   - matplotlib>3
-  - mkdocs==1.1.2
   - mkdocs-material
+  - mkdocs==1.1.2
   - msgpack-python
   - myst-nb
   - myst-parser
@@ -73,8 +73,10 @@ dependencies:
   - param
   - paramiko
   - pint
+  - pint-xarray
   - pip
   - plotly
+  - pluggy
   - proplot
   - pyarrow
   - pydantic>=1.8
@@ -105,6 +107,7 @@ dependencies:
   - xarray>=0.18.2
   - xesmf
   - xgcm>=0.5.1
+  - xoak
   - xrft
   - xtensor
   - zarr>=2.5.0
@@ -165,3 +168,4 @@ dependencies:
       - sphinxcontrib-mermaid
       - sphinxcontrib-programoutput
       - sphinx<4
+      - mdx_include
