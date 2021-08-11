@@ -15,7 +15,7 @@ You can subscribe to the following feeds with a single click.
 |  2 | binder           | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/binder.xml           | 1.3 MB  |
 |  3 | binderhub        | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/binderhub.xml        | 1.7 MB  |
 |  4 | boltons          | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/boltons.xml          | 4.7 MB  |
-|  5 | cartopy          | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/cartopy.xml          | 36.3 MB |
+|  5 | cartopy          | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/cartopy.xml          | 36.2 MB |
 |  6 | cf-xarray        | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/cf-xarray.xml        | 1.5 MB  |
 |  7 | cryptography     | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/cryptography.xml     | 4.7 MB  |
 |  8 | dask-gateway     | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/dask-gateway.xml     | 4.9 MB  |
@@ -56,7 +56,7 @@ You can subscribe to the following feeds with a single click.
 | 43 | wrapt            | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/wrapt.xml            | 4.4 MB  |
 | 44 | xarray           | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/xarray.xml           | 20.0 MB |
 | 45 | xesmf            | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/xesmf.xml            | 7.0 MB  |
-| 46 | xgcm             | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/xgcm.xml             | 20.4 MB |
+| 46 | xgcm             | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/xgcm.xml             | 20.3 MB |
 | 47 | xoak             | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/xoak.xml             | 4.5 MB  |
 | 48 | xrft             | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/xrft.xml             | 1.2 MB  |
 | 49 | zarr             | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/zarr.xml             | 4.5 MB  |
