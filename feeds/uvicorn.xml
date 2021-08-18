@@ -3,7 +3,7 @@
   uvicorn
  </name>
  <version>
-  main@a6dff71
+  main@72dffc7
  </version>
  <url>
   https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/docsets/uvicorn.tar.gz

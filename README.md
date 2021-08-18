@@ -24,7 +24,7 @@ You can subscribe to the following feeds with a single click.
 | 11 | fabric           | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/fabric.xml           | 0.4 MB  |
 | 12 | fastapi          | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/fastapi.xml          | 5.3 MB  |
 | 13 | fsspec           | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/fsspec.xml           | 4.6 MB  |
-| 14 | hvplot           | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/hvplot.xml           | 24.7 MB |
+| 14 | hvplot           | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/hvplot.xml           | 24.6 MB |
 | 15 | intake           | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/intake.xml           | 6.0 MB  |
 | 16 | invoke           | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/invoke.xml           | 0.4 MB  |
 | 17 | ipywidgets       | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/ipywidgets.xml       | 5.9 MB  |
