@@ -39,7 +39,7 @@ You can subscribe to the following feeds with a single click.
 | 26 | pint-xarray      | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/pint-xarray.xml      | 5.1 MB  |
 | 27 | pluggy           | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/pluggy.xml           | 0.4 MB  |
 | 28 | pooch            | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/pooch.xml            | 1.3 MB  |
-| 29 | proplot          | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/proplot.xml          | 61.7 MB |
+| 29 | proplot          | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/proplot.xml          | 45.4 MB |
 | 30 | psutil           | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/psutil.xml           | 6.1 MB  |
 | 31 | pynacl           | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/pynacl.xml           | 4.5 MB  |
 | 32 | repo2docker      | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/repo2docker.xml      | 1.5 MB  |
@@ -52,9 +52,9 @@ You can subscribe to the following feeds with a single click.
 | 39 | toolz            | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/toolz.xml            | 0.2 MB  |
 | 40 | trio             | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/trio.xml             | 4.6 MB  |
 | 41 | typer            | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/typer.xml            | 0.5 MB  |
-| 42 | uvicorn          | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/uvicorn.xml          | 0.8 MB  |
+| 42 | uvicorn          | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/uvicorn.xml          | 0.7 MB  |
 | 43 | wrapt            | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/wrapt.xml            | 4.4 MB  |
-| 44 | xarray           | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/xarray.xml           | 20.0 MB |
+| 44 | xarray           | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/xarray.xml           | 20.1 MB |
 | 45 | xesmf            | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/xesmf.xml            | 7.0 MB  |
 | 46 | xgcm             | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/xgcm.xml             | 20.3 MB |
 | 47 | xoak             | https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds/xoak.xml             | 4.5 MB  |
