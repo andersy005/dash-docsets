@@ -167,5 +167,5 @@ dependencies:
       - zope.interface
       - sphinxcontrib-mermaid
       - sphinxcontrib-programoutput
-      - sphinx<4
+      - sphinx~=4.0
       - mdx_include
