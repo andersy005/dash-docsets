@@ -20,9 +20,9 @@ dependencies:
   - dask-jobqueue
   - dask-kubernetes
   - dask-sphinx-theme
-  - dask>=2.20
+  - dask>=2021.11
   - dill>=0.3.3
-  - distributed>=2.20
+  - distributed>=2021.11
   - django
   - doc2dash
   - docker-py
@@ -80,7 +80,7 @@ dependencies:
   - proplot
   - pyarrow
   - pydantic>=1.8
-  - pydata-sphinx-theme
+  - pydata-sphinx-theme <=0.7.1
   - pygit2
   - pyparsing
   - pyproj
@@ -104,9 +104,9 @@ dependencies:
   - ujson
   - uvicorn
   - wrapt
-  - xarray>=0.18.2
+  - xarray>=0.20.1
   - xesmf
-  - xgcm>=0.5.1
+  - xgcm>=0.5.2
   - xoak
   - xrft
   - xtensor
