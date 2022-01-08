@@ -169,3 +169,4 @@ dependencies:
       - sphinxcontrib-programoutput
       - sphinx~=4.0
       - mdx_include
+      - git+https://github.com/pydata/xarray
