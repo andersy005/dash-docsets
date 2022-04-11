@@ -48,13 +48,13 @@ jobs:
       - run: |
           python builder.py build configs/${{ matrix.key }}.yaml
 
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
           name: docsets
           path: docsets
           retention-days: 3
 
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
           name: feeds
           path: feeds
