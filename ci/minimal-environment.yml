@@ -1,0 +1,13 @@
+name: dash-docs
+channels:
+  - conda-forge
+  - nodefaults
+dependencies:
+  - python=3.9
+  - xarray>=2020.03
+  - zarr
+  - dask
+  - distributed
+  - jupyterlab
+  - pydata-sphinx-theme
+  - sphinx-book-theme

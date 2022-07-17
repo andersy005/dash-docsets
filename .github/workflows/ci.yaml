@@ -4,8 +4,12 @@ on:
     branches:
       - 'main'
   schedule:
-    - cron: '0 0 * * 3,6' # “At 00:00 on Wednesday and Saturday"
-  workflow_dispatch: # allows you to trigger manually
+    - cron: '0 0 * * 6' # “At 00:00 on Wednesday and Saturday"
+  workflow_dispatch: # allows you to trigger manually'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
@@ -17,76 +21,73 @@ jobs:
         shell: bash -l {0}
     env:
       MKL_THREADING_LAYER: GNU
+      CONDA_ENV_FILE: ci/minimal-environment.yml
+
     strategy:
-      fail-fast: true
+      fail-fast: false
       matrix:
         key: ['arctic', 'pacific', 'indian']
+
     timeout-minutes: 200
     steps:
-      - name: Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.10.0
-        with:
-          access_token: ${{ github.token }}
       - uses: actions/checkout@v3
-      - uses: conda-incubator/setup-miniconda@master
         with:
-          # python-version: 3.8
-          mamba-version: '*'
-          channels: conda-forge,nodefaults
+          fetch-depth: 0
+      - name: Setup micromamba
+        uses: mamba-org/provision-with-micromamba@main
+        with:
+          micromamba-version: latest
           channel-priority: strict
-          auto-update-conda: false
-          activate-environment: dash-docs
-          environment-file: ci/environment.yml
-          use-mamba: true
-          miniforge-variant: Mambaforge
+          environment-file: ${{ env.CONDA_ENV_FILE }}
+          environment-name: dash-docs
+          cache-env: true
+          cache-env-key: '${{runner.os}}-${{runner.arch}}-${{hashFiles(env.CONDA_ENV_FILE)}}'
 
       - run: |
-          conda info
-          conda list
-          # printenv | sort
+          micromamba info && micromamba list
 
-      - run: |
-          python builder.py build configs/${{ matrix.key }}.yaml
+      # - run: |
+      #     python builder.py build configs/${{ matrix.key }}.yaml
 
-      - uses: actions/upload-artifact@v2
-        with:
-          name: docsets
-          path: docsets
-          retention-days: 3
+      # - uses: actions/upload-artifact@v2
+      #   with:
+      #     name: docsets
+      #     path: docsets
+      #     retention-days: 3
 
-      - uses: actions/upload-artifact@v2
-        with:
-          name: feeds
-          path: feeds
-          retention-days: 3
+      # - uses: actions/upload-artifact@v2
+      #   with:
+      #     name: feeds
+      #     path: feeds
+      #     retention-days: 3
 
-  deploy:
-    name: dash-docsets-deploy
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/download-artifact@v3
-        with:
-          path: /tmp/workspace/builds
+  # deploy:
+  #   name: dash-docsets-deploy
+  #   needs: build
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - uses: actions/download-artifact@v3
+  #       with:
+  #         path: /tmp/workspace/builds
 
-      - uses: actions/setup-python@v4
-        with:
-          python-version: 3.8
-      - run: |
-          python -m pip install --upgrade pip typer beautifulsoup4 pyyaml requests rich pandas tabulate pydantic ruamel.yaml psutil
-      - run: |
-          python cli.py update-feed-list /tmp/workspace/builds/README.md --docset-dir /tmp/workspace/builds/docsets
+  #     - uses: actions/setup-python@v4
+  #       with:
+  #         python-version: 3.8
+  #     - run: |
+  #         python -m pip install --upgrade pip typer beautifulsoup4 pyyaml requests rich pandas tabulate pydantic ruamel.yaml psutil
+  #     - run: |
+  #         python cli.py update-feed-list /tmp/workspace/builds/README.md --docset-dir /tmp/workspace/builds/docsets
 
-      - name: Display structure of files to upload
-        run: ls -R
-        working-directory: /tmp/workspace/builds
+  #     - name: Display structure of files to upload
+  #       run: ls -R
+  #       working-directory: /tmp/workspace/builds
 
-      - name: Deploy
-        uses: peaceiris/actions-gh-pages@v3.8.0
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: /tmp/workspace/builds
-          user_name: 'GitHub Action'
-          user_email: 'action@github.com'
-          publish_branch: docsets
+  #     - name: Deploy
+  #       uses: peaceiris/actions-gh-pages@v3.8.0
+  #       with:
+  #         github_token: ${{ secrets.GITHUB_TOKEN }}
+  #         publish_dir: /tmp/workspace/builds
+  #         user_name: 'GitHub Action'
+  #         user_email: 'action@github.com'
+  #         publish_branch: docsets

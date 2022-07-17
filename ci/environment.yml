@@ -85,7 +85,7 @@ dependencies:
   - pyparsing
   - pyproj
   - pytablewriter
-  - python=3.8
+  - python=3.9
   - pytorch
   - rasterio
   - recommonmark
@@ -104,7 +104,7 @@ dependencies:
   - ujson
   - uvicorn
   - wrapt
-  - xarray>=0.20.1
+  - xarray>=2020.03
   - xesmf
   - xgcm>=0.5.2
   - xoak
