@@ -8,7 +8,6 @@ import re
 import subprocess
 import sys
 import tempfile
-import typing
 from xml.etree.ElementTree import Element, SubElement, tostring
 
 import pandas as pd
@@ -26,24 +25,24 @@ app = typer.Typer(help='Dash docset builder')
 console = Console()
 
 SYSTEM = platform.system().lower()
-MAKE_CMD = "make html" if SYSTEM == 'darwin' else f"make -j{psutil.cpu_count()} html"
-DOCSET_EXT = ".tar.gz"
+MAKE_CMD = 'make html' if SYSTEM == 'darwin' else f'make -j{psutil.cpu_count()} html'
+DOCSET_EXT = '.tar.gz'
 
-BASE_URL = "https://github.com"
+BASE_URL = 'https://github.com'
 TMPDIR = tempfile.gettempdir()
 REPODIR = pathlib.Path(TMPDIR) / 'repos'
 REPODIR.mkdir(parents=True, exist_ok=True)
 
-HOME_DIR = pathlib.Path(".").absolute()
-ICON_DIR = HOME_DIR / "icons"
-DOCSET_DIR = HOME_DIR / "docsets"
+HOME_DIR = pathlib.Path('.').absolute()
+ICON_DIR = HOME_DIR / 'icons'
+DOCSET_DIR = HOME_DIR / 'docsets'
 DOCSET_DIR.mkdir(parents=True, exist_ok=True)
 
-FEED_DIR = HOME_DIR / "feeds"
+FEED_DIR = HOME_DIR / 'feeds'
 FEED_DIR.mkdir(parents=True, exist_ok=True)
 
 
-def _stream_command(cmd, no_newline_regexp="Progess", **kwargs):
+def _stream_command(cmd, no_newline_regexp='Progess', **kwargs):
     """stream a command (yield) back to the user, as each line is available.
     # Example usage:
     results = []
@@ -58,24 +57,23 @@ def _stream_command(cmd, no_newline_regexp="Progess", **kwargs):
     """
 
     if isinstance(cmd, str):
-        cmd = cmd.split(" ")
+        cmd = cmd.split(' ')
 
     console.log(cmd)
 
     process = subprocess.Popen(
         cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, **kwargs
     )
-    for line in iter(process.stdout.readline, ""):
+    for line in iter(process.stdout.readline, ''):
         if not re.search(no_newline_regexp, line):
             yield line
     process.stdout.close()
-    return_code = process.wait()
-    if return_code:
+    if return_code := process.wait():
         print(process.stderr.read(), file=sys.stderr)
         raise subprocess.CalledProcessError(return_code, cmd)
 
 
-def stream_command(cmd, no_newline_regexp="Progess", **kwargs):
+def stream_command(cmd, no_newline_regexp='Progess', **kwargs):
     for _ in _stream_command(cmd, no_newline_regexp, **kwargs):
         pass
 
@@ -111,7 +109,7 @@ class Project(pydantic.BaseModel):
 
 @pydantic.dataclasses.dataclass
 class Builder:
-    projects: typing.List[Project]
+    projects: list[Project]
 
     def _build_docs(self, project: Project):
         local_dir = REPODIR / project.name
@@ -119,100 +117,97 @@ class Builder:
         kwargs = {}
 
         if not local_dir.exists():
-            repo_link = f"{BASE_URL}/{project.repo}"
+            repo_link = f'{BASE_URL}/{project.repo}'
             command = [
-                "git",
-                "clone",
-                "--recurse-submodules",
+                'git',
+                'clone',
+                '--recurse-submodules',
                 repo_link,
                 local_dir,
             ]
             stream_command(command)
         else:
-            console.log(f"{project.name} directory already exits.")
+            console.log(f'{project.name} directory already exits.')
 
         with working_directory(local_dir):
             if project.install:
-                command = ["python", "-m", "pip", "install", "-e", ".", "--no-deps"]
+                command = ['python', '-m', 'pip', 'install', '-e', '.', '--no-deps']
                 stream_command(command)
 
-            latest_tag = os.popen("git rev-parse --short HEAD").read().strip()
+            latest_tag = os.popen('git rev-parse --short HEAD').read().strip()
             if not latest_tag:
-                latest_tag = "unknown"
+                latest_tag = 'unknown'
 
             with working_directory(project.doc_dir):
                 stream_command(project.doc_build_cmd, **kwargs)
 
         icon_dir = ICON_DIR / project.name
         icons = []
-        icon_files = None
-        if icon_dir.exists():
-            icon_files = list(icon_dir.iterdir())
-
+        icon_files = list(icon_dir.iterdir()) if icon_dir.exists() else None
         source = doc_dir / project.html_pages_dir
-        if project.generator == "doc2dash":
+        if project.generator == 'doc2dash':
             command = [
-                "doc2dash",
-                "--force",
-                "--index-page",
-                "index.html",
-                "--enable-js",
-                "--name",
+                'doc2dash',
+                '--force',
+                '--index-page',
+                'index.html',
+                '--enable-js',
+                '--name',
                 project.name,
                 source.as_posix(),
-                "--destination",
+                '--destination',
                 DOCSET_DIR.as_posix(),
             ]
             if icon_files:
                 icons = [
-                    ["--icon", icon.as_posix()] for icon in icon_files if icon.suffix == '.png'
+                    ['--icon', icon.as_posix()] for icon in icon_files if icon.suffix == '.png'
                 ]
                 icons = list(itertools.chain(*icons))
                 command += icons
-            command = " ".join(command)
+            command = ' '.join(command)
             stream_command(command, **kwargs)
 
-        elif project.generator == "html2dash":
+        elif project.generator == 'html2dash':
             icon = icon_files[0] if icon_files else None
             custom_builder(
                 name=project.name,
                 destination=DOCSET_DIR.as_posix(),
-                index_page="index.html",
+                index_page='index.html',
                 source=source.as_posix(),
                 icon=icon,
             )
 
         with working_directory(DOCSET_DIR):
-            docset_path = f"{project.name}.docset"
+            docset_path = f'{project.name}.docset'
             dir_to_delete = docset_path
 
             tar_command = [
-                "tar",
+                'tar',
                 "--exclude='.DS_Store'",
-                "-Jcvf",
-                f"{project.name}{DOCSET_EXT}",
+                '-Jcvf',
+                f'{project.name}{DOCSET_EXT}',
                 docset_path,
             ]
             stream_command(tar_command)
-            stream_command(f"rm -rf {dir_to_delete}", **kwargs)
+            stream_command(f'rm -rf {dir_to_delete}', **kwargs)
 
         return project.name, latest_tag
 
     def _create_feed(self, name, latest_tag):
-        feed_filename = f"{FEED_DIR}/{name}.xml"
-        base_url = "https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/docsets"
+        feed_filename = f'{FEED_DIR}/{name}.xml'
+        base_url = 'https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/docsets'
 
-        entry = Element("entry")
-        pkg_name = SubElement(entry, "name")
-        pkg_name.text = f"{name}"
-        version = SubElement(entry, "version")
-        version.text = f"main@{latest_tag}"
-        url = SubElement(entry, "url")
-        url.text = f"{base_url}/{name}{DOCSET_EXT}"
+        entry = Element('entry')
+        pkg_name = SubElement(entry, 'name')
+        pkg_name.text = f'{name}'
+        version = SubElement(entry, 'version')
+        version.text = f'main@{latest_tag}'
+        url = SubElement(entry, 'url')
+        url.text = f'{base_url}/{name}{DOCSET_EXT}'
 
-        bs = BeautifulSoup(tostring(entry), features="html.parser").prettify()
+        bs = BeautifulSoup(tostring(entry), features='html.parser').prettify()
 
-        with open(feed_filename, "w") as f:
+        with open(feed_filename, 'w') as f:
             f.write(bs)
 
     def create_docset(self, project: Project) -> None:
@@ -228,8 +223,8 @@ class Builder:
                 self.errors.append(project.name)
 
         if self.errors:
-            error_console = Console(stderr=True, style="bold red")
-            error_console.print(f"Errors occured while building docsets:")
+            error_console = Console(stderr=True, style='bold red')
+            error_console.print('Errors occured while building docsets:')
             error_console.print(self.errors)
 
 
@@ -241,7 +236,7 @@ def build(
 ):
     """Build docset"""
 
-    with open(config, 'r') as f:
+    with open(config) as f:
         config = ruamel.yaml.safe_load(f)
 
     projects = [Project(**p) for p in config]
@@ -251,27 +246,26 @@ def build(
 
 @app.command()
 def update_feed_list(
-    feed_file: pathlib.Path = typer.Argument(f"{FEED_DIR}/README.md"),
+    feed_file: pathlib.Path = typer.Argument(f'{FEED_DIR}/README.md'),
     docset_dir: pathlib.Path = typer.Option(DOCSET_DIR, help='docset directory'),
     feed_root_url: str = typer.Option(
-        "https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds",
-        help="Root URL for the feeds",
+        'https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds',
+        help='Root URL for the feeds',
     ),
 ):
     """Update docsets feed list"""
 
-    items = list(pathlib.Path(docset_dir).rglob(f"*{DOCSET_EXT}"))
-    if items:
-        console.log(f"✅ Found {len(items)} items.")
+    if items := list(pathlib.Path(docset_dir).rglob(f'*{DOCSET_EXT}')):
+        console.log(f'✅ Found {len(items)} items.')
         items.sort()
         console.log(items)
-        with open(feed_file, "w") as fpt:
+        with open(feed_file, 'w') as fpt:
             print(
-                "# Docset Feeds\n\nYou can subscribe to the following feeds with a single click.\n\n```bash\n dash-feed://<URL encoded feed URL>\n```\n",
+                '# Docset Feeds\n\nYou can subscribe to the following feeds with a single click.\n\n```bash\n dash-feed://<URL encoded feed URL>\n```\n',
                 file=fpt,
             )
             print(
-                "\n![dash-docsets](https://github.com/andersy005/dash-docsets/raw/main/images/how-to-add-feed.png)",
+                '\n![dash-docsets](https://github.com/andersy005/dash-docsets/raw/main/images/how-to-add-feed.png)',
                 file=fpt,
             )
             entries = []
@@ -285,7 +279,7 @@ def update_feed_list(
                     }
                 )
 
-            table = pd.DataFrame(entries).to_markdown(tablefmt="github")
+            table = pd.DataFrame(entries).to_markdown(tablefmt='github')
             print(table, file=fpt)
 
     else:
