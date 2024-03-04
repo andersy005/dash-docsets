@@ -2,9 +2,9 @@ name: CI
 on:
   push:
     branches:
-      - 'main'
+      - "main"
   schedule:
-    - cron: '0 0 * * 6' # “At 00:00 on Wednesday and Saturday"
+    - cron: "0 0 * * 6" # “At 00:00 on Wednesday and Saturday"
   workflow_dispatch: # allows you to trigger manually'
 
 concurrency:
@@ -26,7 +26,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        key: ['arctic', 'pacific', 'indian']
+        key: ["arctic", "pacific", "indian"]
 
     timeout-minutes: 200
     steps:
@@ -39,7 +39,7 @@ jobs:
           environment-file: ${{ env.CONDA_ENV_FILE }}
           environment-name: dash-docs
           cache-env: true
-          cache-env-key: '${{runner.os}}-${{runner.arch}}-${{hashFiles(env.CONDA_ENV_FILE)}}'
+          cache-env-key: "${{runner.os}}-${{runner.arch}}-${{hashFiles(env.CONDA_ENV_FILE)}}"
 
       - run: |
           micromamba info && micromamba list
