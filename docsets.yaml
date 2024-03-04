@@ -55,7 +55,7 @@ arctic:
     doc_dir: .
     html_pages_dir: .
     install: false
-    doc_build_cmd: 'git checkout gh-pages'
+    doc_build_cmd: "git checkout gh-pages"
     generator: html2dash
   - name: zict
     repo: dask/zict
@@ -144,14 +144,14 @@ indian:
     doc_dir: .
     html_pages_dir: .
     install: false
-    doc_build_cmd: 'git checkout gh-pages'
+    doc_build_cmd: "git checkout gh-pages"
     generator: html2dash
   - name: hvplot
     repo: holoviz/hvplot
     doc_dir: .
     html_pages_dir: .
     install: false
-    doc_build_cmd: 'git checkout gh-pages'
+    doc_build_cmd: "git checkout gh-pages"
     generator: html2dash
   - name: lumen
     repo: holoviz/lumen
@@ -253,7 +253,7 @@ southern:
     doc_dir: .
     html_pages_dir: .
     install: false
-    doc_build_cmd: 'git checkout gh-pages'
+    doc_build_cmd: "git checkout gh-pages"
     generator: html2dash
   # - name: cupy
   #   repo: cupy/cupy
@@ -274,7 +274,7 @@ pacific:
     doc_dir: .
     html_pages_dir: .
     install: false
-    doc_build_cmd: 'git checkout gh-pages'
+    doc_build_cmd: "git checkout gh-pages"
     generator: html2dash
   - name: starlette
     repo: encode/starlette
@@ -321,7 +321,7 @@ atlantic:
     doc_dir: .
     html_pages_dir: .
     install: false
-    doc_build_cmd: 'git checkout gh-pages'
+    doc_build_cmd: "git checkout gh-pages"
     generator: html2dash
 
   # - name: dokku
