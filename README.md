@@ -16,7 +16,7 @@ My Dash (https://kapeli.com/dash) docsets. Let the buyer beware ⚠️;)
 
 ## Docset Feeds
 
-For instructions on how to subscribe to feeds, check this [page](https://github.com/andersy005/dash-docsets/blob/docsets/README.md).
+For instructions on how to subscribe to feeds, check this [page](https://github.com/andersy005/dash-docsets/releases/download/docsets-latest/README.md).
 
 ## Zeal Issues
 
@@ -30,13 +30,13 @@ You may get the following error:
 
 **Solution**:
 
-- Download docsets from https://github.com/andersy005/dash-docsets/tree/docsets/docsets
+- Download docsets from the latest release assets: https://github.com/andersy005/dash-docsets/releases/tag/docsets-latest
 - Find Zeal's docset storage directory by navigating to `Edit` -> `Preferences` from Zeal Menu bar.
 
 - Untar the downloaded docset into zeal's docset storage directory
 
   ```bash
-  tar -Jcvf docset.tar.xz --directory zeal-docset-storage-directory
+  tar -xzvf docset.tar.gz --directory zeal-docset-storage-directory
   ```
 
-  Replace `docset.tar.xz` with the location of the downloaded docset, and `zeal-docset-storage-directory` with the found zeal's docset storage directory
+  Replace `docset.tar.gz` with the location of the downloaded docset, and `zeal-docset-storage-directory` with the found zeal's docset storage directory

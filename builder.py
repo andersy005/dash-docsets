@@ -29,6 +29,12 @@ MAKE_CMD = 'make html' if SYSTEM == 'darwin' else f'make -j{psutil.cpu_count()} 
 DOCSET_EXT = '.tar.gz'
 
 BASE_URL = 'https://github.com'
+DEFAULT_DOCSET_BASE_URL = (
+    'https://github.com/andersy005/dash-docsets/releases/download/docsets-latest'
+)
+DEFAULT_FEED_ROOT_URL = (
+    'https://github.com/andersy005/dash-docsets/releases/download/docsets-latest'
+)
 TMPDIR = tempfile.gettempdir()
 REPODIR = pathlib.Path(TMPDIR) / 'repos'
 REPODIR.mkdir(parents=True, exist_ok=True)
@@ -40,6 +46,17 @@ DOCSET_DIR.mkdir(parents=True, exist_ok=True)
 
 FEED_DIR = HOME_DIR / 'feeds'
 FEED_DIR.mkdir(parents=True, exist_ok=True)
+
+
+def _env_or_default(name: str, default: str) -> str:
+    value = os.getenv(name)
+    if not value:
+        return default
+    return value.rstrip('/')
+
+
+DOCSET_BASE_URL = _env_or_default('DOCSET_BASE_URL', DEFAULT_DOCSET_BASE_URL)
+FEED_ROOT_URL = _env_or_default('FEED_ROOT_URL', DEFAULT_FEED_ROOT_URL)
 
 
 def _stream_command(cmd, no_newline_regexp='Progess', **kwargs):
@@ -92,7 +109,7 @@ def working_directory(path):
         os.chdir(prev_cwd)
 
 
-class Generator(str, enum.Enum):
+class Generator(enum.StrEnum):
     doc2dash = 'doc2dash'
     html2dash = 'html2dash'
 
@@ -110,6 +127,7 @@ class Project(pydantic.BaseModel):
 @pydantic.dataclasses.dataclass
 class Builder:
     projects: list[Project]
+    docset_base_url: str = DOCSET_BASE_URL
 
     def _build_docs(self, project: Project):
         local_dir = REPODIR / project.name
@@ -184,7 +202,7 @@ class Builder:
             tar_command = [
                 'tar',
                 "--exclude='.DS_Store'",
-                '-Jcvf',
+                '-czvf',
                 f'{project.name}{DOCSET_EXT}',
                 docset_path,
             ]
@@ -195,7 +213,7 @@ class Builder:
 
     def _create_feed(self, name, latest_tag):
         feed_filename = f'{FEED_DIR}/{name}.xml'
-        base_url = 'https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/docsets'
+        docset_base_url = self.docset_base_url.rstrip('/')
 
         entry = Element('entry')
         pkg_name = SubElement(entry, 'name')
@@ -203,7 +221,7 @@ class Builder:
         version = SubElement(entry, 'version')
         version.text = f'main@{latest_tag}'
         url = SubElement(entry, 'url')
-        url.text = f'{base_url}/{name}{DOCSET_EXT}'
+        url.text = f'{docset_base_url}/{name}{DOCSET_EXT}'
 
         bs = BeautifulSoup(tostring(entry), features='html.parser').prettify()
 
@@ -232,7 +250,11 @@ class Builder:
 def build(
     config: pathlib.Path = typer.Argument(
         None, exists=True, file_okay=True, help='YAML config file to use'
-    )
+    ),
+    docset_base_url: str = typer.Option(
+        DOCSET_BASE_URL,
+        help='Base URL where docset archives are hosted.',
+    ),
 ):
     """Build docset"""
 
@@ -240,7 +262,7 @@ def build(
         config = ruamel.yaml.safe_load(f)
 
     projects = [Project(**p) for p in config]
-    builder = Builder(projects=projects)
+    builder = Builder(projects=projects, docset_base_url=docset_base_url)
     builder.build_all()
 
 
@@ -249,7 +271,7 @@ def update_feed_list(
     feed_file: pathlib.Path = typer.Argument(f'{FEED_DIR}/README.md'),
     docset_dir: pathlib.Path = typer.Option(DOCSET_DIR, help='docset directory'),
     feed_root_url: str = typer.Option(
-        'https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds',
+        FEED_ROOT_URL,
         help='Root URL for the feeds',
     ),
 ):
@@ -275,7 +297,7 @@ def update_feed_list(
                     {
                         'Name': entry,
                         'Feed URL': f'{feed_root_url}/{entry}.xml',
-                        'Size': f'{item.stat().st_size / (1024*1024):.1f} MB',
+                        'Size': f'{item.stat().st_size / (1024 * 1024):.1f} MB',
                     }
                 )
 

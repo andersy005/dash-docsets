@@ -11,9 +11,14 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  RELEASE_TAG: docsets-latest
+  DOCSET_BASE_URL: https://github.com/${{ github.repository }}/releases/download/docsets-latest
+  FEED_ROOT_URL: https://github.com/${{ github.repository }}/releases/download/docsets-latest
+
 jobs:
   build:
-    if: "!contains(github.event.head_commit.message, '[skip-ci]')"
+    if: ${{ github.event_name != 'push' || !contains(github.event.head_commit.message, '[skip-ci]') }}
     name: dash-docsets-build
     runs-on: ubuntu-latest
     defaults:
@@ -21,7 +26,7 @@ jobs:
         shell: bash -l {0}
     env:
       MKL_THREADING_LAYER: GNU
-      CONDA_ENV_FILE: ci/minimal-environment.yml
+      CONDA_ENV_FILE: ci/environment.yml
 
     strategy:
       fail-fast: false
@@ -31,6 +36,7 @@ jobs:
     timeout-minutes: 200
     steps:
       - uses: actions/checkout@v6
+
       - name: Setup micromamba
         uses: mamba-org/provision-with-micromamba@main
         with:
@@ -44,48 +50,116 @@ jobs:
       - run: |
           micromamba info && micromamba list
 
-      # - run: |
-      #     python builder.py build configs/${{ matrix.key }}.yaml
+      - run: |
+          python builder.py build configs/${{ matrix.key }}.yaml --docset-base-url "${DOCSET_BASE_URL}"
 
-      # - uses: actions/upload-artifact@v2
-      #   with:
-      #     name: docsets
-      #     path: docsets
-      #     retention-days: 3
+      - uses: actions/upload-artifact@v4
+        with:
+          name: docsets-${{ matrix.key }}
+          path: docsets/*.tar.gz
+          if-no-files-found: error
+          retention-days: 7
 
-      # - uses: actions/upload-artifact@v2
-      #   with:
-      #     name: feeds
-      #     path: feeds
-      #     retention-days: 3
+      - uses: actions/upload-artifact@v4
+        with:
+          name: feeds-${{ matrix.key }}
+          path: feeds/*.xml
+          if-no-files-found: error
+          retention-days: 7
 
-  # deploy:
-  #   name: dash-docsets-deploy
-  #   needs: build
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v6
-  #     - uses: actions/download-artifact@v3
-  #       with:
-  #         path: /tmp/workspace/builds
+  publish:
+    name: dash-docsets-publish
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v6
 
-  #     - uses: actions/setup-python@v4
-  #       with:
-  #         python-version: 3.8
-  #     - run: |
-  #         python -m pip install --upgrade pip typer beautifulsoup4 pyyaml requests rich pandas tabulate pydantic ruamel.yaml psutil
-  #     - run: |
-  #         python cli.py update-feed-list /tmp/workspace/builds/README.md --docset-dir /tmp/workspace/builds/docsets
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: docsets-*
+          path: /tmp/workspace/builds
+          merge-multiple: true
 
-  #     - name: Display structure of files to upload
-  #       run: ls -R
-  #       working-directory: /tmp/workspace/builds
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: feeds-*
+          path: /tmp/workspace/builds
+          merge-multiple: true
 
-  #     - name: Deploy
-  #       uses: peaceiris/actions-gh-pages@v3.8.0
-  #       with:
-  #         github_token: ${{ secrets.GITHUB_TOKEN }}
-  #         publish_dir: /tmp/workspace/builds
-  #         user_name: 'GitHub Action'
-  #         user_email: 'action@github.com'
-  #         publish_branch: docsets
+      - name: Prepare release assets
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/workspace/final/docsets /tmp/workspace/final/feeds
+          find /tmp/workspace/builds -type f -name '*.tar.gz' -exec cp {} /tmp/workspace/final/docsets/ \;
+          find /tmp/workspace/builds -type f -name '*.xml' -exec cp {} /tmp/workspace/final/feeds/ \;
+
+          docset_count="$(find /tmp/workspace/final/docsets -type f -name '*.tar.gz' | wc -l | tr -d ' ')"
+          feed_count="$(find /tmp/workspace/final/feeds -type f -name '*.xml' | wc -l | tr -d ' ')"
+          echo "Found ${docset_count} docsets and ${feed_count} feeds"
+          test "${docset_count}" -gt 0
+          test "${feed_count}" -gt 0
+
+      - name: Build feed list README
+        run: |
+          python - <<'PY'
+          import os
+          from pathlib import Path
+
+          feed_root_url = os.environ["FEED_ROOT_URL"].rstrip("/")
+          docset_dir = Path("/tmp/workspace/final/docsets")
+          readme = Path("/tmp/workspace/final/feeds/README.md")
+
+          rows = []
+          for docset in sorted(docset_dir.glob("*.tar.gz")):
+              name = docset.name.removesuffix(".tar.gz")
+              rows.append(
+                  {
+                      "name": name,
+                      "feed_url": f"{feed_root_url}/{name}.xml",
+                      "size_mb": docset.stat().st_size / (1024 * 1024),
+                  }
+              )
+
+          with readme.open("w", encoding="utf-8") as fpt:
+              fpt.write(
+                  "# Docset Feeds\n\n"
+                  "You can subscribe to the following feeds with a single click.\n\n"
+                  "```bash\n"
+                  "dash-feed://<URL encoded feed URL>\n"
+                  "```\n\n"
+                  f"Release tag: `{os.environ['RELEASE_TAG']}`\n\n"
+              )
+              fpt.write("| Name | Feed URL | Size |\n")
+              fpt.write("| --- | --- | --- |\n")
+              for row in rows:
+                  fpt.write(
+                      f"| {row['name']} | {row['feed_url']} | {row['size_mb']:.1f} MB |\n"
+                  )
+          PY
+
+      - name: Create or update rolling release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          tag="${RELEASE_TAG}"
+          repo="${GITHUB_REPOSITORY}"
+          title="Dash docsets (latest)"
+          notes="Autogenerated from ${GITHUB_SHA} on $(date -u +'%Y-%m-%d %H:%M UTC')."
+
+          if gh release view "${tag}" --repo "${repo}" >/dev/null 2>&1; then
+            for asset_id in $(gh api "repos/${repo}/releases/tags/${tag}" --jq '.assets[].id'); do
+              gh api --method DELETE "repos/${repo}/releases/assets/${asset_id}"
+            done
+            gh release edit "${tag}" --repo "${repo}" --title "${title}" --notes "${notes}"
+          else
+            gh release create "${tag}" --repo "${repo}" --title "${title}" --notes "${notes}"
+          fi
+
+          gh release upload "${tag}" \
+            /tmp/workspace/final/docsets/*.tar.gz \
+            /tmp/workspace/final/feeds/* \
+            --repo "${repo}" \
+            --clobber

@@ -30,6 +30,12 @@ console = Console()
 DOCSET_EXT = '.tar.gz'
 
 BASE_URL = 'https://github.com'
+DEFAULT_DOCSET_BASE_URL = (
+    'https://github.com/andersy005/dash-docsets/releases/download/docsets-latest'
+)
+DEFAULT_FEED_ROOT_URL = (
+    'https://github.com/andersy005/dash-docsets/releases/download/docsets-latest'
+)
 TMPDIR = tempfile.gettempdir()
 REPODIR = Path(TMPDIR) / 'repos'
 REPODIR.mkdir(parents=True, exist_ok=True)
@@ -41,6 +47,17 @@ DOCSET_DIR.mkdir(parents=True, exist_ok=True)
 
 FEED_DIR = HOME_DIR / 'feeds'
 FEED_DIR.mkdir(parents=True, exist_ok=True)
+
+
+def _env_or_default(name: str, default: str) -> str:
+    value = os.getenv(name)
+    if not value:
+        return default
+    return value.rstrip('/')
+
+
+DOCSET_BASE_URL = _env_or_default('DOCSET_BASE_URL', DEFAULT_DOCSET_BASE_URL)
+FEED_ROOT_URL = _env_or_default('FEED_ROOT_URL', DEFAULT_FEED_ROOT_URL)
 
 
 def _stream_command(cmd, no_newline_regexp='Progess', **kwargs):
@@ -107,6 +124,7 @@ def _build_project(
     generator='doc2dash',
     install=True,
     url=None,
+    docset_base_url=DOCSET_BASE_URL,
 ):
 
     local_dir = REPODIR / name
@@ -128,7 +146,6 @@ def _build_project(
         console.log(f'{name} directory already exits.')
 
     with working_directory(local_dir):
-
         if install and generator != 'dash-webgen':
             command = ['python', '-m', 'pip', 'install', '.', '--no-deps']
             stream_command(command)
@@ -191,18 +208,18 @@ def _build_project(
         tar_command = [
             'tar',
             "--exclude='.DS_Store'",
-            '-Jcvf',
+            '-czvf',
             f'{name}{DOCSET_EXT}',
             docset_path,
         ]
         stream_command(tar_command)
         stream_command(f'rm -rf {dir_to_delete}', **kwargs)
-    create_feed(name, latest_tag)
+    create_feed(name, latest_tag, docset_base_url)
 
 
-def create_feed(name, latest_tag):
+def create_feed(name, latest_tag, docset_base_url=DOCSET_BASE_URL):
     feed_filename = f'{FEED_DIR}/{name}.xml'
-    base_url = 'https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/docsets'
+    docset_base_url = docset_base_url.rstrip('/')
 
     entry = Element('entry')
     pkg_name = SubElement(entry, 'name')
@@ -210,7 +227,7 @@ def create_feed(name, latest_tag):
     version = SubElement(entry, 'version')
     version.text = f'main@{latest_tag}'
     url = SubElement(entry, 'url')
-    url.text = f'{base_url}/{name}{DOCSET_EXT}'
+    url.text = f'{docset_base_url}/{name}{DOCSET_EXT}'
 
     bs = BeautifulSoup(tostring(entry), features='html.parser').prettify()
 
@@ -237,10 +254,24 @@ def build(
     generator: str = typer.Option('doc2dash', help='Documentation Set generator.'),
     install: bool = typer.Option(True, help='Whether to install the package in editable mode'),
     url: str = typer.Option(None, help='URL of the docset'),
+    docset_base_url: str = typer.Option(
+        DOCSET_BASE_URL,
+        help='Base URL where docset archives are hosted.',
+    ),
 ):
     """Build dash docset for given project/repo"""
 
-    _build_project(name, repo, doc_dir, html_pages_dir, doc_build_cmd, generator, install, url)
+    _build_project(
+        name,
+        repo,
+        doc_dir,
+        html_pages_dir,
+        doc_build_cmd,
+        generator,
+        install,
+        url,
+        docset_base_url,
+    )
 
 
 @app.command()
@@ -250,6 +281,10 @@ def build_from_config(
     ),
     key: str = typer.Option(
         None, '--key', '-k', help='Key corresponding to list of project to build docsets for.'
+    ),
+    docset_base_url: str = typer.Option(
+        DOCSET_BASE_URL,
+        help='Base URL where docset archives are hosted.',
     ),
 ):
     """
@@ -271,7 +306,7 @@ def build_from_config(
         repo = project_info.pop('repo')
 
         try:
-            _build_project(name, repo, **project_info)
+            _build_project(name, repo, docset_base_url=docset_base_url, **project_info)
         except Exception:
             errors.append((name, traceback.format_exc()))
     if errors:
@@ -290,7 +325,7 @@ def update_feed_list(
     feed_file: Path = typer.Argument(f'{FEED_DIR}/README.md'),
     docset_dir: Path = typer.Option(DOCSET_DIR, help='docset directory'),
     feed_root_url: str = typer.Option(
-        'https://raw.githubusercontent.com/andersy005/dash-docsets/docsets/feeds',
+        FEED_ROOT_URL,
         help='Root URL for the feeds',
     ),
 ):
@@ -316,7 +351,7 @@ def update_feed_list(
                     {
                         'Name': entry,
                         'Feed URL': f'{feed_root_url}/{entry}.xml',
-                        'Size': f'{item.stat().st_size / (1024*1024):.1f} MB',
+                        'Size': f'{item.stat().st_size / (1024 * 1024):.1f} MB',
                     }
                 )
 
