@@ -1,57 +1,142 @@
 [![GitHub Workflow Status](https://img.shields.io/github/workflow/status/andersy005/dash-docsets/CI?logo=github&style=for-the-badge)](https://github.com/andersy005/dash-docsets/actions)
 
-- [Dash Docsets](#dash-docsets)
-  - [Docset Feeds](#docset-feeds)
-  - [Zeal Issues](#zeal-issues)
-
 # Dash Docsets
 
-My Dash (https://kapeli.com/dash) docsets. Let the buyer beware ⚠️;)
+This repo builds Dash docsets from upstream project docs and publishes them as release assets.
 
-**The main difference** between the docsets hosted in this repo and the official dash & dash user contributed docsets is that _these docsets are generated from the main branch of each project_ and are updated regularly.
+The short version is this:
 
-⚠️ Note: It's expected that these docsets should also work in [Zeal](https://zealdocs.org/) with some workarounds. **⚠️ See [Zeal Issues](#zeal-issues)** for more information on how to fix them.
+- It tracks fast-moving projects.
+- It rebuilds from current project docs.
+- It favors practical automation over perfect consistency.
+
+If docs break upstream, a config tweak is usually enough to get back on track.
 
 ![](./images/navigate.png)
 
-## Development Environment
+## What Gets Produced
 
-This repository uses [Pixi](https://pixi.sh/latest/) for environment management, configured in `pyproject.toml` under `[tool.pixi.*]`.
+- `docsets/*.tar.gz` docset archives
+- `feeds/*.xml` Dash feed entries (one per docset)
+- optionally `feeds/README.md` when you run `update-feed-list`
+
+## Build Model
+
+`builder.py` drives the full process:
+
+1. clone or reuse each source repo under a temp workspace
+2. build docs using project-specific settings
+3. convert HTML output to a Dash docset (`doc2dash` or `html2dash`)
+4. archive docsets and write feed XML files
+
+By default, each project is built in its own Pixi environment inside the cloned repo at:
+
+`<cloned-repo>/.dash-docsets-pixi/pyproject.toml`
+
+This keeps project dependencies isolated and avoids polluting the root tooling environment.
+All local commands now go through `builder.py`.
+
+## Prerequisites
+
+- [Pixi](https://pixi.sh/latest/)
+- Git
+- `tar`
+- `rsync` (used by `html2dash.py`)
+
+## Quick Start
 
 ```bash
-# Install dependencies from pyproject.toml
+# install root tooling environment
 pixi install
 
-# Build one config
+# build one config set
 pixi run python builder.py build configs/arctic.yaml
 
-# Regenerate feed README from local artifacts
-pixi run update-feed-list
+# regenerate local feed index markdown from local docsets/
+pixi run python builder.py update-feed-list
 ```
 
-## Docset Feeds
+Build with an explicit release base URL:
 
-For instructions on how to subscribe to feeds, check this [page](https://github.com/andersy005/dash-docsets/releases/download/docsets-latest/README.md).
+```bash
+pixi run python builder.py build configs/arctic.yaml \
+  --docset-base-url "https://github.com/<owner>/<repo>/releases/download/docsets-latest"
+```
 
-## Zeal Issues
+## CI and Release Flow
 
-When subscribing to docsets feeds, Zeal appears to be not working properly:
+GitHub Actions builds configured docsets, uploads artifacts, and refreshes a rolling release tag:
+
+`docsets-latest`
+
+Build outputs from CI:
+
+- `*.tar.gz` docset archives
+- `*.xml` feed files
+- feed `README.md`
+
+Useful env vars in CI or local runs:
+
+- `DOCSET_BASE_URL` for archive links in feed entries
+- `FEED_ROOT_URL` for feed README links
+
+## Configuration
+
+Build configs are YAML lists under `configs/` (for example `configs/arctic.yaml`).
+
+Each project entry supports:
+
+- `name` (required): docset name
+- `repo` (required): GitHub `owner/repo`
+- `generator`: `doc2dash` or `html2dash` (default: `doc2dash`)
+- `doc_dir`: docs root inside the repo (default: `docs`)
+- `doc_build_cmd`: command run in `doc_dir`
+- `html_pages_dir`: built HTML path relative to `doc_dir` (default: `_build/html`)
+- `install`: run `python -m pip install -e .` before build (default: `true`)
+- `use_pixi_env`: build in per-project Pixi env (default: `true`)
+- `pixi_python`: Python spec for project env (default: `3.13.*`)
+- `pixi_channels`: Pixi channels for project env (default: `["conda-forge"]`)
+- `pixi_platforms`: Pixi platforms for project env (default: `["linux-64", "osx-arm64"]`)
+- `pixi_dependencies`: extra per-project dependencies map
+
+Example:
+
+```yaml
+- name: xarray
+  repo: pydata/xarray
+  doc_dir: doc
+  html_pages_dir: _build/html
+  doc_build_cmd: sphinx-build -T -E -b html ./ _build/html
+  use_pixi_env: true
+  pixi_python: "3.13.*"
+  pixi_dependencies:
+    sphinx: ">=8"
+    make: "*"
+```
+
+## Feeds
+
+Published feed docs and feed XML files are attached to the rolling release tag:
+
+`docsets-latest`
+
+For subscription instructions, see:
+
+https://github.com/andersy005/dash-docsets/releases/download/docsets-latest/README.md
+
+## Zeal Notes
+
+Zeal can fail when subscribing to these feeds directly in some setups.
+
+If that happens:
+
+1. Download the `.tar.gz` docset from the latest release assets.
+2. In Zeal, open `Edit -> Preferences` and find your docset storage directory.
+3. Extract the archive into that directory:
+
+```bash
+tar -xzvf docset.tar.gz --directory /path/to/zeal/docsets
+```
 
 ![](./images/zeal-failure.png)
-
-You may get the following error:
-
 ![](./images/zeal-failure-diag.png)
-
-**Solution**:
-
-- Download docsets from the latest release assets: https://github.com/andersy005/dash-docsets/releases/tag/docsets-latest
-- Find Zeal's docset storage directory by navigating to `Edit` -> `Preferences` from Zeal Menu bar.
-
-- Untar the downloaded docset into zeal's docset storage directory
-
-  ```bash
-  tar -xzvf docset.tar.gz --directory zeal-docset-storage-directory
-  ```
-
-  Replace `docset.tar.gz` with the location of the downloaded docset, and `zeal-docset-storage-directory` with the found zeal's docset storage directory
