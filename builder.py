@@ -77,11 +77,19 @@ def _stream_command(
     cmd: str | Sequence[str | os.PathLike[str]],
     no_newline_regexp: str = 'Progress',
     timeout_seconds: float | None = None,
+    shell: bool = False,
     **kwargs: Any,
 ) -> Iterator[str]:
-    """Stream command output while suppressing matching noisy progress lines."""
+    """Stream command output while suppressing matching noisy progress lines.
 
-    if isinstance(cmd, str):
+    When *shell* is True the command is passed as a string to the shell,
+    which enables compound commands (``&&``, pipes, etc.).  When False the
+    command is split with :func:`shlex.split` and executed directly.
+    """
+
+    if shell:
+        command: str | list[str] = cmd if isinstance(cmd, str) else ' '.join(str(p) for p in cmd)
+    elif isinstance(cmd, str):
         command = shlex.split(cmd)
     else:
         command = [os.fspath(part) for part in cmd]
@@ -91,6 +99,7 @@ def _stream_command(
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         text=True,
+        shell=shell,
         **kwargs,
     )
     recent_stdout: deque[str] = deque(maxlen=500)
@@ -145,12 +154,14 @@ def stream_command(
     cmd: str | Sequence[str | os.PathLike[str]],
     no_newline_regexp: str = 'Progress',
     timeout_seconds: float | None = None,
+    shell: bool = False,
     **kwargs: Any,
 ) -> None:
     for _ in _stream_command(
         cmd,
         no_newline_regexp,
         timeout_seconds=timeout_seconds,
+        shell=shell,
         **kwargs,
     ):
         pass
@@ -185,6 +196,15 @@ class Project(pydantic.BaseModel):
     doc_build_cmd: str = MAKE_CMD
     html_pages_dir: str = '_build/html'
     install: bool = True
+    # When True, skip the custom pixi manifest and run doc_build_cmd directly
+    # via the shell in doc_dir.  Use this for projects that ship their own
+    # pixi/uv environment (set doc_dir to "." so commands run from repo root).
+    use_own_env: bool = False
+    # Editable-install command used by the custom-pixi path.  Override when
+    # the project requires extras or a requirements file, e.g.
+    #   "pip install -e .[docs]"
+    #   "pip install -r docs/requirements.txt && pip install -e ."
+    pip_install_cmd: str = 'pip install -e .'
     pixi_python: str = DEFAULT_PROJECT_PIXI_PYTHON
     pixi_channels: list[str] = pydantic.Field(
         default_factory=lambda: list(DEFAULT_PROJECT_PIXI_CHANNELS)
@@ -322,25 +342,37 @@ class Builder:
 
         latest_tag = self._latest_commit(local_dir)
 
-        step('installing pixi env')
-        manifest_path = self._prepare_project_environment(project, local_dir)
+        if project.use_own_env:
+            # Delegate entirely to the project's own environment manager
+            # (pixi, uv, etc.).  The doc_build_cmd is run as a shell command
+            # so compound commands (&&, pipes) work too.
+            step('building docs (own env)')
+            stream_command(
+                project.doc_build_cmd,
+                cwd=doc_dir,
+                timeout_seconds=project.doc_build_timeout_seconds,
+                shell=True,
+            )
+        else:
+            step('installing pixi env')
+            manifest_path = self._prepare_project_environment(project, local_dir)
 
-        if project.install:
-            step('pip installing project')
+            if project.install:
+                step('pip installing project')
+                self._run_in_project_environment(
+                    manifest_path,
+                    ['/bin/bash', '-c', project.pip_install_cmd],
+                    cwd=local_dir,
+                    timeout_seconds=project.install_timeout_seconds,
+                )
+
+            step('building docs')
             self._run_in_project_environment(
                 manifest_path,
-                ['python', '-m', 'pip', 'install', '-e', '.'],
-                cwd=local_dir,
-                timeout_seconds=project.install_timeout_seconds,
+                ['/bin/bash', '-c', project.doc_build_cmd],
+                cwd=doc_dir,
+                timeout_seconds=project.doc_build_timeout_seconds,
             )
-
-        step('building docs')
-        self._run_in_project_environment(
-            manifest_path,
-            ['/bin/bash', '-c', project.doc_build_cmd],
-            cwd=doc_dir,
-            timeout_seconds=project.doc_build_timeout_seconds,
-        )
 
         step('packaging docset')
         icon_dir = ICON_DIR / project.name

@@ -16,6 +16,7 @@
     pymdown-extensions: "*"
     python-slugify: "*"
     pyyaml: "*"
+    httpx: "*"
   pixi_pypi_dependencies:
     griffe-typingdoc: "*"
     griffe-warnings-deprecated: "*"
