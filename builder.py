@@ -1,4 +1,3 @@
-import ast
 import contextlib
 import enum
 import itertools
@@ -10,21 +9,20 @@ import shlex
 import subprocess
 import tempfile
 import threading
-import tomllib
+import time
 from collections import deque
-from collections.abc import Iterator, Sequence
-from dataclasses import field
+from collections.abc import Callable, Iterator, Sequence
+from dataclasses import dataclass, field
 from typing import Any
 from xml.etree.ElementTree import Element, SubElement, tostring
 
-import pandas as pd
-import psutil
 import pydantic
 import ruamel.yaml
 import typer
 from bs4 import BeautifulSoup
 from rich.console import Console
-from rich.progress import track
+from rich.progress import Progress, SpinnerColumn, TextColumn, TimeElapsedColumn
+from rich.table import Table
 
 from html2dash import custom_builder
 
@@ -33,7 +31,7 @@ console = Console()
 error_console = Console(stderr=True, style='bold red')
 
 SYSTEM = platform.system().lower()
-MAKE_CMD = 'make html' if SYSTEM == 'darwin' else f'make -j{psutil.cpu_count()} html'
+MAKE_CMD = 'make html' if SYSTEM == 'darwin' else f'make -j{os.cpu_count() or 1} html'
 DOCSET_EXT = '.tar.gz'
 
 BASE_URL = 'https://github.com'
@@ -59,36 +57,9 @@ PROJECT_PIXI_DIR = '.dash-docsets-pixi'
 DEFAULT_PROJECT_PIXI_PYTHON = '3.13.*'
 DEFAULT_PROJECT_PIXI_CHANNELS = ['conda-forge']
 DEFAULT_PROJECT_PIXI_PLATFORMS = ['linux-64', 'osx-arm64']
-MKDOCS_VERSION_CONSTRAINT = '>=1.6,<2'
-SPHINX_VERSION_CONSTRAINT = '>=8,<9'
-SETUPTOOLS_VERSION_CONSTRAINT = '<81'
 DEFAULT_PIXI_INSTALL_TIMEOUT_SECONDS = 900
 DEFAULT_INSTALL_TIMEOUT_SECONDS = 900
 DEFAULT_DOC_BUILD_TIMEOUT_SECONDS = 1200
-DOCS_GROUP_NAMES = ('docs', 'doc', 'documentation')
-CONF_IMPORT_DEPENDENCY_MAP = {
-    'dask_sphinx_theme': 'dask-sphinx-theme',
-    'jupyter_sphinx': 'jupyter-sphinx',
-    'numpydoc': 'numpydoc',
-    'sphinx_autosummary_accessors': 'sphinx-autosummary-accessors',
-    'sphinx_click': 'sphinx-click',
-    'sphinx_copybutton': 'sphinx-copybutton',
-    'sphinx_design': 'sphinx-design',
-    'sphinx_remove_toctrees': 'sphinx-remove-toctrees',
-    'sphinx_tabs': 'sphinx-tabs',
-    'sphinxcontrib.mermaid': 'sphinxcontrib-mermaid',
-    'yaml': 'pyyaml',
-}
-MKDOCS_THEME_DEPENDENCY_MAP = {
-    'material': 'mkdocs-material',
-}
-MKDOCS_PLUGIN_DEPENDENCY_MAP = {
-    'exclude': 'mkdocs-exclude',
-    'llmstxt': 'mkdocs-llmstxt',
-    'macros': 'mkdocs-macros-plugin',
-    'mkdocstrings': 'mkdocstrings',
-    'redirects': 'mkdocs-redirects',
-}
 
 
 def _env_or_default(name: str, default: str) -> str:
@@ -114,8 +85,6 @@ def _stream_command(
         command = shlex.split(cmd)
     else:
         command = [os.fspath(part) for part in cmd]
-
-    console.log(command)
 
     process = subprocess.Popen(
         command,
@@ -189,14 +158,11 @@ def stream_command(
 
 @contextlib.contextmanager
 def working_directory(path: str | os.PathLike[str]) -> Iterator[None]:
-    """Changes working directory and returns to previous on exit."""
+    """Changes working directory and restores the previous one on exit."""
     prev_cwd = pathlib.Path.cwd()
-
     os.chdir(path)
-    console.log(f'Current directory: {path}')
     try:
         yield
-        _ = pathlib.Path.cwd()
     finally:
         os.chdir(prev_cwd)
 
@@ -204,6 +170,11 @@ def working_directory(path: str | os.PathLike[str]) -> Iterator[None]:
 class Generator(enum.StrEnum):
     doc2dash = 'doc2dash'
     html2dash = 'html2dash'
+
+
+class BuildStatus(enum.StrEnum):
+    success = 'success'
+    failure = 'failure'
 
 
 class Project(pydantic.BaseModel):
@@ -214,7 +185,6 @@ class Project(pydantic.BaseModel):
     doc_build_cmd: str = MAKE_CMD
     html_pages_dir: str = '_build/html'
     install: bool = True
-    use_pixi_env: bool = True
     pixi_python: str = DEFAULT_PROJECT_PIXI_PYTHON
     pixi_channels: list[str] = pydantic.Field(
         default_factory=lambda: list(DEFAULT_PROJECT_PIXI_CHANNELS)
@@ -223,440 +193,33 @@ class Project(pydantic.BaseModel):
         default_factory=lambda: list(DEFAULT_PROJECT_PIXI_PLATFORMS)
     )
     pixi_dependencies: dict[str, str] = pydantic.Field(default_factory=dict)
+    pixi_pypi_dependencies: dict[str, str] = pydantic.Field(default_factory=dict)
     pixi_install_timeout_seconds: int = DEFAULT_PIXI_INSTALL_TIMEOUT_SECONDS
     install_timeout_seconds: int = DEFAULT_INSTALL_TIMEOUT_SECONDS
     doc_build_timeout_seconds: int = DEFAULT_DOC_BUILD_TIMEOUT_SECONDS
+
+
+@dataclass
+class BuildResult:
+    name: str
+    status: BuildStatus
+    elapsed: float
+    error: str | None = None
 
 
 @pydantic.dataclasses.dataclass
 class Builder:
     projects: list[Project]
     docset_base_url: str = DOCSET_BASE_URL
-    errors: list[str] = field(default_factory=list)
+    results: list[BuildResult] = field(default_factory=list)
 
-    def _infer_build_dependencies(self, command: str) -> dict[str, str]:
-        command_lower = command.lower()
-        dependencies: dict[str, str] = {}
-        if 'sphinx-build' in command_lower:
-            dependencies['sphinx'] = SPHINX_VERSION_CONSTRAINT
-        if re.search(r'(^|\s)mkdocs(\s|$)', command_lower):
-            dependencies['mkdocs'] = MKDOCS_VERSION_CONSTRAINT
-        if re.search(r'(^|\s)make(\s|$)', command_lower):
-            dependencies['make'] = '*'
-        return dependencies
-
-    def _clean_requirement_line(self, value: str) -> str | None:
-        cleaned = re.sub(r'\s+#.*$', '', value).strip()
-        if not cleaned:
-            return None
-        if cleaned.startswith('#'):
-            return None
-        if cleaned.startswith(('-r', '--requirement', '-c', '--constraint', '-e', '--editable')):
-            return None
-        return cleaned
-
-    def _normalize_package_name(self, name: str) -> str:
-        return name.strip().lower().replace('_', '-')
-
-    def _parse_requirement(self, requirement: str) -> tuple[str, str, str] | None:
-        cleaned = self._clean_requirement_line(requirement)
-        if cleaned is None:
-            return None
-
-        candidate = cleaned.split(';', 1)[0].strip()
-        if not candidate or candidate.startswith('git+'):
-            return None
-
-        if ' @ ' in candidate:
-            package_name = candidate.split(' @ ', 1)[0].strip()
-            if package_name:
-                normalized_name = self._normalize_package_name(package_name)
-                return normalized_name, '*', candidate
-            return None
-
-        match = re.match(r'^([A-Za-z0-9_.-]+)(?:\[[^]]+\])?\s*(.*)$', candidate)
-        if not match:
-            return None
-
-        package_name, specifier = match.groups()
-        if '/' in package_name or ':' in package_name:
-            return None
-
-        normalized_name = self._normalize_package_name(package_name)
-        normalized_specifier = specifier.strip() or '*'
-        return normalized_name, normalized_specifier, candidate
-
-    def _requirement_to_conda_dependency(self, requirement: str) -> tuple[str, str] | None:
-        parsed = self._parse_requirement(requirement)
-        if parsed is None:
-            return None
-        name, specifier, _pip_requirement = parsed
-        return name, specifier
-
-    def _requirement_to_pip_requirement(self, requirement: str) -> tuple[str, str] | None:
-        parsed = self._parse_requirement(requirement)
-        if parsed is None:
-            return None
-        name, _specifier, pip_requirement = parsed
-        return name, pip_requirement
-
-    def _extract_extra_dependencies(self, requirement: str) -> dict[str, str]:
-        cleaned = self._clean_requirement_line(requirement)
-        if cleaned is None:
-            return {}
-
-        candidate = cleaned.split(';', 1)[0].strip()
-        match = re.match(r'^([A-Za-z0-9_.-]+)\[([^]]+)\]\s*.*$', candidate)
-        if not match:
-            return {}
-
-        package_name, extras = match.groups()
-        normalized_name = self._normalize_package_name(package_name)
-        normalized_extras = {part.strip().lower() for part in extras.split(',') if part.strip()}
-        dependencies: dict[str, str] = {}
-
-        if normalized_name == 'mkdocstrings' and 'python' in normalized_extras:
-            dependencies['mkdocstrings-python'] = '*'
-
-        return dependencies
-
-    def _docs_requirements_files(
-        self, local_dir: pathlib.Path, doc_dir: pathlib.Path
-    ) -> list[pathlib.Path]:
-        files: list[pathlib.Path] = []
-        seen: set[pathlib.Path] = set()
-
-        def _collect(path: pathlib.Path) -> None:
-            if path.is_file() and path not in seen:
-                seen.add(path)
-                files.append(path)
-
-        roots = (doc_dir, local_dir / 'docs')
-        for root in roots:
-            _collect(root / 'requirements.txt')
-            _collect(root / 'requirements-docs.txt')
-            requirements_dir = root / 'requirements'
-            if requirements_dir.is_dir():
-                for item in sorted(requirements_dir.glob('*.txt')):
-                    _collect(item)
-
-        _collect(local_dir / 'requirements-docs.txt')
-        return files
-
-    def _extract_docs_specs_from_pyproject(
-        self, local_dir: pathlib.Path, doc_dir: pathlib.Path
-    ) -> list[str]:
-        pyproject_candidates = [
-            local_dir / 'pyproject.toml',
-            doc_dir / 'pyproject.toml',
-            doc_dir.parent / 'pyproject.toml',
-        ]
-        specs: list[str] = []
-        seen_paths: set[pathlib.Path] = set()
-
-        for pyproject_file in pyproject_candidates:
-            if pyproject_file in seen_paths or not pyproject_file.exists():
-                continue
-            seen_paths.add(pyproject_file)
-
-            specs.extend(self._extract_docs_specs_from_single_pyproject(pyproject_file))
-
-        return list(dict.fromkeys(specs))
-
-    def _extract_docs_specs_from_single_pyproject(self, pyproject_file: pathlib.Path) -> list[str]:
-        try:
-            pyproject_data = tomllib.loads(pyproject_file.read_text(encoding='utf-8'))
-        except (OSError, tomllib.TOMLDecodeError):
-            return []
-
-        specs: list[str] = []
-        project_table = pyproject_data.get('project', {})
-        optional_dependencies = project_table.get('optional-dependencies', {})
-
-        for group_name in DOCS_GROUP_NAMES:
-            group_deps = optional_dependencies.get(group_name, [])
-            if isinstance(group_deps, list):
-                specs.extend([dep for dep in group_deps if isinstance(dep, str)])
-
-        dependency_groups = pyproject_data.get('dependency-groups', {})
-
-        def _expand_group(group_name: str, visited: set[str]) -> None:
-            if group_name in visited:
-                return
-            visited.add(group_name)
-            group_values = dependency_groups.get(group_name, [])
-            if not isinstance(group_values, list):
-                return
-            for entry in group_values:
-                if isinstance(entry, str):
-                    specs.append(entry)
-                elif isinstance(entry, dict):
-                    include_group = entry.get('include-group')
-                    if isinstance(include_group, str):
-                        _expand_group(include_group, visited)
-
-        for group_name in DOCS_GROUP_NAMES:
-            _expand_group(group_name, set())
-
-        hatch_docs = pyproject_data.get('tool', {}).get('hatch', {}).get('envs', {}).get('docs', {})
-        if isinstance(hatch_docs, dict):
-            hatch_extra_deps = hatch_docs.get('extra-dependencies', [])
-            if isinstance(hatch_extra_deps, list):
-                specs.extend([dep for dep in hatch_extra_deps if isinstance(dep, str)])
-
-            hatch_dependency_groups = hatch_docs.get('dependency-groups', [])
-            if isinstance(hatch_dependency_groups, list):
-                for group_name in hatch_dependency_groups:
-                    if isinstance(group_name, str):
-                        _expand_group(group_name, set())
-
-        uv_sources = pyproject_data.get('tool', {}).get('uv', {}).get('sources', {})
-        if isinstance(uv_sources, dict):
-            return [self._resolve_uv_source(spec, uv_sources) for spec in specs]
-
-        return specs
-
-    def _resolve_uv_source(self, spec: str, uv_sources: dict[str, Any]) -> str:
-        parsed = self._parse_requirement(spec)
-        if parsed is None:
-            return spec
-
-        name, _specifier, _pip_requirement = parsed
-        source_value = uv_sources.get(name)
-        if not isinstance(source_value, dict):
-            return spec
-
-        if isinstance(source_value.get('workspace'), bool) and source_value['workspace']:
-            return spec
-
-        git_url = source_value.get('git')
-        if isinstance(git_url, str):
-            git_reference = ''
-            for ref_key in ('rev', 'tag', 'branch'):
-                ref_value = source_value.get(ref_key)
-                if isinstance(ref_value, str):
-                    git_reference = f'@{ref_value}'
-                    break
-
-            git_prefix = '' if git_url.startswith('git+') else 'git+'
-            subdirectory = source_value.get('subdirectory')
-            if isinstance(subdirectory, str):
-                return f'{name} @ {git_prefix}{git_url}{git_reference}#subdirectory={subdirectory}'
-            return f'{name} @ {git_prefix}{git_url}{git_reference}'
-
-        url = source_value.get('url')
-        if isinstance(url, str):
-            return f'{name} @ {url}'
-
-        path_value = source_value.get('path')
-        if isinstance(path_value, str):
-            return f'{name} @ {path_value}'
-
-        return spec
-
-    def _extract_conf_import_dependencies(self, doc_dir: pathlib.Path) -> dict[str, str]:
-        conf_candidates = [
-            doc_dir / 'conf.py',
-            doc_dir / 'source' / 'conf.py',
-        ]
-        conf_file = next((file for file in conf_candidates if file.exists()), None)
-        if conf_file is None:
-            return {}
-
-        try:
-            tree = ast.parse(conf_file.read_text(encoding='utf-8'))
-        except (OSError, SyntaxError):
-            return {}
-
-        imported_modules: set[str] = set()
-        for node in tree.body:
-            if isinstance(node, ast.Import):
-                imported_modules.update(alias.name for alias in node.names)
-            elif isinstance(node, ast.ImportFrom) and node.module:
-                imported_modules.add(node.module)
-            elif isinstance(node, ast.Assign):
-                for target in node.targets:
-                    if isinstance(target, ast.Name) and target.id == 'extensions':
-                        if isinstance(node.value, (ast.List, ast.Tuple, ast.Set)):
-                            for item in node.value.elts:
-                                if isinstance(item, ast.Constant) and isinstance(item.value, str):
-                                    imported_modules.add(item.value)
-            elif isinstance(node, ast.AnnAssign):
-                if isinstance(node.target, ast.Name) and node.target.id == 'extensions':
-                    value = node.value
-                    if isinstance(value, (ast.List, ast.Tuple, ast.Set)):
-                        for item in value.elts:
-                            if isinstance(item, ast.Constant) and isinstance(item.value, str):
-                                imported_modules.add(item.value)
-
-        dependencies: dict[str, str] = {}
-        for module_name in imported_modules:
-            for module_prefix, package_name in CONF_IMPORT_DEPENDENCY_MAP.items():
-                if module_name == module_prefix or module_name.startswith(f'{module_prefix}.'):
-                    dependencies[package_name] = '*'
-        return dependencies
-
-    def _extract_mkdocs_dependencies(
-        self,
-        local_dir: pathlib.Path,
-        doc_dir: pathlib.Path,
-    ) -> dict[str, str]:
-        # `mkdocs.yml` files often contain custom tags like `!!python/name`, which
-        # the safe loader cannot construct. Round-trip mode keeps them inert.
-        loader = ruamel.yaml.YAML(typ='rt', pure=True)
-        dependencies: dict[str, str] = {}
-        candidates = [
-            doc_dir / 'mkdocs.yml',
-            doc_dir / 'mkdocs.yaml',
-            local_dir / 'mkdocs.yml',
-            local_dir / 'mkdocs.yaml',
-        ]
-        seen: set[pathlib.Path] = set()
-        for config_file in candidates:
-            if config_file in seen or not config_file.exists():
-                continue
-            seen.add(config_file)
-            try:
-                config_data = loader.load(config_file.read_text(encoding='utf-8')) or {}
-            except (OSError, ruamel.yaml.YAMLError):
-                continue
-            if not isinstance(config_data, dict):
-                continue
-
-            theme = config_data.get('theme')
-            theme_name: str | None = None
-            if isinstance(theme, dict):
-                raw_name = theme.get('name')
-                if isinstance(raw_name, str):
-                    theme_name = raw_name.strip().lower()
-            elif isinstance(theme, str):
-                theme_name = theme.strip().lower()
-            if theme_name:
-                mapped_theme_dependency = MKDOCS_THEME_DEPENDENCY_MAP.get(theme_name)
-                if mapped_theme_dependency:
-                    dependencies[mapped_theme_dependency] = '*'
-
-            plugins = config_data.get('plugins')
-            if isinstance(plugins, list):
-                for plugin in plugins:
-                    plugin_name: str | None = None
-                    if isinstance(plugin, str):
-                        plugin_name = plugin
-                    elif isinstance(plugin, dict):
-                        keys = list(plugin.keys())
-                        if keys:
-                            first_key = keys[0]
-                            if isinstance(first_key, str):
-                                plugin_name = first_key
-                    if not plugin_name:
-                        continue
-                    normalized_plugin_name = plugin_name.strip().lower()
-                    mapped_plugin_dependency = MKDOCS_PLUGIN_DEPENDENCY_MAP.get(
-                        normalized_plugin_name
-                    )
-                    if mapped_plugin_dependency:
-                        dependencies[mapped_plugin_dependency] = '*'
-                    if normalized_plugin_name == 'mkdocstrings':
-                        dependencies['mkdocstrings-python'] = '*'
-
-        return dependencies
-
-    def _dependency_to_pip_requirement(self, name: str, specifier: str) -> str:
-        if specifier in {'', '*'}:
-            return name
-        return f'{name}{specifier}'
-
-    def _extract_missing_conda_packages(self, output_text: str) -> list[str]:
-        normalized_output = re.sub(
-            r'([A-Za-z0-9_.-])-\s*\n\s*([A-Za-z0-9_.-])',
-            r'\1-\2',
-            output_text,
-        )
-        normalized_output = re.sub(r'\n\s+', ' ', normalized_output)
-        patterns = [
-            r'No candidates were found for\s+([A-Za-z0-9_.-]+)',
-            r'No candidates found for\s+([A-Za-z0-9_.-]+)',
-        ]
-        missing: list[str] = []
-        for pattern in patterns:
-            for match in re.finditer(pattern, normalized_output, flags=re.DOTALL):
-                candidate = self._normalize_package_name(match.group(1))
-                if candidate not in missing:
-                    missing.append(candidate)
-        return missing
-
-    def _discover_docs_dependencies(
-        self, project: Project, local_dir: pathlib.Path, doc_dir: pathlib.Path
-    ) -> tuple[dict[str, str], dict[str, str]]:
-        dependencies: dict[str, str] = {}
-        pip_requirements: dict[str, str] = {}
-
-        for requirement_file in self._docs_requirements_files(local_dir, doc_dir):
-            try:
-                for line in requirement_file.read_text(encoding='utf-8').splitlines():
-                    conda_dependency = self._requirement_to_conda_dependency(line)
-                    pip_dependency = self._requirement_to_pip_requirement(line)
-                    if conda_dependency is not None:
-                        name, specifier = conda_dependency
-                        dependencies[name] = specifier
-                    if pip_dependency is not None:
-                        name, pip_requirement = pip_dependency
-                        pip_requirements[name] = pip_requirement
-                    extra_dependencies = self._extract_extra_dependencies(line)
-                    dependencies.update(extra_dependencies)
-                    for name in extra_dependencies:
-                        pip_requirements.setdefault(name, name)
-            except OSError:
-                continue
-
-        for spec in self._extract_docs_specs_from_pyproject(local_dir, doc_dir):
-            conda_dependency = self._requirement_to_conda_dependency(spec)
-            pip_dependency = self._requirement_to_pip_requirement(spec)
-            if conda_dependency is not None:
-                name, specifier = conda_dependency
-                dependencies[name] = specifier
-            if pip_dependency is not None:
-                name, pip_requirement = pip_dependency
-                pip_requirements[name] = pip_requirement
-            extra_dependencies = self._extract_extra_dependencies(spec)
-            dependencies.update(extra_dependencies)
-            for name in extra_dependencies:
-                pip_requirements.setdefault(name, name)
-
-        conf_dependencies = self._extract_conf_import_dependencies(doc_dir)
-        dependencies.update(conf_dependencies)
-        for name in conf_dependencies:
-            pip_requirements.setdefault(name, name)
-
-        mkdocs_dependencies = self._extract_mkdocs_dependencies(local_dir, doc_dir)
-        dependencies.update(mkdocs_dependencies)
-        for name in mkdocs_dependencies:
-            pip_requirements.setdefault(name, name)
-
-        # `make` and PyPI installs still rely on these base tools.
-        dependencies.setdefault('setuptools', SETUPTOOLS_VERSION_CONSTRAINT)
-        pip_requirements.setdefault('setuptools', 'setuptools<81')
-
-        if dependencies:
-            console.log(f'Discovered docs dependencies for {project.name}: {sorted(dependencies)}')
-        return dependencies, pip_requirements
-
-    def _build_project_dependency_map(
-        self,
-        project: Project,
-        discovered_dependencies: dict[str, str] | None = None,
-    ) -> dict[str, str]:
-        dependency_map = {
+    def _build_project_dependency_map(self, project: Project) -> dict[str, str]:
+        """Merge a minimal base set with the project's explicit pixi_dependencies."""
+        dependency_map: dict[str, str] = {
             'python': project.pixi_python,
             'pip': '*',
-            'setuptools': SETUPTOOLS_VERSION_CONSTRAINT,
         }
-        dependency_map.update(self._infer_build_dependencies(project.doc_build_cmd))
-        if discovered_dependencies:
-            dependency_map.update(discovered_dependencies)
         dependency_map.update(project.pixi_dependencies)
-        # Keep pkg_resources available for legacy Sphinx extensions like sphinx-tabs.
-        dependency_map['setuptools'] = SETUPTOOLS_VERSION_CONSTRAINT
         return dependency_map
 
     def _write_project_manifest(
@@ -692,61 +255,27 @@ class Builder:
             '[tool.pixi.dependencies]\n'
             f'{dependency_lines}\n'
         )
+
+        if project.pixi_pypi_dependencies:
+            pypi_lines = '\n'.join(
+                f'    "{name}" = "{spec}"'
+                for name, spec in sorted(project.pixi_pypi_dependencies.items())
+            )
+            manifest_text += f'\n[tool.pixi.pypi-dependencies]\n{pypi_lines}\n'
+
         manifest_path.write_text(manifest_text, encoding='utf-8')
         return manifest_path
 
-    def _project_manifest_path(
-        self,
-        project: Project,
-        local_dir: pathlib.Path,
-        discovered_dependencies: dict[str, str] | None = None,
-    ) -> pathlib.Path:
-        dependency_map = self._build_project_dependency_map(
-            project, discovered_dependencies=discovered_dependencies
-        )
-        return self._write_project_manifest(project, local_dir, dependency_map)
-
     def _prepare_project_environment(
-        self,
-        project: Project,
-        local_dir: pathlib.Path,
-        discovered_dependencies: dict[str, str] | None = None,
-        discovered_pip_requirements: dict[str, str] | None = None,
-    ) -> tuple[pathlib.Path, list[str]]:
-        dependency_map = self._build_project_dependency_map(
-            project, discovered_dependencies=discovered_dependencies
+        self, project: Project, local_dir: pathlib.Path
+    ) -> pathlib.Path:
+        dependency_map = self._build_project_dependency_map(project)
+        manifest_path = self._write_project_manifest(project, local_dir, dependency_map)
+        stream_command(
+            ['pixi', 'install', '--manifest-path', manifest_path.as_posix()],
+            timeout_seconds=project.pixi_install_timeout_seconds,
         )
-        fallback_requirements: dict[str, str] = {}
-        fallback_candidates = set(discovered_dependencies or {})
-
-        while True:
-            manifest_path = self._write_project_manifest(project, local_dir, dependency_map)
-            try:
-                stream_command(
-                    ['pixi', 'install', '--manifest-path', manifest_path.as_posix()],
-                    timeout_seconds=project.pixi_install_timeout_seconds,
-                )
-                return manifest_path, sorted(fallback_requirements.values())
-            except subprocess.CalledProcessError as error:
-                combined_output = '\n'.join(
-                    text for text in (error.output or '', error.stderr or '') if text
-                )
-                missing_packages = self._extract_missing_conda_packages(combined_output)
-                removable = [
-                    name
-                    for name in missing_packages
-                    if name in fallback_candidates and name in dependency_map
-                ]
-                if not removable:
-                    raise
-
-                for name in removable:
-                    specifier = dependency_map.pop(name, '*')
-                    fallback_requirements[name] = (discovered_pip_requirements or {}).get(
-                        name, self._dependency_to_pip_requirement(name, specifier)
-                    )
-
-                console.log(f'Falling back to pip for {project.name}: {sorted(removable)}')
+        return manifest_path
 
     def _run_in_project_environment(
         self,
@@ -767,75 +296,59 @@ class Builder:
             latest_tag = 'unknown'
         return latest_tag or 'unknown'
 
-    def _build_docs(self, project: Project) -> tuple[str, str]:
+    def _build_docs(
+        self,
+        project: Project,
+        on_step: Callable[[str], None] | None = None,
+    ) -> tuple[str, str]:
+        def step(label: str) -> None:
+            if on_step is not None:
+                on_step(label)
+
         local_dir = REPODIR / project.name
         doc_dir = local_dir / project.doc_dir
 
+        step('cloning repo')
         if not local_dir.exists():
             repo_link = f'{BASE_URL}/{project.repo}'
-            command = [
-                'git',
-                'clone',
-                '--recurse-submodules',
-                repo_link,
-                local_dir,
-            ]
-            stream_command(command)
+            stream_command(
+                ['git', 'clone', '--recurse-submodules', repo_link, local_dir],
+            )
         else:
-            console.log(f'{project.name} directory already exits.')
+            console.log(f'{project.name} repo already cloned, reusing.')
 
         if not doc_dir.exists():
             raise FileNotFoundError(f'Documentation directory does not exist: {doc_dir}')
 
-        discovered_dependencies, discovered_pip_requirements = self._discover_docs_dependencies(
-            project, local_dir, doc_dir
-        )
         latest_tag = self._latest_commit(local_dir)
-        if project.use_pixi_env:
-            manifest_path, pip_requirements = self._prepare_project_environment(
-                project,
-                local_dir,
-                discovered_dependencies=discovered_dependencies,
-                discovered_pip_requirements=discovered_pip_requirements,
-            )
-            if project.install:
-                self._run_in_project_environment(
-                    manifest_path,
-                    ['python', '-m', 'pip', 'install', '-e', '.'],
-                    cwd=local_dir,
-                    timeout_seconds=project.install_timeout_seconds,
-                )
-            if pip_requirements:
-                self._run_in_project_environment(
-                    manifest_path,
-                    ['python', '-m', 'pip', 'install', *pip_requirements],
-                    cwd=local_dir,
-                    timeout_seconds=project.install_timeout_seconds,
-                )
+
+        step('installing pixi env')
+        manifest_path = self._prepare_project_environment(project, local_dir)
+
+        if project.install:
+            step('pip installing project')
             self._run_in_project_environment(
                 manifest_path,
-                ['/bin/bash', '-c', project.doc_build_cmd],
-                cwd=doc_dir,
-                timeout_seconds=project.doc_build_timeout_seconds,
+                ['python', '-m', 'pip', 'install', '-e', '.'],
+                cwd=local_dir,
+                timeout_seconds=project.install_timeout_seconds,
             )
-        else:
-            with working_directory(local_dir):
-                if project.install:
-                    stream_command(
-                        ['python', '-m', 'pip', 'install', '-e', '.'],
-                        timeout_seconds=project.install_timeout_seconds,
-                    )
-                with working_directory(project.doc_dir):
-                    stream_command(
-                        project.doc_build_cmd,
-                        timeout_seconds=project.doc_build_timeout_seconds,
-                    )
 
+        step('building docs')
+        self._run_in_project_environment(
+            manifest_path,
+            ['/bin/bash', '-c', project.doc_build_cmd],
+            cwd=doc_dir,
+            timeout_seconds=project.doc_build_timeout_seconds,
+        )
+
+        step('packaging docset')
         icon_dir = ICON_DIR / project.name
         icon_files = sorted(icon_dir.iterdir()) if icon_dir.exists() else None
         source = doc_dir / project.html_pages_dir
         if not source.exists():
             raise FileNotFoundError(f'Built HTML directory does not exist: {source}')
+
         if project.generator == 'doc2dash':
             command = [
                 'doc2dash',
@@ -855,8 +368,7 @@ class Builder:
                     for icon in icon_files
                     if icon.suffix.lower() == '.png'
                 ]
-                icons = list(itertools.chain(*icons))
-                command += icons
+                command += list(itertools.chain(*icons))
             stream_command(command)
 
         elif project.generator == 'html2dash':
@@ -871,8 +383,6 @@ class Builder:
 
         with working_directory(DOCSET_DIR):
             docset_path = f'{project.name}.docset'
-            dir_to_delete = docset_path
-
             tar_command = [
                 'tar',
                 "--exclude='.DS_Store'",
@@ -881,7 +391,7 @@ class Builder:
                 docset_path,
             ]
             stream_command(tar_command)
-            stream_command(['rm', '-rf', dir_to_delete])
+            stream_command(['rm', '-rf', docset_path])
 
         return project.name, latest_tag
 
@@ -891,7 +401,7 @@ class Builder:
 
         entry = Element('entry')
         pkg_name = SubElement(entry, 'name')
-        pkg_name.text = f'{name}'
+        pkg_name.text = name
         version = SubElement(entry, 'version')
         version.text = f'main@{latest_tag}'
         url = SubElement(entry, 'url')
@@ -902,28 +412,88 @@ class Builder:
         with open(feed_filename, 'w', encoding='utf-8') as f:
             f.write(bs)
 
-    def create_docset(self, project: Project) -> None:
-        name, latest_tag = self._build_docs(project)
+    def create_docset(
+        self,
+        project: Project,
+        on_step: Callable[[str], None] | None = None,
+    ) -> None:
+        name, latest_tag = self._build_docs(project, on_step=on_step)
         self._create_feed(name, latest_tag)
 
     def build_all(self) -> None:
-        self.errors = []
-        for project in track(self.projects):
-            try:
-                self.create_docset(project)
-            except subprocess.TimeoutExpired as timeout_error:
-                error_console.print(
-                    f'{project.name} timed out after {timeout_error.timeout}s while running:'
-                    f' {timeout_error.cmd}'
-                )
-                self.errors.append(project.name)
-            except Exception as error:
-                error_console.print(f'{project.name} failed: {error}')
-                self.errors.append(project.name)
+        self.results = []
+        for project in self.projects:
+            console.rule(f'Building {project.name}', style='cyan')
+            start = time.monotonic()
+            with Progress(
+                SpinnerColumn(),
+                TextColumn('[bold blue]{task.fields[project]}[/]'),
+                TextColumn('•'),
+                TextColumn('[white]{task.description}[/]'),
+                TimeElapsedColumn(),
+                console=console,
+                transient=True,
+            ) as progress:
+                task_id = progress.add_task('starting', project=project.name, total=None)
 
-        if self.errors:
-            error_console.print('Errors occured while building docsets:')
-            error_console.print(self.errors)
+                def update(label: str, _task_id=task_id, _progress=progress) -> None:
+                    _progress.update(_task_id, description=label)
+
+                try:
+                    self.create_docset(project, on_step=update)
+                except subprocess.TimeoutExpired as timeout_error:
+                    elapsed = time.monotonic() - start
+                    message = (
+                        f'timed out after {timeout_error.timeout}s while running:'
+                        f' {timeout_error.cmd}'
+                    )
+                    self.results.append(
+                        BuildResult(project.name, BuildStatus.failure, elapsed, message)
+                    )
+                    error_console.print(f'✗ {project.name} — {message}')
+                except Exception as error:
+                    elapsed = time.monotonic() - start
+                    self.results.append(
+                        BuildResult(project.name, BuildStatus.failure, elapsed, str(error))
+                    )
+                    error_console.print(f'✗ {project.name} — {error}')
+                else:
+                    elapsed = time.monotonic() - start
+                    self.results.append(BuildResult(project.name, BuildStatus.success, elapsed))
+                    console.print(
+                        f'[bold green]✓[/] [bold]{project.name}[/] [dim]({elapsed:.1f}s)[/]'
+                    )
+
+        self._print_summary()
+
+    def _print_summary(self) -> None:
+        if not self.results:
+            return
+
+        table = Table(title='Build summary', show_lines=False)
+        table.add_column('Project', style='bold')
+        table.add_column('Status')
+        table.add_column('Elapsed', justify='right')
+        table.add_column('Error', overflow='fold')
+
+        for result in self.results:
+            status_text = (
+                '[green]✓ success[/]'
+                if result.status == BuildStatus.success
+                else '[red]✗ failure[/]'
+            )
+            table.add_row(
+                result.name,
+                status_text,
+                f'{result.elapsed:.1f}s',
+                result.error or '',
+            )
+
+        console.print(table)
+
+        failed = [result.name for result in self.results if result.status == BuildStatus.failure]
+        if failed:
+            error_console.print(f'{len(failed)} project(s) failed: {", ".join(failed)}')
 
 
 @app.command()
@@ -963,37 +533,29 @@ def update_feed_list(
 ):
     """Update docsets feed list"""
 
-    if items := list(pathlib.Path(docset_dir).rglob(f'*{DOCSET_EXT}')):
-        console.log(f'✅ Found {len(items)} items.')
-        items.sort()
-        console.log(items)
-        with open(feed_file, 'w') as fpt:
-            fpt.write(
-                '# Docset Feeds\n\nYou can subscribe to the following feeds with a single click.\n\n'
-                '```bash\n'
-                ' dash-feed://<URL encoded feed URL>\n'
-                '```\n'
-            )
-            fpt.write(
-                '\n![dash-docsets](https://github.com/andersy005/dash-docsets/raw/main/images/how-to-add-feed.png)\n'
-            )
-            entries = []
-            for item in track(items):
-                entry = item.name.split('.')[0]
-                entries.append(
-                    {
-                        'Name': entry,
-                        'Feed URL': f'{feed_root_url}/{entry}.xml',
-                        'Size': f'{item.stat().st_size / (1024 * 1024):.1f} MB',
-                    }
-                )
+    items = sorted(pathlib.Path(docset_dir).rglob(f'*{DOCSET_EXT}'))
+    if not items:
+        console.print('[red]❌ No docsets found[/]')
+        return
 
-            table = pd.DataFrame(entries).to_markdown(tablefmt='github')
-            fpt.write(f'{table}\n')
+    console.print(f'[green]✅ Found {len(items)} docset(s)[/]')
 
-    else:
-        console.log("❌ Didn't find any files...", style='red')
+    lines = [
+        '# Docset Feeds\n',
+        '\nYou can subscribe to the following feeds with a single click.\n',
+        '\n```bash\n dash-feed://<URL encoded feed URL>\n```\n',
+        '\n![dash-docsets](https://github.com/andersy005/dash-docsets/raw/main/images/how-to-add-feed.png)\n\n',
+        '| Name | Feed URL | Size |\n',
+        '| --- | --- | --- |\n',
+    ]
+    for item in items:
+        entry = item.name.split('.')[0]
+        size_mb = item.stat().st_size / (1024 * 1024)
+        lines.append(f'| {entry} | {feed_root_url}/{entry}.xml | {size_mb:.1f} MB |\n')
+
+    with open(feed_file, 'w') as fpt:
+        fpt.writelines(lines)
 
 
 if __name__ == '__main__':
-    typer.run(app())
+    app()

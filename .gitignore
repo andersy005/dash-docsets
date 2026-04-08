@@ -133,3 +133,4 @@ dmypy.json
 docsets/
 feeds/
 .github/copilot-instructions.md
+.claude/

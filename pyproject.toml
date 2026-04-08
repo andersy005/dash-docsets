@@ -67,9 +67,7 @@
 [tool.pixi.dependencies]
     "beautifulsoup4" = ">=4.14.3"
     "doc2dash" = ">=3.1.0"
-    "pandas" = ">=3.0.2"
     "pip" = ">=26.0.1"
-    "psutil" = ">=7.2.2"
     "pydantic" = ">=2.12.5"
     "python" = ">=3.13,<3.14"
     "rich" = ">=14.3.3"

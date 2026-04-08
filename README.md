@@ -93,7 +93,6 @@ Each project entry supports:
 - `doc_build_cmd`: command run in `doc_dir`
 - `html_pages_dir`: built HTML path relative to `doc_dir` (default: `_build/html`)
 - `install`: run `python -m pip install -e .` before build (default: `true`)
-- `use_pixi_env`: build in per-project Pixi env (default: `true`)
 - `pixi_python`: Python spec for project env (default: `3.13.*`)
 - `pixi_channels`: Pixi channels for project env (default: `["conda-forge"]`)
 - `pixi_platforms`: Pixi platforms for project env (default: `["linux-64", "osx-arm64"]`)
@@ -107,11 +106,10 @@ Example:
   doc_dir: doc
   html_pages_dir: _build/html
   doc_build_cmd: sphinx-build -T -E -b html ./ _build/html
-  use_pixi_env: true
   pixi_python: "3.13.*"
   pixi_dependencies:
-    sphinx: ">=8"
-    make: "*"
+    sphinx: ">=8,<9"
+    pydata-sphinx-theme: "*"
 ```
 
 ## Feeds

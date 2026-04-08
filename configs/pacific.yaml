@@ -4,37 +4,101 @@
   doc_build_cmd: mkdocs build --no-directory-urls
   html_pages_dir: site
   generator: html2dash
+  pixi_dependencies:
+    mkdocs: ">=1.6,<2"
+    mkdocs-material: "*"
+    mkdocs-macros-plugin: "*"
+    mkdocs-redirects: "*"
+    mkdocstrings: "*"
+    mkdocstrings-python: "*"
+    griffe-typingdoc: "*"
+    griffe-warnings-deprecated: "*"
+    cairosvg: "*"
+    pillow: "*"
+    pymdown-extensions: "*"
+    mdx-include: "*"
+    markdown-include-variants: "*"
+    python-slugify: "*"
+    pyyaml: "*"
+
 - name: uvicorn
   repo: encode/uvicorn
   doc_dir: .
   doc_build_cmd: mkdocs build --no-directory-urls
   html_pages_dir: site
   generator: html2dash
+  pixi_dependencies:
+    mkdocs: ">=1.6,<2"
+    mkdocs-material: "*"
+    mkdocstrings: "*"
+    mkdocstrings-python: "*"
+    mkdocs-llmstxt: "*"
+
 - name: starlette
   repo: encode/starlette
   doc_dir: .
   doc_build_cmd: mkdocs build --no-directory-urls
   html_pages_dir: site
   generator: html2dash
+  pixi_dependencies:
+    mkdocs: ">=1.6,<2"
+    mkdocs-material: "*"
+    mkdocstrings: "*"
+    mkdocstrings-python: "*"
+
 - name: pydantic
   repo: samuelcolvin/pydantic
   doc_dir: .
   doc_build_cmd: mkdocs build --no-directory-urls
   html_pages_dir: site
   generator: html2dash
+  pixi_dependencies:
+    mkdocs: ">=1.6,<2"
+    mkdocs-material: "*"
+    mkdocs-exclude: "*"
+    mkdocs-redirects: "*"
+    mkdocs-llmstxt: "*"
+    mkdocs-macros-plugin: "*"
+    mkdocstrings: "*"
+    mkdocstrings-python: "*"
+    griffe-typingdoc: "*"
+    griffe-warnings-deprecated: "*"
+    mike: "*"
+    cairosvg: "*"
+    pillow: "*"
+
 - name: typer
   repo: tiangolo/typer
   doc_dir: .
   doc_build_cmd: mkdocs build --no-directory-urls
   html_pages_dir: site
   generator: html2dash
+  pixi_dependencies:
+    mkdocs: ">=1.6,<2"
+    mkdocs-material: "*"
+    mkdocs-macros-plugin: "*"
+    mkdocs-redirects: "*"
+    mkdocstrings: "*"
+    mkdocstrings-python: "*"
+    griffe-typingdoc: "*"
+    cairosvg: "*"
+    pillow: "*"
+
 - name: rich
   repo: willmcgugan/rich
   doc_dir: docs
   doc_build_cmd: sphinx-build -T -E -b html ./source build/html
   html_pages_dir: build/html
+  pixi_dependencies:
+    sphinx: ">=8,<9"
+    sphinx-rtd-theme: "*"
+    sphinx-copybutton: "*"
+
 - name: pluggy
   repo: pytest-dev/pluggy
   doc_dir: docs
   html_pages_dir: _build/html
   doc_build_cmd: sphinx-build -j auto -T -E -b html ./ _build/html
+  pixi_dependencies:
+    sphinx: ">=8,<9"
+    alabaster: "*"
