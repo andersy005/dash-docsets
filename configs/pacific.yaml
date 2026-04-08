@@ -1,90 +1,47 @@
 - name: fastapi
   repo: tiangolo/fastapi
-  doc_dir: docs/en
-  doc_build_cmd: mkdocs build --no-directory-urls
-  html_pages_dir: site
+  doc_dir: .
+  doc_build_cmd: "uv sync --group docs && cd docs/en && uv run mkdocs build --no-directory-urls"
+  html_pages_dir: docs/en/site
   generator: html2dash
-  pixi_dependencies:
-    mkdocs: ">=1.6,<2"
-    mkdocs-material: "*"
-    mkdocs-macros-plugin: "*"
-    mkdocs-redirects: "*"
-    mkdocstrings: "*"
-    mkdocstrings-python: "*"
-    cairosvg: "*"
-    pillow: "*"
-    pymdown-extensions: "*"
-    python-slugify: "*"
-    pyyaml: "*"
-    httpx: "*"
-  pixi_pypi_dependencies:
-    griffe-typingdoc: "*"
-    griffe-warnings-deprecated: "*"
-    mdx-include: "*"
-    markdown-include-variants: "*"
+  use_own_env: true
+  install: false
 
 - name: uvicorn
   repo: encode/uvicorn
   doc_dir: .
-  doc_build_cmd: mkdocs build --no-directory-urls
+  doc_build_cmd: "uv sync --group docs && uv run mkdocs build --no-directory-urls --no-strict"
   html_pages_dir: site
   generator: html2dash
-  pixi_dependencies:
-    mkdocs: ">=1.6,<2"
-    mkdocs-material: "*"
-    mkdocstrings: "*"
-    mkdocstrings-python: "*"
-    mkdocs-llmstxt: "*"
+  use_own_env: true
+  install: false
 
 - name: starlette
   repo: encode/starlette
   doc_dir: .
-  doc_build_cmd: mkdocs build --no-directory-urls
+  doc_build_cmd: "uv sync --group docs && uv run mkdocs build --no-directory-urls --no-strict"
   html_pages_dir: site
   generator: html2dash
-  pixi_dependencies:
-    mkdocs: ">=1.6,<2"
-    mkdocs-material: "*"
-    mkdocstrings: "*"
-    mkdocstrings-python: "*"
+  use_own_env: true
+  install: false
 
 - name: pydantic
-  repo: samuelcolvin/pydantic
+  repo: pydantic/pydantic
   doc_dir: .
-  doc_build_cmd: mkdocs build --no-directory-urls
+  doc_build_cmd: "uv sync --group docs && uv run mkdocs build --no-directory-urls --no-strict"
   html_pages_dir: site
   generator: html2dash
-  pixi_dependencies:
-    mkdocs: ">=1.6,<2"
-    mkdocs-material: "*"
-    mkdocs-exclude: "*"
-    mkdocs-redirects: "*"
-    mkdocs-llmstxt: "*"
-    mkdocs-macros-plugin: "*"
-    mkdocstrings: "*"
-    mkdocstrings-python: "*"
-    griffe-typingdoc: "*"
-    griffe-warnings-deprecated: "*"
-    mike: "*"
-    cairosvg: "*"
-    pillow: "*"
+  use_own_env: true
+  install: false
 
 - name: typer
   repo: tiangolo/typer
   doc_dir: .
-  doc_build_cmd: mkdocs build --no-directory-urls
+  doc_build_cmd: "uv sync --group docs && uv run mkdocs build --no-directory-urls"
   html_pages_dir: site
   generator: html2dash
-  pixi_dependencies:
-    mkdocs: ">=1.6,<2"
-    mkdocs-material: "*"
-    mkdocs-macros-plugin: "*"
-    mkdocs-redirects: "*"
-    mkdocstrings: "*"
-    mkdocstrings-python: "*"
-    griffe-typingdoc: "*"
-    cairosvg: "*"
-    pillow: "*"
+  use_own_env: true
+  install: false
 
 - name: rich
   repo: willmcgugan/rich

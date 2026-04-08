@@ -31,3 +31,6 @@
     sphinx-design: "*"
     sphinx-autodoc-typehints: "*"
     ipykernel: "*"
+    jupytext: "*"
+  pixi_pypi_dependencies:
+    coconut: "*"

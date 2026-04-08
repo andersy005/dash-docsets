@@ -23,6 +23,7 @@ from bs4 import BeautifulSoup
 from rich.console import Console
 from rich.progress import Progress, SpinnerColumn, TextColumn, TimeElapsedColumn
 from rich.table import Table
+from rich.text import Text
 
 from html2dash import custom_builder
 
@@ -518,7 +519,7 @@ class Builder:
                 result.name,
                 status_text,
                 f'{result.elapsed:.1f}s',
-                result.error or '',
+                Text(result.error or ''),
             )
 
         console.print(table)
