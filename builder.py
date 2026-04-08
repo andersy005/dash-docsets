@@ -258,10 +258,11 @@ def build(
 ):
     """Build docset"""
 
-    with open(config) as f:
-        config = ruamel.yaml.safe_load(f)
+    yaml_loader = ruamel.yaml.YAML(typ='safe', pure=True)
+    with open(config, encoding='utf-8') as f:
+        config_data = yaml_loader.load(f)
 
-    projects = [Project(**p) for p in config]
+    projects = [Project(**p) for p in config_data]
     builder = Builder(projects=projects, docset_base_url=docset_base_url)
     builder.build_all()
 
