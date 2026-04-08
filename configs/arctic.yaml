@@ -3,11 +3,29 @@
   doc_dir: docs
   html_pages_dir: build/html
   doc_build_cmd: sphinx-build -T -b html ./source build/html
+  pixi_dependencies:
+    sphinx: ">=8,<9"
+    numpydoc: "*"
+    sphinx-autosummary-accessors: "*"
+    setuptools: "*"
+    dask-sphinx-theme: ">=4"
+    sphinx-click: "*"
+    sphinx-copybutton: "*"
+    sphinx-remove-toctrees: "*"
+    sphinx-tabs: "*"
+    sphinx-design: "*"
+    jupyter-sphinx: "*"
 - name: distributed
   repo: dask/distributed
   doc_dir: docs
   html_pages_dir: build/html
   doc_build_cmd: sphinx-build -T -b html ./source build/html
+  pixi_dependencies:
+    sphinx: ">=8,<9"
+    numpydoc: "*"
+    dask-sphinx-theme: ">=4"
+    sphinx-click: "*"
+    sphinx-design: "*"
 # - name: intake
 #   repo: intake/intake
 #   doc_dir: docs
@@ -21,6 +39,10 @@
   doc_dir: doc
   html_pages_dir: _build/html
   doc_build_cmd: sphinx-build -T -E -b html ./ _build/html
+  pixi_dependencies:
+    sphinx: ">=8,<9"
+    sphinx-autosummary-accessors: "*"
+    pyyaml: "*"
 # - name: pooch
 #   repo: fatiando/pooch
 #   doc_dir: doc
@@ -45,8 +67,17 @@
   doc_dir: .
   html_pages_dir: site
   doc_build_cmd: mkdocs build --no-directory-urls
-  install: false
+  install: true
   generator: html2dash
+  pixi_dependencies:
+    mkdocs: ">=1.6,<2"
+    mkdocs-material: ">=9.6.14"
+    mkdocstrings: ">=0.29.1"
+    mkdocstrings-python: ">=1.16.10"
+    mkdocs-jupyter: ">=0.25.1"
+    mkdocs-redirects: ">=1.2.0"
+    markdown-exec: ">=1.12"
+    griffe-inherited-docstrings: ">=1.1"
 # - name: numcodecs
 #   repo: zarr-developers/numcodecs
 #   doc_dir: docs

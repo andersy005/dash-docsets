@@ -8,6 +8,8 @@ import re
 import shlex
 import subprocess
 import tempfile
+import tomllib
+from ast import Import, ImportFrom, parse
 from collections.abc import Iterator, Sequence
 from dataclasses import field
 from typing import Any
@@ -56,6 +58,21 @@ DEFAULT_PROJECT_PIXI_PYTHON = '3.13.*'
 DEFAULT_PROJECT_PIXI_CHANNELS = ['conda-forge']
 DEFAULT_PROJECT_PIXI_PLATFORMS = ['linux-64', 'osx-arm64']
 MKDOCS_VERSION_CONSTRAINT = '>=1.6,<2'
+SPHINX_VERSION_CONSTRAINT = '>=8,<9'
+DOCS_GROUP_NAMES = ('docs', 'doc', 'documentation')
+CONF_IMPORT_DEPENDENCY_MAP = {
+    'dask_sphinx_theme': 'dask-sphinx-theme',
+    'jupyter_sphinx': 'jupyter-sphinx',
+    'numpydoc': 'numpydoc',
+    'sphinx_autosummary_accessors': 'sphinx-autosummary-accessors',
+    'sphinx_click': 'sphinx-click',
+    'sphinx_copybutton': 'sphinx-copybutton',
+    'sphinx_design': 'sphinx-design',
+    'sphinx_remove_toctrees': 'sphinx-remove-toctrees',
+    'sphinx_tabs': 'sphinx-tabs',
+    'sphinxcontrib.mermaid': 'sphinxcontrib-mermaid',
+    'yaml': 'pyyaml',
+}
 
 
 def _env_or_default(name: str, default: str) -> str:
@@ -156,14 +173,195 @@ class Builder:
         command_lower = command.lower()
         dependencies: dict[str, str] = {}
         if 'sphinx-build' in command_lower:
-            dependencies['sphinx'] = '>=8'
+            dependencies['sphinx'] = SPHINX_VERSION_CONSTRAINT
         if re.search(r'(^|\s)mkdocs(\s|$)', command_lower):
             dependencies['mkdocs'] = MKDOCS_VERSION_CONSTRAINT
         if re.search(r'(^|\s)make(\s|$)', command_lower):
             dependencies['make'] = '*'
         return dependencies
 
-    def _project_manifest_path(self, project: Project, local_dir: pathlib.Path) -> pathlib.Path:
+    def _clean_requirement_line(self, value: str) -> str | None:
+        cleaned = re.sub(r'\s+#.*$', '', value).strip()
+        if not cleaned:
+            return None
+        if cleaned.startswith('#'):
+            return None
+        if cleaned.startswith(('-r', '--requirement', '-c', '--constraint', '-e', '--editable')):
+            return None
+        return cleaned
+
+    def _normalize_package_name(self, name: str) -> str:
+        return name.strip().lower().replace('_', '-')
+
+    def _requirement_to_conda_dependency(self, requirement: str) -> tuple[str, str] | None:
+        cleaned = self._clean_requirement_line(requirement)
+        if cleaned is None:
+            return None
+
+        candidate = cleaned.split(';', 1)[0].strip()
+        if not candidate or candidate.startswith('git+'):
+            return None
+
+        if ' @ ' in candidate:
+            package_name = candidate.split(' @ ', 1)[0].strip()
+            if package_name:
+                return self._normalize_package_name(package_name), '*'
+            return None
+
+        match = re.match(r'^([A-Za-z0-9_.-]+)(?:\[[^]]+\])?\s*(.*)$', candidate)
+        if not match:
+            return None
+
+        package_name, specifier = match.groups()
+        if '/' in package_name or ':' in package_name:
+            return None
+
+        normalized_name = self._normalize_package_name(package_name)
+        normalized_specifier = specifier.strip() or '*'
+        return normalized_name, normalized_specifier
+
+    def _docs_requirements_files(
+        self, local_dir: pathlib.Path, doc_dir: pathlib.Path
+    ) -> list[pathlib.Path]:
+        files: list[pathlib.Path] = []
+        seen: set[pathlib.Path] = set()
+
+        def _collect(path: pathlib.Path) -> None:
+            if path.is_file() and path not in seen:
+                seen.add(path)
+                files.append(path)
+
+        roots = (doc_dir, local_dir / 'docs')
+        for root in roots:
+            _collect(root / 'requirements.txt')
+            _collect(root / 'requirements-docs.txt')
+            requirements_dir = root / 'requirements'
+            if requirements_dir.is_dir():
+                for item in sorted(requirements_dir.glob('*.txt')):
+                    _collect(item)
+
+        _collect(local_dir / 'requirements-docs.txt')
+        return files
+
+    def _extract_docs_specs_from_pyproject(self, local_dir: pathlib.Path) -> list[str]:
+        pyproject_file = local_dir / 'pyproject.toml'
+        if not pyproject_file.exists():
+            return []
+
+        try:
+            pyproject_data = tomllib.loads(pyproject_file.read_text(encoding='utf-8'))
+        except (OSError, tomllib.TOMLDecodeError):
+            return []
+
+        specs: list[str] = []
+        project_table = pyproject_data.get('project', {})
+        optional_dependencies = project_table.get('optional-dependencies', {})
+
+        for group_name in DOCS_GROUP_NAMES:
+            group_deps = optional_dependencies.get(group_name, [])
+            if isinstance(group_deps, list):
+                specs.extend([dep for dep in group_deps if isinstance(dep, str)])
+
+        dependency_groups = pyproject_data.get('dependency-groups', {})
+
+        def _expand_group(group_name: str, visited: set[str]) -> None:
+            if group_name in visited:
+                return
+            visited.add(group_name)
+            group_values = dependency_groups.get(group_name, [])
+            if not isinstance(group_values, list):
+                return
+            for entry in group_values:
+                if isinstance(entry, str):
+                    specs.append(entry)
+                elif isinstance(entry, dict):
+                    include_group = entry.get('include-group')
+                    if isinstance(include_group, str):
+                        _expand_group(include_group, visited)
+
+        for group_name in DOCS_GROUP_NAMES:
+            _expand_group(group_name, set())
+
+        hatch_docs = pyproject_data.get('tool', {}).get('hatch', {}).get('envs', {}).get('docs', {})
+        if isinstance(hatch_docs, dict):
+            hatch_extra_deps = hatch_docs.get('extra-dependencies', [])
+            if isinstance(hatch_extra_deps, list):
+                specs.extend([dep for dep in hatch_extra_deps if isinstance(dep, str)])
+
+            hatch_dependency_groups = hatch_docs.get('dependency-groups', [])
+            if isinstance(hatch_dependency_groups, list):
+                for group_name in hatch_dependency_groups:
+                    if isinstance(group_name, str):
+                        _expand_group(group_name, set())
+
+        return specs
+
+    def _extract_conf_import_dependencies(self, doc_dir: pathlib.Path) -> dict[str, str]:
+        conf_candidates = [
+            doc_dir / 'conf.py',
+            doc_dir / 'source' / 'conf.py',
+        ]
+        conf_file = next((file for file in conf_candidates if file.exists()), None)
+        if conf_file is None:
+            return {}
+
+        try:
+            tree = parse(conf_file.read_text(encoding='utf-8'))
+        except (OSError, SyntaxError):
+            return {}
+
+        imported_modules: set[str] = set()
+        for node in tree.body:
+            if isinstance(node, Import):
+                imported_modules.update(alias.name for alias in node.names)
+            elif isinstance(node, ImportFrom) and node.module:
+                imported_modules.add(node.module)
+
+        dependencies: dict[str, str] = {}
+        for module_name in imported_modules:
+            for module_prefix, package_name in CONF_IMPORT_DEPENDENCY_MAP.items():
+                if module_name == module_prefix or module_name.startswith(f'{module_prefix}.'):
+                    dependencies[package_name] = '*'
+        return dependencies
+
+    def _discover_docs_dependencies(
+        self, project: Project, local_dir: pathlib.Path, doc_dir: pathlib.Path
+    ) -> dict[str, str]:
+        dependencies: dict[str, str] = {}
+
+        for requirement_file in self._docs_requirements_files(local_dir, doc_dir):
+            try:
+                for line in requirement_file.read_text(encoding='utf-8').splitlines():
+                    dependency = self._requirement_to_conda_dependency(line)
+                    if dependency is None:
+                        continue
+                    name, specifier = dependency
+                    dependencies[name] = specifier
+            except OSError:
+                continue
+
+        for spec in self._extract_docs_specs_from_pyproject(local_dir):
+            dependency = self._requirement_to_conda_dependency(spec)
+            if dependency is None:
+                continue
+            name, specifier = dependency
+            dependencies[name] = specifier
+
+        dependencies.update(self._extract_conf_import_dependencies(doc_dir))
+
+        # `make` and PyPI installs still rely on these base tools.
+        dependencies.setdefault('setuptools', '*')
+
+        if dependencies:
+            console.log(f'Discovered docs dependencies for {project.name}: {sorted(dependencies)}')
+        return dependencies
+
+    def _project_manifest_path(
+        self,
+        project: Project,
+        local_dir: pathlib.Path,
+        discovered_dependencies: dict[str, str] | None = None,
+    ) -> pathlib.Path:
         project_pixi_dir = local_dir / PROJECT_PIXI_DIR
         project_pixi_dir.mkdir(parents=True, exist_ok=True)
         manifest_path = project_pixi_dir / 'pyproject.toml'
@@ -172,8 +370,10 @@ class Builder:
         if not workspace_name:
             workspace_name = 'dash-docset'
 
-        dependency_map = {'python': project.pixi_python, 'pip': '*'}
+        dependency_map = {'python': project.pixi_python, 'pip': '*', 'setuptools': '*'}
         dependency_map.update(self._infer_build_dependencies(project.doc_build_cmd))
+        if discovered_dependencies:
+            dependency_map.update(discovered_dependencies)
         dependency_map.update(project.pixi_dependencies)
 
         if not project.pixi_channels:
@@ -199,9 +399,14 @@ class Builder:
         return manifest_path
 
     def _prepare_project_environment(
-        self, project: Project, local_dir: pathlib.Path
+        self,
+        project: Project,
+        local_dir: pathlib.Path,
+        discovered_dependencies: dict[str, str] | None = None,
     ) -> pathlib.Path:
-        manifest_path = self._project_manifest_path(project, local_dir)
+        manifest_path = self._project_manifest_path(
+            project, local_dir, discovered_dependencies=discovered_dependencies
+        )
         stream_command(['pixi', 'install', '--manifest-path', manifest_path.as_posix()])
         return manifest_path
 
@@ -243,9 +448,12 @@ class Builder:
         if not doc_dir.exists():
             raise FileNotFoundError(f'Documentation directory does not exist: {doc_dir}')
 
+        discovered_dependencies = self._discover_docs_dependencies(project, local_dir, doc_dir)
         latest_tag = self._latest_commit(local_dir)
         if project.use_pixi_env:
-            manifest_path = self._prepare_project_environment(project, local_dir)
+            manifest_path = self._prepare_project_environment(
+                project, local_dir, discovered_dependencies=discovered_dependencies
+            )
             if project.install:
                 self._run_in_project_environment(
                     manifest_path, ['python', '-m', 'pip', 'install', '-e', '.'], cwd=local_dir
