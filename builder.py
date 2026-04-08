@@ -55,6 +55,7 @@ PROJECT_PIXI_DIR = '.dash-docsets-pixi'
 DEFAULT_PROJECT_PIXI_PYTHON = '3.13.*'
 DEFAULT_PROJECT_PIXI_CHANNELS = ['conda-forge']
 DEFAULT_PROJECT_PIXI_PLATFORMS = ['linux-64', 'osx-arm64']
+MKDOCS_VERSION_CONSTRAINT = '>=1.6,<2'
 
 
 def _env_or_default(name: str, default: str) -> str:
@@ -151,6 +152,17 @@ class Builder:
     docset_base_url: str = DOCSET_BASE_URL
     errors: list[str] = field(default_factory=list)
 
+    def _infer_build_dependencies(self, command: str) -> dict[str, str]:
+        command_lower = command.lower()
+        dependencies: dict[str, str] = {}
+        if 'sphinx-build' in command_lower:
+            dependencies['sphinx'] = '>=8'
+        if re.search(r'(^|\s)mkdocs(\s|$)', command_lower):
+            dependencies['mkdocs'] = MKDOCS_VERSION_CONSTRAINT
+        if re.search(r'(^|\s)make(\s|$)', command_lower):
+            dependencies['make'] = '*'
+        return dependencies
+
     def _project_manifest_path(self, project: Project, local_dir: pathlib.Path) -> pathlib.Path:
         project_pixi_dir = local_dir / PROJECT_PIXI_DIR
         project_pixi_dir.mkdir(parents=True, exist_ok=True)
@@ -161,6 +173,7 @@ class Builder:
             workspace_name = 'dash-docset'
 
         dependency_map = {'python': project.pixi_python, 'pip': '*'}
+        dependency_map.update(self._infer_build_dependencies(project.doc_build_cmd))
         dependency_map.update(project.pixi_dependencies)
 
         if not project.pixi_channels:
@@ -193,7 +206,10 @@ class Builder:
         return manifest_path
 
     def _run_in_project_environment(
-        self, manifest_path: pathlib.Path, command: list[str], cwd: pathlib.Path
+        self,
+        manifest_path: pathlib.Path,
+        command: list[str],
+        cwd: pathlib.Path,
     ) -> None:
         pixi_command = ['pixi', 'run', '--manifest-path', manifest_path.as_posix(), *command]
         stream_command(pixi_command, cwd=cwd)
@@ -236,7 +252,7 @@ class Builder:
                 )
             self._run_in_project_environment(
                 manifest_path,
-                ['/bin/bash', '-lc', project.doc_build_cmd],
+                ['/bin/bash', '-c', project.doc_build_cmd],
                 cwd=doc_dir,
             )
         else:
