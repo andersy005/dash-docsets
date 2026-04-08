@@ -149,9 +149,7 @@ def _build_project(
         if install and generator != 'dash-webgen':
             command = ['python', '-m', 'pip', 'install', '.', '--no-deps']
             stream_command(command)
-        latest_tag = os.popen('git rev-parse --short HEAD').read().strip()
-        if not latest_tag:
-            latest_tag = 'unknown'
+        latest_tag = os.popen('git rev-parse --short HEAD').read().strip() or 'unknown'
     if generator != 'dash-webgen':
         with working_directory(doc_dir):
             command = doc_build_cmd

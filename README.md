@@ -14,6 +14,21 @@ My Dash (https://kapeli.com/dash) docsets. Let the buyer beware ⚠️;)
 
 ![](./images/navigate.png)
 
+## Development Environment
+
+This repository uses [Pixi](https://pixi.sh/latest/) for environment management, configured in `pyproject.toml` under `[tool.pixi.*]`.
+
+```bash
+# Install dependencies from pyproject.toml
+pixi install
+
+# Build one config
+pixi run python builder.py build configs/arctic.yaml
+
+# Regenerate feed README from local artifacts
+pixi run update-feed-list
+```
+
 ## Docset Feeds
 
 For instructions on how to subscribe to feeds, check this [page](https://github.com/andersy005/dash-docsets/releases/download/docsets-latest/README.md).
