@@ -9,6 +9,7 @@ import re
 import shlex
 import subprocess
 import tempfile
+import threading
 import tomllib
 from collections import deque
 from collections.abc import Iterator, Sequence
@@ -61,6 +62,9 @@ DEFAULT_PROJECT_PIXI_PLATFORMS = ['linux-64', 'osx-arm64']
 MKDOCS_VERSION_CONSTRAINT = '>=1.6,<2'
 SPHINX_VERSION_CONSTRAINT = '>=8,<9'
 SETUPTOOLS_VERSION_CONSTRAINT = '<81'
+DEFAULT_PIXI_INSTALL_TIMEOUT_SECONDS = 900
+DEFAULT_INSTALL_TIMEOUT_SECONDS = 900
+DEFAULT_DOC_BUILD_TIMEOUT_SECONDS = 1200
 DOCS_GROUP_NAMES = ('docs', 'doc', 'documentation')
 CONF_IMPORT_DEPENDENCY_MAP = {
     'dask_sphinx_theme': 'dask-sphinx-theme',
@@ -101,6 +105,7 @@ FEED_ROOT_URL = _env_or_default('FEED_ROOT_URL', DEFAULT_FEED_ROOT_URL)
 def _stream_command(
     cmd: str | Sequence[str | os.PathLike[str]],
     no_newline_regexp: str = 'Progress',
+    timeout_seconds: float | None = None,
     **kwargs: Any,
 ) -> Iterator[str]:
     """Stream command output while suppressing matching noisy progress lines."""
@@ -120,14 +125,43 @@ def _stream_command(
         **kwargs,
     )
     recent_stdout: deque[str] = deque(maxlen=500)
-    for line in iter(process.stdout.readline, ''):
-        if not re.search(no_newline_regexp, line):
-            recent_stdout.append(line)
-            yield line
-    process.stdout.close()
-    stderr_output = process.stderr.read()
-    process.stderr.close()
-    if return_code := process.wait():
+    timed_out = False
+    timer: threading.Timer | None = None
+
+    def _kill_process() -> None:
+        nonlocal timed_out
+        timed_out = True
+        with contextlib.suppress(ProcessLookupError):
+            process.kill()
+
+    if timeout_seconds is not None and timeout_seconds > 0:
+        timer = threading.Timer(timeout_seconds, _kill_process)
+        timer.daemon = True
+        timer.start()
+
+    stderr_output = ''
+    try:
+        for line in iter(process.stdout.readline, ''):
+            if not re.search(no_newline_regexp, line):
+                recent_stdout.append(line)
+                yield line
+        process.stdout.close()
+        stderr_output = process.stderr.read()
+        process.stderr.close()
+        return_code = process.wait()
+    finally:
+        if timer is not None:
+            timer.cancel()
+
+    if timed_out and timeout_seconds is not None:
+        raise subprocess.TimeoutExpired(
+            command,
+            timeout_seconds,
+            output=''.join(recent_stdout),
+            stderr=stderr_output,
+        )
+
+    if return_code:
         if stderr_output:
             error_console.print(stderr_output)
         raise subprocess.CalledProcessError(
@@ -141,9 +175,15 @@ def _stream_command(
 def stream_command(
     cmd: str | Sequence[str | os.PathLike[str]],
     no_newline_regexp: str = 'Progress',
+    timeout_seconds: float | None = None,
     **kwargs: Any,
 ) -> None:
-    for _ in _stream_command(cmd, no_newline_regexp, **kwargs):
+    for _ in _stream_command(
+        cmd,
+        no_newline_regexp,
+        timeout_seconds=timeout_seconds,
+        **kwargs,
+    ):
         pass
 
 
@@ -183,6 +223,9 @@ class Project(pydantic.BaseModel):
         default_factory=lambda: list(DEFAULT_PROJECT_PIXI_PLATFORMS)
     )
     pixi_dependencies: dict[str, str] = pydantic.Field(default_factory=dict)
+    pixi_install_timeout_seconds: int = DEFAULT_PIXI_INSTALL_TIMEOUT_SECONDS
+    install_timeout_seconds: int = DEFAULT_INSTALL_TIMEOUT_SECONDS
+    doc_build_timeout_seconds: int = DEFAULT_DOC_BUILD_TIMEOUT_SECONDS
 
 
 @pydantic.dataclasses.dataclass
@@ -256,6 +299,26 @@ class Builder:
             return None
         name, _specifier, pip_requirement = parsed
         return name, pip_requirement
+
+    def _extract_extra_dependencies(self, requirement: str) -> dict[str, str]:
+        cleaned = self._clean_requirement_line(requirement)
+        if cleaned is None:
+            return {}
+
+        candidate = cleaned.split(';', 1)[0].strip()
+        match = re.match(r'^([A-Za-z0-9_.-]+)\[([^]]+)\]\s*.*$', candidate)
+        if not match:
+            return {}
+
+        package_name, extras = match.groups()
+        normalized_name = self._normalize_package_name(package_name)
+        normalized_extras = {part.strip().lower() for part in extras.split(',') if part.strip()}
+        dependencies: dict[str, str] = {}
+
+        if normalized_name == 'mkdocstrings' and 'python' in normalized_extras:
+            dependencies['mkdocstrings-python'] = '*'
+
+        return dependencies
 
     def _docs_requirements_files(
         self, local_dir: pathlib.Path, doc_dir: pathlib.Path
@@ -493,6 +556,8 @@ class Builder:
                     )
                     if mapped_plugin_dependency:
                         dependencies[mapped_plugin_dependency] = '*'
+                    if normalized_plugin_name == 'mkdocstrings':
+                        dependencies['mkdocstrings-python'] = '*'
 
         return dependencies
 
@@ -502,13 +567,19 @@ class Builder:
         return f'{name}{specifier}'
 
     def _extract_missing_conda_packages(self, output_text: str) -> list[str]:
+        normalized_output = re.sub(
+            r'([A-Za-z0-9_.-])-\s*\n\s*([A-Za-z0-9_.-])',
+            r'\1-\2',
+            output_text,
+        )
+        normalized_output = re.sub(r'\n\s+', ' ', normalized_output)
         patterns = [
             r'No candidates were found for\s+([A-Za-z0-9_.-]+)',
             r'No candidates found for\s+([A-Za-z0-9_.-]+)',
         ]
         missing: list[str] = []
         for pattern in patterns:
-            for match in re.finditer(pattern, output_text, flags=re.DOTALL):
+            for match in re.finditer(pattern, normalized_output, flags=re.DOTALL):
                 candidate = self._normalize_package_name(match.group(1))
                 if candidate not in missing:
                     missing.append(candidate)
@@ -531,6 +602,10 @@ class Builder:
                     if pip_dependency is not None:
                         name, pip_requirement = pip_dependency
                         pip_requirements[name] = pip_requirement
+                    extra_dependencies = self._extract_extra_dependencies(line)
+                    dependencies.update(extra_dependencies)
+                    for name in extra_dependencies:
+                        pip_requirements.setdefault(name, name)
             except OSError:
                 continue
 
@@ -543,6 +618,10 @@ class Builder:
             if pip_dependency is not None:
                 name, pip_requirement = pip_dependency
                 pip_requirements[name] = pip_requirement
+            extra_dependencies = self._extract_extra_dependencies(spec)
+            dependencies.update(extra_dependencies)
+            for name in extra_dependencies:
+                pip_requirements.setdefault(name, name)
 
         conf_dependencies = self._extract_conf_import_dependencies(doc_dir)
         dependencies.update(conf_dependencies)
@@ -643,7 +722,10 @@ class Builder:
         while True:
             manifest_path = self._write_project_manifest(project, local_dir, dependency_map)
             try:
-                stream_command(['pixi', 'install', '--manifest-path', manifest_path.as_posix()])
+                stream_command(
+                    ['pixi', 'install', '--manifest-path', manifest_path.as_posix()],
+                    timeout_seconds=project.pixi_install_timeout_seconds,
+                )
                 return manifest_path, sorted(fallback_requirements.values())
             except subprocess.CalledProcessError as error:
                 combined_output = '\n'.join(
@@ -671,9 +753,10 @@ class Builder:
         manifest_path: pathlib.Path,
         command: list[str],
         cwd: pathlib.Path,
+        timeout_seconds: float | None = None,
     ) -> None:
         pixi_command = ['pixi', 'run', '--manifest-path', manifest_path.as_posix(), *command]
-        stream_command(pixi_command, cwd=cwd)
+        stream_command(pixi_command, cwd=cwd, timeout_seconds=timeout_seconds)
 
     def _latest_commit(self, local_dir: pathlib.Path) -> str:
         try:
@@ -717,25 +800,36 @@ class Builder:
             )
             if project.install:
                 self._run_in_project_environment(
-                    manifest_path, ['python', '-m', 'pip', 'install', '-e', '.'], cwd=local_dir
+                    manifest_path,
+                    ['python', '-m', 'pip', 'install', '-e', '.'],
+                    cwd=local_dir,
+                    timeout_seconds=project.install_timeout_seconds,
                 )
             if pip_requirements:
                 self._run_in_project_environment(
                     manifest_path,
                     ['python', '-m', 'pip', 'install', *pip_requirements],
                     cwd=local_dir,
+                    timeout_seconds=project.install_timeout_seconds,
                 )
             self._run_in_project_environment(
                 manifest_path,
                 ['/bin/bash', '-c', project.doc_build_cmd],
                 cwd=doc_dir,
+                timeout_seconds=project.doc_build_timeout_seconds,
             )
         else:
             with working_directory(local_dir):
                 if project.install:
-                    stream_command(['python', '-m', 'pip', 'install', '-e', '.'])
+                    stream_command(
+                        ['python', '-m', 'pip', 'install', '-e', '.'],
+                        timeout_seconds=project.install_timeout_seconds,
+                    )
                 with working_directory(project.doc_dir):
-                    stream_command(project.doc_build_cmd)
+                    stream_command(
+                        project.doc_build_cmd,
+                        timeout_seconds=project.doc_build_timeout_seconds,
+                    )
 
         icon_dir = ICON_DIR / project.name
         icon_files = sorted(icon_dir.iterdir()) if icon_dir.exists() else None
@@ -817,7 +911,14 @@ class Builder:
         for project in track(self.projects):
             try:
                 self.create_docset(project)
-            except Exception:
+            except subprocess.TimeoutExpired as timeout_error:
+                error_console.print(
+                    f'{project.name} timed out after {timeout_error.timeout}s while running:'
+                    f' {timeout_error.cmd}'
+                )
+                self.errors.append(project.name)
+            except Exception as error:
+                error_console.print(f'{project.name} failed: {error}')
                 self.errors.append(project.name)
 
         if self.errors:

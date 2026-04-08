@@ -132,3 +132,4 @@ dmypy.json
 .pixi/
 docsets/
 feeds/
+.github/copilot-instructions.md
