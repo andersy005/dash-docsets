@@ -5,9 +5,12 @@ import os
 import pathlib
 import platform
 import re
+import shlex
 import subprocess
-import sys
 import tempfile
+from collections.abc import Iterator, Sequence
+from dataclasses import field
+from typing import Any
 from xml.etree.ElementTree import Element, SubElement, tostring
 
 import pandas as pd
@@ -23,6 +26,7 @@ from html2dash import custom_builder
 
 app = typer.Typer(help='Dash docset builder')
 console = Console()
+error_console = Console(stderr=True, style='bold red')
 
 SYSTEM = platform.system().lower()
 MAKE_CMD = 'make html' if SYSTEM == 'darwin' else f'make -j{psutil.cpu_count()} html'
@@ -64,44 +68,47 @@ DOCSET_BASE_URL = _env_or_default('DOCSET_BASE_URL', DEFAULT_DOCSET_BASE_URL)
 FEED_ROOT_URL = _env_or_default('FEED_ROOT_URL', DEFAULT_FEED_ROOT_URL)
 
 
-def _stream_command(cmd, no_newline_regexp='Progess', **kwargs):
-    """stream a command (yield) back to the user, as each line is available.
-    # Example usage:
-    results = []
-    for line in stream_command(cmd):
-        print(line, end="")
-        results.append(line)
-    Parameters
-    ==========
-    cmd: the command to send, should be a list for subprocess
-    no_newline_regexp: the regular expression to determine skipping a
-                       newline. Defaults to finding Progress
-    """
+def _stream_command(
+    cmd: str | Sequence[str | os.PathLike[str]],
+    no_newline_regexp: str = 'Progress',
+    **kwargs: Any,
+) -> Iterator[str]:
+    """Stream command output while suppressing matching noisy progress lines."""
 
     if isinstance(cmd, str):
-        cmd = cmd.split(' ')
+        command = shlex.split(cmd)
+    else:
+        command = [os.fspath(part) for part in cmd]
 
-    console.log(cmd)
+    console.log(command)
 
     process = subprocess.Popen(
-        cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, **kwargs
+        command,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        **kwargs,
     )
     for line in iter(process.stdout.readline, ''):
         if not re.search(no_newline_regexp, line):
             yield line
     process.stdout.close()
     if return_code := process.wait():
-        print(process.stderr.read(), file=sys.stderr)
-        raise subprocess.CalledProcessError(return_code, cmd)
+        error_console.print(process.stderr.read())
+        raise subprocess.CalledProcessError(return_code, command)
 
 
-def stream_command(cmd, no_newline_regexp='Progess', **kwargs):
+def stream_command(
+    cmd: str | Sequence[str | os.PathLike[str]],
+    no_newline_regexp: str = 'Progress',
+    **kwargs: Any,
+) -> None:
     for _ in _stream_command(cmd, no_newline_regexp, **kwargs):
         pass
 
 
 @contextlib.contextmanager
-def working_directory(path):
+def working_directory(path: str | os.PathLike[str]) -> Iterator[None]:
     """Changes working directory and returns to previous on exit."""
     prev_cwd = pathlib.Path.cwd()
 
@@ -142,6 +149,7 @@ class Project(pydantic.BaseModel):
 class Builder:
     projects: list[Project]
     docset_base_url: str = DOCSET_BASE_URL
+    errors: list[str] = field(default_factory=list)
 
     def _project_manifest_path(self, project: Project, local_dir: pathlib.Path) -> pathlib.Path:
         project_pixi_dir = local_dir / PROJECT_PIXI_DIR
@@ -154,6 +162,11 @@ class Builder:
 
         dependency_map = {'python': project.pixi_python, 'pip': '*'}
         dependency_map.update(project.pixi_dependencies)
+
+        if not project.pixi_channels:
+            raise ValueError(f'Project {project.name!r} must define at least one pixi channel')
+        if not project.pixi_platforms:
+            raise ValueError(f'Project {project.name!r} must define at least one pixi platform')
 
         channels = ', '.join(f'"{channel}"' for channel in project.pixi_channels)
         platforms = ', '.join(f'"{platform}"' for platform in project.pixi_platforms)
@@ -190,11 +203,11 @@ class Builder:
             latest_tag = subprocess.check_output(
                 ['git', 'rev-parse', '--short', 'HEAD'], text=True, cwd=local_dir
             ).strip()
-        except subprocess.CalledProcessError:
+        except (subprocess.CalledProcessError, FileNotFoundError):
             latest_tag = 'unknown'
         return latest_tag or 'unknown'
 
-    def _build_docs(self, project: Project):
+    def _build_docs(self, project: Project) -> tuple[str, str]:
         local_dir = REPODIR / project.name
         doc_dir = local_dir / project.doc_dir
 
@@ -210,6 +223,9 @@ class Builder:
             stream_command(command)
         else:
             console.log(f'{project.name} directory already exits.')
+
+        if not doc_dir.exists():
+            raise FileNotFoundError(f'Documentation directory does not exist: {doc_dir}')
 
         latest_tag = self._latest_commit(local_dir)
         if project.use_pixi_env:
@@ -231,9 +247,10 @@ class Builder:
                     stream_command(project.doc_build_cmd)
 
         icon_dir = ICON_DIR / project.name
-        icons = []
-        icon_files = list(icon_dir.iterdir()) if icon_dir.exists() else None
+        icon_files = sorted(icon_dir.iterdir()) if icon_dir.exists() else None
         source = doc_dir / project.html_pages_dir
+        if not source.exists():
+            raise FileNotFoundError(f'Built HTML directory does not exist: {source}')
         if project.generator == 'doc2dash':
             command = [
                 'doc2dash',
@@ -249,11 +266,12 @@ class Builder:
             ]
             if icon_files:
                 icons = [
-                    ['--icon', icon.as_posix()] for icon in icon_files if icon.suffix == '.png'
+                    ['--icon', icon.as_posix()]
+                    for icon in icon_files
+                    if icon.suffix.lower() == '.png'
                 ]
                 icons = list(itertools.chain(*icons))
                 command += icons
-            command = ' '.join(command)
             stream_command(command)
 
         elif project.generator == 'html2dash':
@@ -278,11 +296,11 @@ class Builder:
                 docset_path,
             ]
             stream_command(tar_command)
-            stream_command(f'rm -rf {dir_to_delete}')
+            stream_command(['rm', '-rf', dir_to_delete])
 
         return project.name, latest_tag
 
-    def _create_feed(self, name, latest_tag):
+    def _create_feed(self, name: str, latest_tag: str) -> None:
         feed_filename = f'{FEED_DIR}/{name}.xml'
         docset_base_url = self.docset_base_url.rstrip('/')
 
@@ -296,14 +314,14 @@ class Builder:
 
         bs = BeautifulSoup(tostring(entry), features='html.parser').prettify()
 
-        with open(feed_filename, 'w') as f:
+        with open(feed_filename, 'w', encoding='utf-8') as f:
             f.write(bs)
 
     def create_docset(self, project: Project) -> None:
         name, latest_tag = self._build_docs(project)
         self._create_feed(name, latest_tag)
 
-    def build_all(self):
+    def build_all(self) -> None:
         self.errors = []
         for project in track(self.projects):
             try:
@@ -312,7 +330,6 @@ class Builder:
                 self.errors.append(project.name)
 
         if self.errors:
-            error_console = Console(stderr=True, style='bold red')
             error_console.print('Errors occured while building docsets:')
             error_console.print(self.errors)
 
@@ -320,7 +337,7 @@ class Builder:
 @app.command()
 def build(
     config: pathlib.Path = typer.Argument(
-        None, exists=True, file_okay=True, help='YAML config file to use'
+        ..., exists=True, file_okay=True, help='YAML config file to use'
     ),
     docset_base_url: str = typer.Option(
         DOCSET_BASE_URL,
@@ -332,6 +349,11 @@ def build(
     yaml_loader = ruamel.yaml.YAML(typ='safe', pure=True)
     with open(config, encoding='utf-8') as f:
         config_data = yaml_loader.load(f)
+
+    if not isinstance(config_data, list):
+        raise TypeError(
+            f'Expected a list of project mappings in {config}, got {type(config_data)!r}'
+        )
 
     projects = [Project(**p) for p in config_data]
     builder = Builder(projects=projects, docset_base_url=docset_base_url)
@@ -354,13 +376,14 @@ def update_feed_list(
         items.sort()
         console.log(items)
         with open(feed_file, 'w') as fpt:
-            print(
-                '# Docset Feeds\n\nYou can subscribe to the following feeds with a single click.\n\n```bash\n dash-feed://<URL encoded feed URL>\n```\n',
-                file=fpt,
+            fpt.write(
+                '# Docset Feeds\n\nYou can subscribe to the following feeds with a single click.\n\n'
+                '```bash\n'
+                ' dash-feed://<URL encoded feed URL>\n'
+                '```\n'
             )
-            print(
-                '\n![dash-docsets](https://github.com/andersy005/dash-docsets/raw/main/images/how-to-add-feed.png)',
-                file=fpt,
+            fpt.write(
+                '\n![dash-docsets](https://github.com/andersy005/dash-docsets/raw/main/images/how-to-add-feed.png)\n'
             )
             entries = []
             for item in track(items):
@@ -374,7 +397,7 @@ def update_feed_list(
                 )
 
             table = pd.DataFrame(entries).to_markdown(tablefmt='github')
-            print(table, file=fpt)
+            fpt.write(f'{table}\n')
 
     else:
         console.log("❌ Didn't find any files...", style='red')
