@@ -10,6 +10,7 @@ import shlex
 import subprocess
 import tempfile
 import tomllib
+from collections import deque
 from collections.abc import Iterator, Sequence
 from dataclasses import field
 from typing import Any
@@ -108,13 +109,23 @@ def _stream_command(
         text=True,
         **kwargs,
     )
+    recent_stdout: deque[str] = deque(maxlen=500)
     for line in iter(process.stdout.readline, ''):
         if not re.search(no_newline_regexp, line):
+            recent_stdout.append(line)
             yield line
     process.stdout.close()
+    stderr_output = process.stderr.read()
+    process.stderr.close()
     if return_code := process.wait():
-        error_console.print(process.stderr.read())
-        raise subprocess.CalledProcessError(return_code, command)
+        if stderr_output:
+            error_console.print(stderr_output)
+        raise subprocess.CalledProcessError(
+            return_code,
+            command,
+            output=''.join(recent_stdout),
+            stderr=stderr_output,
+        )
 
 
 def stream_command(
@@ -355,6 +366,24 @@ class Builder:
                     dependencies[package_name] = '*'
         return dependencies
 
+    def _dependency_to_pip_requirement(self, name: str, specifier: str) -> str:
+        if specifier in {'', '*'}:
+            return name
+        return f'{name}{specifier}'
+
+    def _extract_missing_conda_packages(self, output_text: str) -> list[str]:
+        patterns = [
+            r'No candidates were found for ([A-Za-z0-9_.-]+)',
+            r'No candidates found for ([A-Za-z0-9_.-]+)',
+        ]
+        missing: list[str] = []
+        for pattern in patterns:
+            for match in re.finditer(pattern, output_text, flags=re.DOTALL):
+                candidate = self._normalize_package_name(match.group(1))
+                if candidate not in missing:
+                    missing.append(candidate)
+        return missing
+
     def _discover_docs_dependencies(
         self, project: Project, local_dir: pathlib.Path, doc_dir: pathlib.Path
     ) -> dict[str, str]:
@@ -387,20 +416,11 @@ class Builder:
             console.log(f'Discovered docs dependencies for {project.name}: {sorted(dependencies)}')
         return dependencies
 
-    def _project_manifest_path(
+    def _build_project_dependency_map(
         self,
         project: Project,
-        local_dir: pathlib.Path,
         discovered_dependencies: dict[str, str] | None = None,
-    ) -> pathlib.Path:
-        project_pixi_dir = local_dir / PROJECT_PIXI_DIR
-        project_pixi_dir.mkdir(parents=True, exist_ok=True)
-        manifest_path = project_pixi_dir / 'pyproject.toml'
-
-        workspace_name = re.sub(r'[^a-z0-9-]+', '-', project.name.lower()).strip('-')
-        if not workspace_name:
-            workspace_name = 'dash-docset'
-
+    ) -> dict[str, str]:
         dependency_map = {
             'python': project.pixi_python,
             'pip': '*',
@@ -412,6 +432,21 @@ class Builder:
         dependency_map.update(project.pixi_dependencies)
         # Keep pkg_resources available for legacy Sphinx extensions like sphinx-tabs.
         dependency_map['setuptools'] = SETUPTOOLS_VERSION_CONSTRAINT
+        return dependency_map
+
+    def _write_project_manifest(
+        self,
+        project: Project,
+        local_dir: pathlib.Path,
+        dependency_map: dict[str, str],
+    ) -> pathlib.Path:
+        project_pixi_dir = local_dir / PROJECT_PIXI_DIR
+        project_pixi_dir.mkdir(parents=True, exist_ok=True)
+        manifest_path = project_pixi_dir / 'pyproject.toml'
+
+        workspace_name = re.sub(r'[^a-z0-9-]+', '-', project.name.lower()).strip('-')
+        if not workspace_name:
+            workspace_name = 'dash-docset'
 
         if not project.pixi_channels:
             raise ValueError(f'Project {project.name!r} must define at least one pixi channel')
@@ -435,17 +470,54 @@ class Builder:
         manifest_path.write_text(manifest_text, encoding='utf-8')
         return manifest_path
 
-    def _prepare_project_environment(
+    def _project_manifest_path(
         self,
         project: Project,
         local_dir: pathlib.Path,
         discovered_dependencies: dict[str, str] | None = None,
     ) -> pathlib.Path:
-        manifest_path = self._project_manifest_path(
-            project, local_dir, discovered_dependencies=discovered_dependencies
+        dependency_map = self._build_project_dependency_map(
+            project, discovered_dependencies=discovered_dependencies
         )
-        stream_command(['pixi', 'install', '--manifest-path', manifest_path.as_posix()])
-        return manifest_path
+        return self._write_project_manifest(project, local_dir, dependency_map)
+
+    def _prepare_project_environment(
+        self,
+        project: Project,
+        local_dir: pathlib.Path,
+        discovered_dependencies: dict[str, str] | None = None,
+    ) -> tuple[pathlib.Path, list[str]]:
+        dependency_map = self._build_project_dependency_map(
+            project, discovered_dependencies=discovered_dependencies
+        )
+        fallback_requirements: dict[str, str] = {}
+        fallback_candidates = set(discovered_dependencies or {})
+
+        while True:
+            manifest_path = self._write_project_manifest(project, local_dir, dependency_map)
+            try:
+                stream_command(['pixi', 'install', '--manifest-path', manifest_path.as_posix()])
+                return manifest_path, sorted(fallback_requirements.values())
+            except subprocess.CalledProcessError as error:
+                combined_output = '\n'.join(
+                    text for text in (error.output or '', error.stderr or '') if text
+                )
+                missing_packages = self._extract_missing_conda_packages(combined_output)
+                removable = [
+                    name
+                    for name in missing_packages
+                    if name in fallback_candidates and name in dependency_map
+                ]
+                if not removable:
+                    raise
+
+                for name in removable:
+                    specifier = dependency_map.pop(name, '*')
+                    fallback_requirements[name] = self._dependency_to_pip_requirement(
+                        name, specifier
+                    )
+
+                console.log(f'Falling back to pip for {project.name}: {sorted(removable)}')
 
     def _run_in_project_environment(
         self,
@@ -488,12 +560,18 @@ class Builder:
         discovered_dependencies = self._discover_docs_dependencies(project, local_dir, doc_dir)
         latest_tag = self._latest_commit(local_dir)
         if project.use_pixi_env:
-            manifest_path = self._prepare_project_environment(
+            manifest_path, pip_requirements = self._prepare_project_environment(
                 project, local_dir, discovered_dependencies=discovered_dependencies
             )
             if project.install:
                 self._run_in_project_environment(
                     manifest_path, ['python', '-m', 'pip', 'install', '-e', '.'], cwd=local_dir
+                )
+            if pip_requirements:
+                self._run_in_project_environment(
+                    manifest_path,
+                    ['python', '-m', 'pip', 'install', *pip_requirements],
+                    cwd=local_dir,
                 )
             self._run_in_project_environment(
                 manifest_path,
