@@ -244,11 +244,27 @@ class Builder:
         _collect(local_dir / 'requirements-docs.txt')
         return files
 
-    def _extract_docs_specs_from_pyproject(self, local_dir: pathlib.Path) -> list[str]:
-        pyproject_file = local_dir / 'pyproject.toml'
-        if not pyproject_file.exists():
-            return []
+    def _extract_docs_specs_from_pyproject(
+        self, local_dir: pathlib.Path, doc_dir: pathlib.Path
+    ) -> list[str]:
+        pyproject_candidates = [
+            local_dir / 'pyproject.toml',
+            doc_dir / 'pyproject.toml',
+            doc_dir.parent / 'pyproject.toml',
+        ]
+        specs: list[str] = []
+        seen_paths: set[pathlib.Path] = set()
 
+        for pyproject_file in pyproject_candidates:
+            if pyproject_file in seen_paths or not pyproject_file.exists():
+                continue
+            seen_paths.add(pyproject_file)
+
+            specs.extend(self._extract_docs_specs_from_single_pyproject(pyproject_file))
+
+        return list(dict.fromkeys(specs))
+
+    def _extract_docs_specs_from_single_pyproject(self, pyproject_file: pathlib.Path) -> list[str]:
         try:
             pyproject_data = tomllib.loads(pyproject_file.read_text(encoding='utf-8'))
         except (OSError, tomllib.TOMLDecodeError):
@@ -355,7 +371,7 @@ class Builder:
             except OSError:
                 continue
 
-        for spec in self._extract_docs_specs_from_pyproject(local_dir):
+        for spec in self._extract_docs_specs_from_pyproject(local_dir, doc_dir):
             dependency = self._requirement_to_conda_dependency(spec)
             if dependency is None:
                 continue
@@ -394,6 +410,8 @@ class Builder:
         if discovered_dependencies:
             dependency_map.update(discovered_dependencies)
         dependency_map.update(project.pixi_dependencies)
+        # Keep pkg_resources available for legacy Sphinx extensions like sphinx-tabs.
+        dependency_map['setuptools'] = SETUPTOOLS_VERSION_CONSTRAINT
 
         if not project.pixi_channels:
             raise ValueError(f'Project {project.name!r} must define at least one pixi channel')
