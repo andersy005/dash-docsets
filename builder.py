@@ -438,7 +438,9 @@ class Builder:
         local_dir: pathlib.Path,
         doc_dir: pathlib.Path,
     ) -> dict[str, str]:
-        loader = ruamel.yaml.YAML(typ='safe', pure=True)
+        # `mkdocs.yml` files often contain custom tags like `!!python/name`, which
+        # the safe loader cannot construct. Round-trip mode keeps them inert.
+        loader = ruamel.yaml.YAML(typ='rt', pure=True)
         dependencies: dict[str, str] = {}
         candidates = [
             doc_dir / 'mkdocs.yml',
