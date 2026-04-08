@@ -7,7 +7,7 @@
     sphinx: ">=8,<9"
     numpydoc: "*"
     sphinx-autosummary-accessors: "*"
-    setuptools: "*"
+    setuptools: "<81"
     dask-sphinx-theme: ">=4"
     sphinx-click: "*"
     sphinx-copybutton: "*"

@@ -1,3 +1,4 @@
+import ast
 import contextlib
 import enum
 import itertools
@@ -9,7 +10,6 @@ import shlex
 import subprocess
 import tempfile
 import tomllib
-from ast import Import, ImportFrom, parse
 from collections.abc import Iterator, Sequence
 from dataclasses import field
 from typing import Any
@@ -59,6 +59,7 @@ DEFAULT_PROJECT_PIXI_CHANNELS = ['conda-forge']
 DEFAULT_PROJECT_PIXI_PLATFORMS = ['linux-64', 'osx-arm64']
 MKDOCS_VERSION_CONSTRAINT = '>=1.6,<2'
 SPHINX_VERSION_CONSTRAINT = '>=8,<9'
+SETUPTOOLS_VERSION_CONSTRAINT = '<81'
 DOCS_GROUP_NAMES = ('docs', 'doc', 'documentation')
 CONF_IMPORT_DEPENDENCY_MAP = {
     'dask_sphinx_theme': 'dask-sphinx-theme',
@@ -306,16 +307,30 @@ class Builder:
             return {}
 
         try:
-            tree = parse(conf_file.read_text(encoding='utf-8'))
+            tree = ast.parse(conf_file.read_text(encoding='utf-8'))
         except (OSError, SyntaxError):
             return {}
 
         imported_modules: set[str] = set()
         for node in tree.body:
-            if isinstance(node, Import):
+            if isinstance(node, ast.Import):
                 imported_modules.update(alias.name for alias in node.names)
-            elif isinstance(node, ImportFrom) and node.module:
+            elif isinstance(node, ast.ImportFrom) and node.module:
                 imported_modules.add(node.module)
+            elif isinstance(node, ast.Assign):
+                for target in node.targets:
+                    if isinstance(target, ast.Name) and target.id == 'extensions':
+                        if isinstance(node.value, (ast.List, ast.Tuple, ast.Set)):
+                            for item in node.value.elts:
+                                if isinstance(item, ast.Constant) and isinstance(item.value, str):
+                                    imported_modules.add(item.value)
+            elif isinstance(node, ast.AnnAssign):
+                if isinstance(node.target, ast.Name) and node.target.id == 'extensions':
+                    value = node.value
+                    if isinstance(value, (ast.List, ast.Tuple, ast.Set)):
+                        for item in value.elts:
+                            if isinstance(item, ast.Constant) and isinstance(item.value, str):
+                                imported_modules.add(item.value)
 
         dependencies: dict[str, str] = {}
         for module_name in imported_modules:
@@ -350,7 +365,7 @@ class Builder:
         dependencies.update(self._extract_conf_import_dependencies(doc_dir))
 
         # `make` and PyPI installs still rely on these base tools.
-        dependencies.setdefault('setuptools', '*')
+        dependencies.setdefault('setuptools', SETUPTOOLS_VERSION_CONSTRAINT)
 
         if dependencies:
             console.log(f'Discovered docs dependencies for {project.name}: {sorted(dependencies)}')
@@ -370,7 +385,11 @@ class Builder:
         if not workspace_name:
             workspace_name = 'dash-docset'
 
-        dependency_map = {'python': project.pixi_python, 'pip': '*', 'setuptools': '*'}
+        dependency_map = {
+            'python': project.pixi_python,
+            'pip': '*',
+            'setuptools': SETUPTOOLS_VERSION_CONSTRAINT,
+        }
         dependency_map.update(self._infer_build_dependencies(project.doc_build_cmd))
         if discovered_dependencies:
             dependency_map.update(discovered_dependencies)
