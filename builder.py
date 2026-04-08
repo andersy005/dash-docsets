@@ -75,6 +75,16 @@ CONF_IMPORT_DEPENDENCY_MAP = {
     'sphinxcontrib.mermaid': 'sphinxcontrib-mermaid',
     'yaml': 'pyyaml',
 }
+MKDOCS_THEME_DEPENDENCY_MAP = {
+    'material': 'mkdocs-material',
+}
+MKDOCS_PLUGIN_DEPENDENCY_MAP = {
+    'exclude': 'mkdocs-exclude',
+    'llmstxt': 'mkdocs-llmstxt',
+    'macros': 'mkdocs-macros-plugin',
+    'mkdocstrings': 'mkdocstrings',
+    'redirects': 'mkdocs-redirects',
+}
 
 
 def _env_or_default(name: str, default: str) -> str:
@@ -205,7 +215,7 @@ class Builder:
     def _normalize_package_name(self, name: str) -> str:
         return name.strip().lower().replace('_', '-')
 
-    def _requirement_to_conda_dependency(self, requirement: str) -> tuple[str, str] | None:
+    def _parse_requirement(self, requirement: str) -> tuple[str, str, str] | None:
         cleaned = self._clean_requirement_line(requirement)
         if cleaned is None:
             return None
@@ -217,7 +227,8 @@ class Builder:
         if ' @ ' in candidate:
             package_name = candidate.split(' @ ', 1)[0].strip()
             if package_name:
-                return self._normalize_package_name(package_name), '*'
+                normalized_name = self._normalize_package_name(package_name)
+                return normalized_name, '*', candidate
             return None
 
         match = re.match(r'^([A-Za-z0-9_.-]+)(?:\[[^]]+\])?\s*(.*)$', candidate)
@@ -230,7 +241,21 @@ class Builder:
 
         normalized_name = self._normalize_package_name(package_name)
         normalized_specifier = specifier.strip() or '*'
-        return normalized_name, normalized_specifier
+        return normalized_name, normalized_specifier, candidate
+
+    def _requirement_to_conda_dependency(self, requirement: str) -> tuple[str, str] | None:
+        parsed = self._parse_requirement(requirement)
+        if parsed is None:
+            return None
+        name, specifier, _pip_requirement = parsed
+        return name, specifier
+
+    def _requirement_to_pip_requirement(self, requirement: str) -> tuple[str, str] | None:
+        parsed = self._parse_requirement(requirement)
+        if parsed is None:
+            return None
+        name, _specifier, pip_requirement = parsed
+        return name, pip_requirement
 
     def _docs_requirements_files(
         self, local_dir: pathlib.Path, doc_dir: pathlib.Path
@@ -322,7 +347,49 @@ class Builder:
                     if isinstance(group_name, str):
                         _expand_group(group_name, set())
 
+        uv_sources = pyproject_data.get('tool', {}).get('uv', {}).get('sources', {})
+        if isinstance(uv_sources, dict):
+            return [self._resolve_uv_source(spec, uv_sources) for spec in specs]
+
         return specs
+
+    def _resolve_uv_source(self, spec: str, uv_sources: dict[str, Any]) -> str:
+        parsed = self._parse_requirement(spec)
+        if parsed is None:
+            return spec
+
+        name, _specifier, _pip_requirement = parsed
+        source_value = uv_sources.get(name)
+        if not isinstance(source_value, dict):
+            return spec
+
+        if isinstance(source_value.get('workspace'), bool) and source_value['workspace']:
+            return spec
+
+        git_url = source_value.get('git')
+        if isinstance(git_url, str):
+            git_reference = ''
+            for ref_key in ('rev', 'tag', 'branch'):
+                ref_value = source_value.get(ref_key)
+                if isinstance(ref_value, str):
+                    git_reference = f'@{ref_value}'
+                    break
+
+            git_prefix = '' if git_url.startswith('git+') else 'git+'
+            subdirectory = source_value.get('subdirectory')
+            if isinstance(subdirectory, str):
+                return f'{name} @ {git_prefix}{git_url}{git_reference}#subdirectory={subdirectory}'
+            return f'{name} @ {git_prefix}{git_url}{git_reference}'
+
+        url = source_value.get('url')
+        if isinstance(url, str):
+            return f'{name} @ {url}'
+
+        path_value = source_value.get('path')
+        if isinstance(path_value, str):
+            return f'{name} @ {path_value}'
+
+        return spec
 
     def _extract_conf_import_dependencies(self, doc_dir: pathlib.Path) -> dict[str, str]:
         conf_candidates = [
@@ -366,6 +433,67 @@ class Builder:
                     dependencies[package_name] = '*'
         return dependencies
 
+    def _extract_mkdocs_dependencies(
+        self,
+        local_dir: pathlib.Path,
+        doc_dir: pathlib.Path,
+    ) -> dict[str, str]:
+        loader = ruamel.yaml.YAML(typ='safe', pure=True)
+        dependencies: dict[str, str] = {}
+        candidates = [
+            doc_dir / 'mkdocs.yml',
+            doc_dir / 'mkdocs.yaml',
+            local_dir / 'mkdocs.yml',
+            local_dir / 'mkdocs.yaml',
+        ]
+        seen: set[pathlib.Path] = set()
+        for config_file in candidates:
+            if config_file in seen or not config_file.exists():
+                continue
+            seen.add(config_file)
+            try:
+                config_data = loader.load(config_file.read_text(encoding='utf-8')) or {}
+            except (OSError, ruamel.yaml.YAMLError):
+                continue
+            if not isinstance(config_data, dict):
+                continue
+
+            theme = config_data.get('theme')
+            theme_name: str | None = None
+            if isinstance(theme, dict):
+                raw_name = theme.get('name')
+                if isinstance(raw_name, str):
+                    theme_name = raw_name.strip().lower()
+            elif isinstance(theme, str):
+                theme_name = theme.strip().lower()
+            if theme_name:
+                mapped_theme_dependency = MKDOCS_THEME_DEPENDENCY_MAP.get(theme_name)
+                if mapped_theme_dependency:
+                    dependencies[mapped_theme_dependency] = '*'
+
+            plugins = config_data.get('plugins')
+            if isinstance(plugins, list):
+                for plugin in plugins:
+                    plugin_name: str | None = None
+                    if isinstance(plugin, str):
+                        plugin_name = plugin
+                    elif isinstance(plugin, dict):
+                        keys = list(plugin.keys())
+                        if keys:
+                            first_key = keys[0]
+                            if isinstance(first_key, str):
+                                plugin_name = first_key
+                    if not plugin_name:
+                        continue
+                    normalized_plugin_name = plugin_name.strip().lower()
+                    mapped_plugin_dependency = MKDOCS_PLUGIN_DEPENDENCY_MAP.get(
+                        normalized_plugin_name
+                    )
+                    if mapped_plugin_dependency:
+                        dependencies[mapped_plugin_dependency] = '*'
+
+        return dependencies
+
     def _dependency_to_pip_requirement(self, name: str, specifier: str) -> str:
         if specifier in {'', '*'}:
             return name
@@ -373,8 +501,8 @@ class Builder:
 
     def _extract_missing_conda_packages(self, output_text: str) -> list[str]:
         patterns = [
-            r'No candidates were found for ([A-Za-z0-9_.-]+)',
-            r'No candidates found for ([A-Za-z0-9_.-]+)',
+            r'No candidates were found for\s+([A-Za-z0-9_.-]+)',
+            r'No candidates found for\s+([A-Za-z0-9_.-]+)',
         ]
         missing: list[str] = []
         for pattern in patterns:
@@ -386,35 +514,51 @@ class Builder:
 
     def _discover_docs_dependencies(
         self, project: Project, local_dir: pathlib.Path, doc_dir: pathlib.Path
-    ) -> dict[str, str]:
+    ) -> tuple[dict[str, str], dict[str, str]]:
         dependencies: dict[str, str] = {}
+        pip_requirements: dict[str, str] = {}
 
         for requirement_file in self._docs_requirements_files(local_dir, doc_dir):
             try:
                 for line in requirement_file.read_text(encoding='utf-8').splitlines():
-                    dependency = self._requirement_to_conda_dependency(line)
-                    if dependency is None:
-                        continue
-                    name, specifier = dependency
-                    dependencies[name] = specifier
+                    conda_dependency = self._requirement_to_conda_dependency(line)
+                    pip_dependency = self._requirement_to_pip_requirement(line)
+                    if conda_dependency is not None:
+                        name, specifier = conda_dependency
+                        dependencies[name] = specifier
+                    if pip_dependency is not None:
+                        name, pip_requirement = pip_dependency
+                        pip_requirements[name] = pip_requirement
             except OSError:
                 continue
 
         for spec in self._extract_docs_specs_from_pyproject(local_dir, doc_dir):
-            dependency = self._requirement_to_conda_dependency(spec)
-            if dependency is None:
-                continue
-            name, specifier = dependency
-            dependencies[name] = specifier
+            conda_dependency = self._requirement_to_conda_dependency(spec)
+            pip_dependency = self._requirement_to_pip_requirement(spec)
+            if conda_dependency is not None:
+                name, specifier = conda_dependency
+                dependencies[name] = specifier
+            if pip_dependency is not None:
+                name, pip_requirement = pip_dependency
+                pip_requirements[name] = pip_requirement
 
-        dependencies.update(self._extract_conf_import_dependencies(doc_dir))
+        conf_dependencies = self._extract_conf_import_dependencies(doc_dir)
+        dependencies.update(conf_dependencies)
+        for name in conf_dependencies:
+            pip_requirements.setdefault(name, name)
+
+        mkdocs_dependencies = self._extract_mkdocs_dependencies(local_dir, doc_dir)
+        dependencies.update(mkdocs_dependencies)
+        for name in mkdocs_dependencies:
+            pip_requirements.setdefault(name, name)
 
         # `make` and PyPI installs still rely on these base tools.
         dependencies.setdefault('setuptools', SETUPTOOLS_VERSION_CONSTRAINT)
+        pip_requirements.setdefault('setuptools', 'setuptools<81')
 
         if dependencies:
             console.log(f'Discovered docs dependencies for {project.name}: {sorted(dependencies)}')
-        return dependencies
+        return dependencies, pip_requirements
 
     def _build_project_dependency_map(
         self,
@@ -486,6 +630,7 @@ class Builder:
         project: Project,
         local_dir: pathlib.Path,
         discovered_dependencies: dict[str, str] | None = None,
+        discovered_pip_requirements: dict[str, str] | None = None,
     ) -> tuple[pathlib.Path, list[str]]:
         dependency_map = self._build_project_dependency_map(
             project, discovered_dependencies=discovered_dependencies
@@ -513,8 +658,8 @@ class Builder:
 
                 for name in removable:
                     specifier = dependency_map.pop(name, '*')
-                    fallback_requirements[name] = self._dependency_to_pip_requirement(
-                        name, specifier
+                    fallback_requirements[name] = (discovered_pip_requirements or {}).get(
+                        name, self._dependency_to_pip_requirement(name, specifier)
                     )
 
                 console.log(f'Falling back to pip for {project.name}: {sorted(removable)}')
@@ -557,11 +702,16 @@ class Builder:
         if not doc_dir.exists():
             raise FileNotFoundError(f'Documentation directory does not exist: {doc_dir}')
 
-        discovered_dependencies = self._discover_docs_dependencies(project, local_dir, doc_dir)
+        discovered_dependencies, discovered_pip_requirements = self._discover_docs_dependencies(
+            project, local_dir, doc_dir
+        )
         latest_tag = self._latest_commit(local_dir)
         if project.use_pixi_env:
             manifest_path, pip_requirements = self._prepare_project_environment(
-                project, local_dir, discovered_dependencies=discovered_dependencies
+                project,
+                local_dir,
+                discovered_dependencies=discovered_dependencies,
+                discovered_pip_requirements=discovered_pip_requirements,
             )
             if project.install:
                 self._run_in_project_environment(
