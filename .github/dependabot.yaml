@@ -3,5 +3,5 @@ updates:
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      # Check for updates once a week
-      interval: "weekly"
+      # Check for updates once a month
+      interval: "monthly"
