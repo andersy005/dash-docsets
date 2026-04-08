@@ -30,8 +30,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        key: ["arctic"]
-        #, "pacific", "indian"]
+        key: ["arctic", "pacific"]
+        #, , "indian"]
 
     timeout-minutes: 200
     steps:
