@@ -121,7 +121,7 @@ class Project(pydantic.BaseModel):
     doc_dir: str = 'docs'
     doc_build_cmd: str = MAKE_CMD
     html_pages_dir: str = '_build/html'
-    install: bool = False
+    install: bool = True
 
 
 @pydantic.dataclasses.dataclass

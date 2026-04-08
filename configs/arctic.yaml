@@ -2,12 +2,12 @@
   repo: dask/dask
   doc_dir: docs
   html_pages_dir: build/html
-  doc_build_cmd: sphinx-build -T -b html ./ build/html
+  doc_build_cmd: sphinx-build -T -b html ./source build/html
 - name: distributed
   repo: dask/distributed
   doc_dir: docs
   html_pages_dir: build/html
-  doc_build_cmd: sphinx-build -T -b html ./ build/html
+  doc_build_cmd: sphinx-build -T -b html ./source build/html
 # - name: intake
 #   repo: intake/intake
 #   doc_dir: docs
@@ -42,18 +42,16 @@
 #   doc_build_cmd: sphinx-build -j auto -W -b html . _build/html
 - name: zarr
   repo: zarr-developers/zarr-python
-  doc_dir: docs
-  html_pages_dir: _build/html
+  doc_dir: .
+  html_pages_dir: site
+  doc_build_cmd: mkdocs build --no-directory-urls
+  install: false
+  generator: html2dash
 # - name: numcodecs
 #   repo: zarr-developers/numcodecs
 #   doc_dir: docs
 #   html_pages_dir: _build/html
 
-# - name: xtensor
-#   repo: xtensor-stack/xtensor
-#   doc_dir: docs
-#   html_pages_dir: build/html
-#   install: false
 # - name: numba
 #   repo: numba/numba
 #   doc_dir: docs
