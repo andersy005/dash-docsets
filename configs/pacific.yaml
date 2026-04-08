@@ -11,15 +11,16 @@
     mkdocs-redirects: "*"
     mkdocstrings: "*"
     mkdocstrings-python: "*"
-    griffe-typingdoc: "*"
-    griffe-warnings-deprecated: "*"
     cairosvg: "*"
     pillow: "*"
     pymdown-extensions: "*"
-    mdx-include: "*"
-    markdown-include-variants: "*"
     python-slugify: "*"
     pyyaml: "*"
+  pixi_pypi_dependencies:
+    griffe-typingdoc: "*"
+    griffe-warnings-deprecated: "*"
+    mdx-include: "*"
+    markdown-include-variants: "*"
 
 - name: uvicorn
   repo: encode/uvicorn

@@ -14,6 +14,7 @@
     sphinxext-rediraffe: "*"
     sphinxext-opengraph: "*"
     ipython: "*"
+    linkify-it-py: "*"
   pixi_pypi_dependencies:
     sphinx-pyscript: "*"
 
