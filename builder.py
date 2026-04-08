@@ -118,6 +118,18 @@ def _stream_command(
         timer.daemon = True
         timer.start()
 
+    # Drain stderr in a background thread to avoid deadlocks when both stdout
+    # and stderr pipes fill simultaneously (classic subprocess pipe deadlock).
+    stderr_lines: list[str] = []
+
+    def _drain_stderr() -> None:
+        for line in iter(process.stderr.readline, ''):
+            stderr_lines.append(line)
+        process.stderr.close()
+
+    stderr_thread = threading.Thread(target=_drain_stderr, daemon=True)
+    stderr_thread.start()
+
     stderr_output = ''
     try:
         for line in iter(process.stdout.readline, ''):
@@ -125,8 +137,8 @@ def _stream_command(
                 recent_stdout.append(line)
                 yield line
         process.stdout.close()
-        stderr_output = process.stderr.read()
-        process.stderr.close()
+        stderr_thread.join()
+        stderr_output = ''.join(stderr_lines)
         return_code = process.wait()
     finally:
         if timer is not None:
@@ -419,7 +431,7 @@ class Builder:
             tar_command = [
                 'tar',
                 "--exclude='.DS_Store'",
-                '-czvf',
+                '-czf',
                 f'{project.name}{DOCSET_EXT}',
                 docset_path,
             ]

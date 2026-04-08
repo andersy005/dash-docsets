@@ -2,7 +2,7 @@
   repo: dask/dask
   doc_dir: .
   html_pages_dir: docs/build/html
-  doc_build_cmd: "uv venv && uv pip install -r docs/requirements-docs.txt -e . && uv run sphinx-build -T -b html docs/source docs/build/html"
+  doc_build_cmd: "uv venv --allow-existing && uv pip install -r docs/requirements-docs.txt -e . && uv run sphinx-build -T -b html docs/source docs/build/html"
   use_own_env: true
   install: false
 
@@ -10,7 +10,7 @@
   repo: dask/distributed
   doc_dir: .
   html_pages_dir: docs/build/html
-  doc_build_cmd: "uv venv && uv pip install -r docs/requirements.txt -e . && uv run sphinx-build -T -b html docs/source docs/build/html"
+  doc_build_cmd: "uv venv --allow-existing && uv pip install -r docs/requirements.txt -e . && uv run sphinx-build -T -b html docs/source docs/build/html"
   use_own_env: true
   install: false
 
@@ -86,7 +86,7 @@
   repo: earth-mover/icechunk
   doc_dir: icechunk-python/docs
   html_pages_dir: .site
-  doc_build_cmd: mkdocs build
+  doc_build_cmd: mkdocs build --no-strict
   install: false
   generator: html2dash
   pixi_dependencies:
