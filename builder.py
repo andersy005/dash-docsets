@@ -47,6 +47,11 @@ DOCSET_DIR.mkdir(parents=True, exist_ok=True)
 FEED_DIR = HOME_DIR / 'feeds'
 FEED_DIR.mkdir(parents=True, exist_ok=True)
 
+PROJECT_PIXI_DIR = '.dash-docsets-pixi'
+DEFAULT_PROJECT_PIXI_PYTHON = '3.13.*'
+DEFAULT_PROJECT_PIXI_CHANNELS = ['conda-forge']
+DEFAULT_PROJECT_PIXI_PLATFORMS = ['linux-64', 'osx-arm64']
+
 
 def _env_or_default(name: str, default: str) -> str:
     value = os.getenv(name)
@@ -122,6 +127,15 @@ class Project(pydantic.BaseModel):
     doc_build_cmd: str = MAKE_CMD
     html_pages_dir: str = '_build/html'
     install: bool = True
+    use_pixi_env: bool = True
+    pixi_python: str = DEFAULT_PROJECT_PIXI_PYTHON
+    pixi_channels: list[str] = pydantic.Field(
+        default_factory=lambda: list(DEFAULT_PROJECT_PIXI_CHANNELS)
+    )
+    pixi_platforms: list[str] = pydantic.Field(
+        default_factory=lambda: list(DEFAULT_PROJECT_PIXI_PLATFORMS)
+    )
+    pixi_dependencies: dict[str, str] = pydantic.Field(default_factory=dict)
 
 
 @pydantic.dataclasses.dataclass
@@ -129,10 +143,60 @@ class Builder:
     projects: list[Project]
     docset_base_url: str = DOCSET_BASE_URL
 
+    def _project_manifest_path(self, project: Project, local_dir: pathlib.Path) -> pathlib.Path:
+        project_pixi_dir = local_dir / PROJECT_PIXI_DIR
+        project_pixi_dir.mkdir(parents=True, exist_ok=True)
+        manifest_path = project_pixi_dir / 'pyproject.toml'
+
+        workspace_name = re.sub(r'[^a-z0-9-]+', '-', project.name.lower()).strip('-')
+        if not workspace_name:
+            workspace_name = 'dash-docset'
+
+        dependency_map = {'python': project.pixi_python, 'pip': '*'}
+        dependency_map.update(project.pixi_dependencies)
+
+        channels = ', '.join(f'"{channel}"' for channel in project.pixi_channels)
+        platforms = ', '.join(f'"{platform}"' for platform in project.pixi_platforms)
+        dependency_lines = '\n'.join(
+            f'    "{name}" = "{spec}"' for name, spec in sorted(dependency_map.items())
+        )
+
+        manifest_text = (
+            '[tool.pixi.workspace]\n'
+            f'    name = "{workspace_name}"\n'
+            f'    channels = [{channels}]\n'
+            f'    platforms = [{platforms}]\n\n'
+            '[tool.pixi.dependencies]\n'
+            f'{dependency_lines}\n'
+        )
+        manifest_path.write_text(manifest_text, encoding='utf-8')
+        return manifest_path
+
+    def _prepare_project_environment(
+        self, project: Project, local_dir: pathlib.Path
+    ) -> pathlib.Path:
+        manifest_path = self._project_manifest_path(project, local_dir)
+        stream_command(['pixi', 'install', '--manifest-path', manifest_path.as_posix()])
+        return manifest_path
+
+    def _run_in_project_environment(
+        self, manifest_path: pathlib.Path, command: list[str], cwd: pathlib.Path
+    ) -> None:
+        pixi_command = ['pixi', 'run', '--manifest-path', manifest_path.as_posix(), *command]
+        stream_command(pixi_command, cwd=cwd)
+
+    def _latest_commit(self, local_dir: pathlib.Path) -> str:
+        try:
+            latest_tag = subprocess.check_output(
+                ['git', 'rev-parse', '--short', 'HEAD'], text=True, cwd=local_dir
+            ).strip()
+        except subprocess.CalledProcessError:
+            latest_tag = 'unknown'
+        return latest_tag or 'unknown'
+
     def _build_docs(self, project: Project):
         local_dir = REPODIR / project.name
         doc_dir = local_dir / project.doc_dir
-        kwargs = {}
 
         if not local_dir.exists():
             repo_link = f'{BASE_URL}/{project.repo}'
@@ -147,17 +211,24 @@ class Builder:
         else:
             console.log(f'{project.name} directory already exits.')
 
-        with working_directory(local_dir):
+        latest_tag = self._latest_commit(local_dir)
+        if project.use_pixi_env:
+            manifest_path = self._prepare_project_environment(project, local_dir)
             if project.install:
-                command = ['python', '-m', 'pip', 'install', '-e', '.', '--no-deps']
-                stream_command(command)
-
-            latest_tag = os.popen('git rev-parse --short HEAD').read().strip()
-            if not latest_tag:
-                latest_tag = 'unknown'
-
-            with working_directory(project.doc_dir):
-                stream_command(project.doc_build_cmd, **kwargs)
+                self._run_in_project_environment(
+                    manifest_path, ['python', '-m', 'pip', 'install', '-e', '.'], cwd=local_dir
+                )
+            self._run_in_project_environment(
+                manifest_path,
+                ['/bin/bash', '-lc', project.doc_build_cmd],
+                cwd=doc_dir,
+            )
+        else:
+            with working_directory(local_dir):
+                if project.install:
+                    stream_command(['python', '-m', 'pip', 'install', '-e', '.'])
+                with working_directory(project.doc_dir):
+                    stream_command(project.doc_build_cmd)
 
         icon_dir = ICON_DIR / project.name
         icons = []
@@ -183,7 +254,7 @@ class Builder:
                 icons = list(itertools.chain(*icons))
                 command += icons
             command = ' '.join(command)
-            stream_command(command, **kwargs)
+            stream_command(command)
 
         elif project.generator == 'html2dash':
             icon = icon_files[0] if icon_files else None
@@ -207,7 +278,7 @@ class Builder:
                 docset_path,
             ]
             stream_command(tar_command)
-            stream_command(f'rm -rf {dir_to_delete}', **kwargs)
+            stream_command(f'rm -rf {dir_to_delete}')
 
         return project.name, latest_tag
 

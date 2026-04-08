@@ -199,7 +199,8 @@ def custom_builder(
 
     add_infoplist(info_path, index_page, docset_name)
 
-    if icon_filename := str(icon):
+    if icon is not None:
+        icon_filename = str(icon)
         if icon_filename.endswith('.png') and os.path.isfile(icon_filename):
             try:
                 subprocess.call(['cp', icon_filename, icon_path])
